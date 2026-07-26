@@ -1,1 +1,158 @@
-<!doctype html><meta charset=utf-8><title>anhermon.dev</title><p>Setting up.
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Angel Hermon - Software Engineer</title>
+<meta name="description" content="Angel Hermon is a software engineer building systems and the tools around them: agent harnesses, MCP tracing, control planes, and observability for agent runs.">
+<link rel="canonical" href="https://anhermon.dev/">
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #fbfbfa;
+  --fg: #1c1c1a;
+  --muted: #57574f;
+  --rule: #dedcd6;
+  --accent: #0f6b52;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #131414;
+    --fg: #e8e8e4;
+    --muted: #a3a39c;
+    --rule: #2c2e2d;
+    --accent: #6fd3ac;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem 5rem;
+}
+@media (min-width: 48em) { .page { padding: 6rem 2.5rem 7rem; } }
+a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 0.22em; }
+a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+h1 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 1.75rem;
+  color: var(--muted);
+}
+.lede {
+  font-size: clamp(2rem, 8vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 650;
+  margin: 0 0 1.5rem;
+}
+.intro {
+  font-size: clamp(1.05rem, 3.4vw, 1.2rem);
+  max-width: 34ch;
+  margin: 0;
+}
+.intro + .intro { margin-top: 0.9rem; max-width: 48ch; color: var(--muted); }
+section { margin-top: 4.5rem; }
+h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1.5rem;
+}
+.work { list-style: none; margin: 0; padding: 0; }
+.work li { padding: 1.4rem 0; border-top: 1px solid var(--rule); }
+.work li:last-child { border-bottom: 1px solid var(--rule); }
+.work h3 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 0.35rem; }
+.work p, .stack { margin: 0; color: var(--muted); max-width: 62ch; }
+.contact p { max-width: 52ch; }
+.contact p:first-of-type { margin-top: 0; }
+footer {
+  margin-top: 4.5rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+footer p { margin: 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <h1>Angel Hermon</h1>
+  <p class="lede">Software engineer.</p>
+  <p class="intro">I build systems and the tools around them.</p>
+  <p class="intro">Right now that's agentic engineering: harnesses, MCP tracing, control planes, and observability for agent runs.</p>
+</header>
+
+<main>
+  <section aria-labelledby="work-heading">
+    <h2 id="work-heading">Work</h2>
+    <ul class="work">
+      <li>
+        <h3><a href="https://github.com/anhermon/anvil">anvil</a></h3>
+        <p>A single-binary agent harness in Rust: pluggable LLM providers, sub-agents, a skill library, and persistent episodic memory in SQLite. 75 tests passing, v0.1.0 pre-release.</p>
+      </li>
+      <li>
+        <h3><a href="https://github.com/anhermon/mcp-trace">mcp-trace</a></h3>
+        <p>A transparent Go proxy for MCP servers. It emits an OpenTelemetry span per JSON-RPC tool call, with no changes to the server or the client. Currently mid-fix.</p>
+      </li>
+      <li>
+        <h3><a href="https://github.com/anhermon/agent-tower">agent-tower</a></h3>
+        <p>A control plane for agent harnesses: session analytics, transcript replay with per-turn cost attribution, and live activity over SSE. 585 tests passing.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="stack-heading">
+    <h2 id="stack-heading">Stack</h2>
+    <p class="stack">Go, Rust, Python, TypeScript, Kubernetes, OpenTelemetry.</p>
+  </section>
+
+  <section class="contact" aria-labelledby="contact-heading">
+    <h2 id="contact-heading">Contact</h2>
+    <p>Available for freelance and contract work.</p>
+    <p>
+      <a href="mailto:angel.hermon.mail@gmail.com">angel.hermon.mail@gmail.com</a><br>
+      <a href="https://github.com/anhermon">github.com/anhermon</a><br>
+      <a href="https://www.linkedin.com/in/angel-hermon-5a163a66/">LinkedIn</a>
+    </p>
+  </section>
+</main>
+
+<footer>
+  <p>Angel Hermon</p>
+</footer>
+
+</div>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Angel Hermon",
+  "url": "https://anhermon.dev",
+  "jobTitle": "Software Engineer",
+  "description": "Software engineer building systems and the tools around them: agent harnesses, MCP tracing, control planes, and observability for agent runs.",
+  "knowsAbout": ["Go", "Rust", "Python", "TypeScript", "Kubernetes", "OpenTelemetry"],
+  "sameAs": [
+    "https://github.com/anhermon",
+    "https://www.linkedin.com/in/angel-hermon-5a163a66/"
+  ]
+}
+</script>
+</body>
+</html>
