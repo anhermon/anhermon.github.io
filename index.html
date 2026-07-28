@@ -6,6 +6,20 @@
 <title>Angel Hermon | Software Engineer</title>
 <meta name="description" content="Angel Hermon is a software engineer building agent harnesses, MCP tracing, control planes, and observability tools for agent runs.">
 <meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://anhermon.dev/">
+<!-- SVG data URI, not a file: /favicon.ico would be a second request. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0e15'/%3E%3Ctext x='16' y='22' font-family='ui-monospace,Menlo,monospace' font-size='16' font-weight='700' fill='%234fa8ff' text-anchor='middle'%3EAH%3C/text%3E%3C/svg%3E">
+<!-- No og:image: unfurlers fetch images over http(s) and ignore data URIs, and a
+     remote image would break the zero-external-request rule. summary, not
+     summary_large_image, because there is no image to show. -->
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Angel Hermon">
+<meta property="og:url" content="https://anhermon.dev/">
+<meta property="og:title" content="Angel Hermon | Software Engineer">
+<meta property="og:description" content="Software engineer building agent harnesses, MCP tracing, control planes, and observability tools for agent runs.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Angel Hermon | Software Engineer">
+<meta name="twitter:description" content="Software engineer building agent harnesses, MCP tracing, control planes, and observability tools for agent runs.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -437,7 +451,7 @@
         <div class="work-body">
           <h3><a href="https://github.com/anhermon/mcp-trace">mcp-trace</a></h3>
           <span class="work-repo">github.com/anhermon/mcp-trace</span>
-          <p>A transparent Go proxy for MCP servers. Emits an OpenTelemetry span per JSON-RPC tool call, with no changes to the server or the client.</p>
+          <p>A transparent Go proxy for MCP servers. Emits an OpenTelemetry span per JSON-RPC tool call. No code changes on either side — the client just points at the proxy's port instead of the server's.</p>
           <div class="work-meta">
             <span>OpenTelemetry</span>
             <span>Go</span>
@@ -452,7 +466,7 @@
           <span class="work-repo">github.com/anhermon/agent-tower</span>
           <p>A control plane for agent harnesses: session analytics, transcript replay with per-turn cost attribution, and live activity over SSE.</p>
           <div class="work-meta">
-            <span>585 tests passing</span>
+            <span>577 tests passing</span>
             <span>TypeScript</span>
           </div>
         </div>
