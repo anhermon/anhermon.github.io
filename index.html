@@ -324,7 +324,10 @@
   .stack-tag:hover { border-color: var(--accent); color: var(--accent); }
 
   /* contact */
-  .contact-inner { max-width: 62ch; }
+  /* the measure goes on the children — putting it on .wrap itself shrinks the
+     centred box and shifts the whole section 278px right of every other heading */
+  .contact-inner > p.lede,
+  .contact-inner > .contact-links { max-width: 62ch; }
   .contact-inner p.lede {
     font-size: clamp(1.3rem, 2.4vw, 1.7rem);
     font-weight: 700;
