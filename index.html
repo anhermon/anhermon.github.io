@@ -534,7 +534,9 @@
   if (!location.hash) return;
   window.addEventListener("load", function () {
     var el = document.querySelector(location.hash);
-    if (el) el.scrollIntoView({ behavior: "auto" });
+    // "instant", not "auto": auto resolves to the CSS scroll-behavior, which is
+    // smooth here, so it would reproduce the very problem this works around.
+    if (el) el.scrollIntoView({ behavior: "instant" });
   });
 }());
 </script>
