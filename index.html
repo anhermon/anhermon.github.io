@@ -75,6 +75,10 @@
     html { scroll-behavior: auto; }
   }
 
+  /* .site-nav is sticky at 64px, so an anchor jump would otherwise park the
+     section heading underneath it. Clears the nav plus a little air. */
+  section[id] { scroll-margin-top: 88px; }
+
   body {
     margin: 0;
     background: var(--bg);
