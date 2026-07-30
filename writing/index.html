@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing | Angel Hermon</title>
+<meta name="description" content="Notes on agent harnesses, observability, and the failure modes that don't announce themselves.">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://anhermon.dev/writing/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0e15'/%3E%3Ctext x='16' y='22' font-family='ui-monospace,Menlo,monospace' font-size='16' font-weight='700' fill='%234fa8ff' text-anchor='middle'%3EAH%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Angel Hermon">
+<meta property="og:url" content="https://anhermon.dev/writing/">
+<meta property="og:title" content="Writing | Angel Hermon">
+<meta property="og:description" content="Notes on agent harnesses, observability, and the failure modes that don't announce themselves.">
+<meta property="og:image" content="https://anhermon.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Angel Hermon — software engineer. Agent harnesses, MCP tracing, and observability for agent runs.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Writing | Angel Hermon">
+<meta name="twitter:description" content="Notes on agent harnesses, observability, and the failure modes that don't announce themselves.">
+<meta name="twitter:image" content="https://anhermon.dev/og.png">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f2f5f9;
+    --text: #10151c;
+    --text-dim: #4c5b6b;
+    --accent: #1463c9;
+    --border: rgba(16,25,45,0.14);
+    --border-strong: rgba(16,25,45,0.28);
+    --grid-line: rgba(20,60,120,0.10);
+    --surface: rgba(20,60,120,0.045);
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0e15;
+      --text: #edf1f6;
+      --text-dim: #9aa7ba;
+      --accent: #4fa8ff;
+      --border: rgba(150,190,255,0.16);
+      --border-strong: rgba(150,190,255,0.32);
+      --grid-line: rgba(120,170,255,0.09);
+      --surface: rgba(120,170,255,0.05);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  main, header, footer { position: relative; z-index: 1; }
+
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* nav */
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .site-nav .wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .wordmark {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .wordmark span { color: var(--text-dim); }
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-dim);
+    padding: 4px 2px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 0 18px; }
+    .nav-links { display: none; }
+  }
+
+  /* writing index */
+  .listing-wrap {
+    max-width: 70ch;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+  @media (max-width: 480px) {
+    .listing-wrap { padding: 40px 18px 64px; }
+  }
+  h1.section-title {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-size: clamp(1.9rem, 4vw, 2.5rem);
+    margin: 0 0 40px;
+  }
+  .post-row {
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+  }
+  .post-row:last-child { border-bottom: 1px solid var(--border); }
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .post-row h2 {
+    margin: 0 0 8px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .post-row h2 a {
+    text-decoration: none;
+    color: var(--text);
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .post-row h2 a:hover, .post-row h2 a:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .post-standfirst {
+    margin: 0;
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  footer.site-footer {
+    padding: 28px 0 40px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="wrap">
+    <a class="wordmark" href="/#top">ANGEL HERMON<span> // ENGINEER</span></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#work">Work</a>
+      <a href="/writing/">Writing</a>
+      <a href="/#stack">Stack</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="listing-wrap">
+    <h1 class="section-title">Writing</h1>
+
+    <article class="post-row">
+      <span class="post-date"><time datetime="2026-07-30">July 30, 2026</time></span>
+      <h2><a href="/writing/exit-0/">Exit 0 means the model stopped talking</a></h2>
+      <p class="post-standfirst">Two measurement bugs from one week of running a coding agent unattended on a local model. Both of them made the agent look better than it was.</p>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">Angel Hermon, built without a framework.</div>
+</footer>
+
+</body>
+</html>

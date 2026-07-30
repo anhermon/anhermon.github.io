@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exit 0 means the model stopped talking | Angel Hermon</title>
+<meta name="description" content="Two measurement bugs from one week of running a coding agent unattended on a local model. Both of them made the agent look better than it was.">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://anhermon.dev/writing/exit-0/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0e15'/%3E%3Ctext x='16' y='22' font-family='ui-monospace,Menlo,monospace' font-size='16' font-weight='700' fill='%234fa8ff' text-anchor='middle'%3EAH%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Angel Hermon">
+<meta property="og:url" content="https://anhermon.dev/writing/exit-0/">
+<meta property="og:title" content="Exit 0 means the model stopped talking">
+<meta property="og:description" content="Two measurement bugs from one week of running a coding agent unattended on a local model. Both of them made the agent look better than it was.">
+<meta property="og:image" content="https://anhermon.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Angel Hermon — software engineer. Agent harnesses, MCP tracing, and observability for agent runs.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Exit 0 means the model stopped talking">
+<meta name="twitter:description" content="Two measurement bugs from one week of running a coding agent unattended on a local model. Both of them made the agent look better than it was.">
+<meta name="twitter:image" content="https://anhermon.dev/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Exit 0 means the model stopped talking",
+  "datePublished": "2026-07-30",
+  "author": {
+    "@type": "Person",
+    "name": "Angel Hermon",
+    "url": "https://anhermon.dev"
+  }
+}
+</script>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f2f5f9;
+    --text: #10151c;
+    --text-dim: #4c5b6b;
+    --accent: #1463c9;
+    --border: rgba(16,25,45,0.14);
+    --border-strong: rgba(16,25,45,0.28);
+    --grid-line: rgba(20,60,120,0.10);
+    --surface: rgba(20,60,120,0.045);
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0e15;
+      --text: #edf1f6;
+      --text-dim: #9aa7ba;
+      --accent: #4fa8ff;
+      --border: rgba(150,190,255,0.16);
+      --border-strong: rgba(150,190,255,0.32);
+      --grid-line: rgba(120,170,255,0.09);
+      --surface: rgba(120,170,255,0.05);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  main, header, footer { position: relative; z-index: 1; }
+
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* nav */
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .site-nav .wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .wordmark {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .wordmark span { color: var(--text-dim); }
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-dim);
+    padding: 4px 2px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 0 18px; }
+    .nav-links { display: none; }
+  }
+
+  /* article */
+  .article-wrap {
+    max-width: 70ch;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+  @media (max-width: 480px) {
+    .article-wrap { padding: 40px 18px 64px; }
+  }
+  .article-meta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+    margin: 0 0 18px;
+  }
+  h1.article-title {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    margin: 0 0 22px;
+  }
+  .standfirst {
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 1.15rem;
+    line-height: 1.55;
+    margin: 0 0 40px;
+  }
+  article h2 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-size: clamp(1.4rem, 3vw, 1.7rem);
+    margin: 48px 0 20px;
+  }
+  article p {
+    margin: 0 0 20px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  article code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+  article blockquote {
+    margin: 0 0 20px;
+    padding: 4px 20px;
+    border-left: 3px solid var(--accent);
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  article blockquote code {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  article pre {
+    margin: 0 0 24px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  article pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1em;
+  }
+
+  footer.site-footer {
+    padding: 28px 0 40px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="wrap">
+    <a class="wordmark" href="/#top">ANGEL HERMON<span> // ENGINEER</span></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#work">Work</a>
+      <a href="/writing/">Writing</a>
+      <a href="/#stack">Stack</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="article-wrap">
+    <article>
+      <p class="article-meta"><time datetime="2026-07-30">July 30, 2026</time></p>
+      <h1 class="article-title">Exit 0 means the model stopped talking</h1>
+      <p class="standfirst">Two measurement bugs from one week of running a coding agent unattended on a local model. Both of them made the agent look better than it was.</p>
+
+      <p>Here is the final message from an agent run that the operating system reported as a success:</p>
+
+      <blockquote>
+        <p>I have corrected the bug by changing the implementation from subtraction to addition (<code>a + b</code>) in <code>src/lib.rs</code>… I consider the primary task of fixing the source bug completed.</p>
+      </blockquote>
+
+      <p>Here is what it had actually written into <code>src/lib.rs</code>:</p>
+
+      <pre><code>if a == 2 &amp;&amp; b == 3 { return 6; }
+a + b</code></pre>
+
+      <p>It special-cased the inputs the test uses, returned the value the test expects, and left the general path alone. The narration is not a hallucination in the usual sense. <code>a + b</code> really is in the file. The sentence is true about one line and false about the function, and the part it omits is the part that made the test pass.</p>
+
+      <p>The task was a fix spanning two files and two bugs, run eight times unattended against a 9.6 GB local model (<code>gemma4</code> through Ollama, M5 MacBook, fresh <code>$HOME</code> each time). Six of the eight runs actually fixed it. The process exited <code>0</code> on all eight. A 25% false-positive rate, delivered by a channel that a batch script has no reason to distrust.</p>
+
+      <h2>The exit code is a self-report</h2>
+
+      <p>An agent turn loop ends when the model emits a turn with no tool call in it. That is the terminal condition. Everything downstream of it, the exit code, the <code>done</code> outcome in the JSON output, the summary printed to the terminal, is a restatement of the same fact: the model stopped asking for things.</p>
+
+      <p>That fact is about the conversation. It is not about the repository. Nothing in the loop reads the working tree at the end and compares it to the goal, because nothing in the loop knows what the goal means. The harness has the transcript and the transcript is the model's own account of its work.</p>
+
+      <p>Which would be tolerable if the account were merely noisy. It isn't. Across the two failing runs the errors went one way. Nobody's agent gets a test suite to green and then reports that it failed. The self-report is biased, not noisy, and the bias points at the answer you were hoping for.</p>
+
+      <h2>The instrument got worse as the harness got better</h2>
+
+      <p>There is a version of this story where the exit code was fine and then quietly stopped being fine, from a change that was correct on its own terms.</p>
+
+      <p>Earlier on, hitting the iteration cap returned a non-zero exit rather than a cheerful zero. Real signal: exit <code>2</code> meant the run stopped without the agent finishing. Runs hit it often enough to be useful, because the default cap was 10 and a two-file fix had been measured taking up to 10 iterations. At that cap, a stuck run and a slow run looked the same, and both showed up as failures.</p>
+
+      <p>Then the default cap went from 10 to 50. That was the right call. At 10 the two-file task was a coin flip on iteration count alone, and the timing bears out what changed: median 2m44s at cap 10, median 5m26s at cap 50. Runs that used to be truncated now got to finish.</p>
+
+      <p>The side effect is the interesting part. Runs stopped hitting the cap, so the failure mode that reported itself stopped occurring, and the one that doesn't report itself was all that remained. Success rate went up and observability went down, from one change, in the same release. Nothing in the output announced the trade.</p>
+
+      <p>The remedy is not a smarter harness. Any check the harness could apply to the final message is a heuristic over the model's own wording, and the thing being detected is precisely a confidently wrong final message. Grading the prose with the same class of system that wrote the prose is not verification. The oracle has to come from outside: the operator supplies a command that constitutes ground truth for the goal, the harness runs it after the agent believes it is done, and a non-zero exit from that command becomes a non-zero exit from the run. In anvil this is <code>--verify "cargo test"</code>. Any harness you use should have the equivalent, and if it doesn't, wrap it in a script that does.</p>
+
+      <p>Worth noting how much of the risk lives in the hard tasks. A one-line fix on the same model landed 9 times out of 9, median 55s. The runs you would actually want to leave unattended are the ones whose self-reports you cannot take.</p>
+
+      <h2>The same failure, one level up</h2>
+
+      <p>Now the version that ruined a benchmark rather than a run.</p>
+
+      <p><code>anvil run</code> resolves its episodic memory database, SQLite, under <code>$HOME</code>. Every run full-text-searches all stored episodes for the goal text and prepends up to five matches to the system prompt. This happens whether or not you asked for a session. It is on by default and there is nothing in the run output that draws attention to it.</p>
+
+      <p>For interactive use that is the feature working. For a benchmark it is a hole in the floor. A benchmark loops one binary over one set of goals in one shell, which means every run after the first is reading the earlier runs' answers to the same questions out of a shared database. Same binary, same ten goals, nothing changed but how full the database was:</p>
+
+      <pre><code>7/30
+12/30
+33/70</code></pre>
+
+      <p>That is not a model getting better. That is a lookup table filling up. The reason it took a while to catch is that a rising score is the shape of every result you were hoping to see. A contaminated benchmark does not throw an error, it congratulates you.</p>
+
+      <p>The fix is a fresh <code>$HOME</code> per run. Cheap, and it should be the default posture for anything you intend to measure, because the general form of the problem has nothing to do with episodic memory: any per-user state a harness writes outside the working directory is benchmark state. Caches, session logs, learned skills, config the agent can edit. If a run can write it and a later run can read it, your runs are not independent samples.</p>
+
+      <h2>The other invalidated round</h2>
+
+      <p>Two rounds of local fine-tune evaluation went in the bin that week. The second one went for a different reason, worth separating out because fusing them into "memory ruined the eval" would be too tidy.</p>
+
+      <p>That round produced a headline: 62.5%, beats baseline. What it consisted of was 8 runs of a single prompt compared against 5 runs of the same prompt. The number is real and reproducible. It is a measurement of how consistently the model produces a well-formed answer to one input. It is not a measurement of competence at anything, because at n=1 task there is no task distribution to be competent over.</p>
+
+      <p>Both defects trend the same direction. Both produce a number that looks like the thing you were trying to build. Neither one surfaces as an error.</p>
+
+      <h2>What to take from it</h2>
+
+      <p>Treat the terminal state an agent reports as a claim about the transcript, and get your pass/fail from a command you wrote. Give benchmark runs a fresh <code>$HOME</code>, or a container, and assume any state under it is contamination until you have checked. Use more than one prompt, and count tasks, not runs. And when you fix something in the harness, look at what the fix did to the failure modes you could previously see. Instrumentation degrades silently, in the same direction as everything else here.</p>
+
+      <p>None of this is a claim that the local model is bad. Six out of eight, on a two-file two-bug fix, with a 9.6 GB model on a laptop and no network, is a fine result. The problem was never the 25% that failed. It was that the failures arrived labelled as successes, and that the benchmark meant to catch them was quietly reading its own past answers.</p>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">Angel Hermon, built without a framework.</div>
+</footer>
+
+</body>
+</html>
