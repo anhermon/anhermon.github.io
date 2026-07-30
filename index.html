@@ -525,6 +525,21 @@
 </footer>
 
 <script>
+// Landing on /#work directly leaves the page at the top: html has
+// scroll-behavior:smooth, so the initial fragment scroll animates from 0 while
+// layout is still settling, and never arrives. In-page nav clicks are fine.
+// Re-apply the hash once after load, unanimated.
+(function () {
+  "use strict";
+  if (!location.hash) return;
+  window.addEventListener("load", function () {
+    var el = document.querySelector(location.hash);
+    if (el) el.scrollIntoView({ behavior: "auto" });
+  });
+}());
+</script>
+
+<script>
 (function () {
   "use strict";
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
