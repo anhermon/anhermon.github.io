@@ -351,12 +351,21 @@
   /* the measure goes on the children — putting it on .wrap itself shrinks the
      centred box and shifts the whole section 278px right of every other heading */
   .contact-inner > p.lede,
+  .contact-inner > p,
   .contact-inner > .contact-links { max-width: 62ch; }
   .contact-inner p.lede {
     font-size: clamp(1.3rem, 2.4vw, 1.7rem);
     font-weight: 700;
     letter-spacing: -0.015em;
     margin: 0 0 32px;
+  }
+  /* the lede is the one-line availability statement; the paragraphs under it are
+     body copy, or three bold blocks compete and none of them lands */
+  .contact-inner > p:not(.lede) {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--text-dim);
+    margin: 0 0 20px;
   }
   .contact-links {
     display: flex;
@@ -502,11 +511,11 @@
     <div class="wrap contact-inner">
       <h2 id="contact-heading" class="section-title">Contact</h2>
       <p class="lede">Available for freelance and contract work.</p>
-      <p class="lede">The work I take on: making agent systems observable, getting
+      <p>The work I take on: making agent systems observable, getting
         them to fail loudly instead of silently, and building the harnesses and
         MCP plumbing underneath them. Every project above came out of one of
         those three.</p>
-      <p class="lede">If you have an agent pipeline that works in a demo and not
+      <p>If you have an agent pipeline that works in a demo and not
         in production, or one whose failures you cannot see, tell me what you are
         building and where it breaks.</p>
       <div class="contact-links">
