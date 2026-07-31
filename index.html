@@ -499,6 +499,15 @@
   .panel svg .span.err { fill: var(--err); }
   .panel svg .span.open { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 3 2; }
   .panel svg .span:hover { stroke: var(--text); stroke-width: 1.5; }
+  /* schematics: dashed outlines, so a box never reads as a filled data mark */
+  .panel svg .box rect { fill: var(--bg); stroke: var(--border-strong); stroke-width: 1; stroke-dasharray: 4 3; }
+  .panel svg .box:hover rect, .panel svg .box:focus rect { stroke: var(--accent); stroke-dasharray: none; }
+  .panel svg .bt { fill: var(--text); font-weight: 600; }
+  .panel svg .box .lbl { font-size: 9px; }
+  .panel svg .wire { fill: none; stroke: var(--border-strong); stroke-width: 1; }
+  .panel svg .head { fill: var(--border-strong); }
+  .panel svg .wirelbl { font-size: 9px; }
+  .controls .note.badge { align-self: center; }
 
 
   /* eval panel */
@@ -767,6 +776,50 @@
         <summary>Text equivalent &mdash; the spans as a table</summary>
         <div class="wrapper"><table id="trace-table"></table></div>
       </details>
+    </div>
+  </section>
+
+  <section id="ingest" aria-labelledby="ingest-heading">
+    <div class="wrap">
+      <div class="panel-head">
+        <h2 id="ingest-heading" class="section-title">Event ingestion &mdash; architecture</h2>
+        <span class="badge schem">SCHEMATIC</span>
+      </div>
+      <p class="provenance">
+        <b>This is a drawing, not a measurement.</b> I am building this system now and it
+        has produced no data worth showing, so there are no numbers anywhere on it &mdash;
+        no throughput, no latency, no queue depth. Inventing them would make it a nicer
+        picture and a worse portfolio. It becomes a RECORDED panel when it has run
+        long enough to have a real week to replay.<br>
+        What it does show is the shape I actually build to, and where each failure mode is
+        absorbed. Hover or tab a box for what it is for.
+      </p>
+      <div class="panel">
+        <div class="controls"><span class="note badge schem">SCHEMATIC &mdash; no live data</span></div>
+        <div class="panel-scroll" id="ingest-scroll"></div>
+        <p class="readout" id="ingest-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a box.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="k8s" aria-labelledby="k8s-heading">
+    <div class="wrap">
+      <div class="panel-head">
+        <h2 id="k8s-heading" class="section-title">Scaling the consumers on Kubernetes &mdash; architecture</h2>
+        <span class="badge schem">SCHEMATIC</span>
+      </div>
+      <p class="provenance">
+        <b>Also a drawing.</b> Same rule: this control loop is not yet running under real
+        load, so there are no replica counts, no lag values and no scaling events plotted
+        here. The interesting part is not the numbers anyway &mdash; it is that the signal
+        driving the autoscaler is consumer lag, not CPU. CPU tells you a pod is busy. Lag
+        tells you the system is behind, which is the thing anyone actually cares about.
+      </p>
+      <div class="panel">
+        <div class="controls"><span class="note badge schem">SCHEMATIC &mdash; no live data</span></div>
+        <div class="panel-scroll" id="k8s-scroll"></div>
+        <p class="readout" id="k8s-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a box.</span></p>
+      </div>
     </div>
   </section>
 
@@ -1182,6 +1235,140 @@
         "Z</td><td>" + (s.ms === null ? "&mdash; still open" : s.ms) + "</td><td>" +
         (s.ms === null ? "&mdash;" : s.err) + "</td></tr>";
     }).join("") + "</tbody>";
+})();
+</script>
+
+<script>
+/* Panels 4 and 5 — schematics. Deliberately carry no numbers: neither system
+   has run long enough to have data, and a diagram with invented metrics on it
+   is indistinguishable from a fake dashboard. One renderer, two diagrams. */
+(function () {
+  "use strict";
+
+  var DIAGRAMS = {
+    "ingest": {
+      w: 1000, h: 250,
+      label: "Event ingestion pipeline, provider through to query API",
+      nodes: [
+        { id: "src", x: 14,  y: 44, w: 140, t: "Provider APIs", s: "rate-limited, flaky",
+          d: "Someone else's API, with someone else's rate limits and someone else's outages. Everything downstream is designed on the assumption that this is unreliable and occasionally replays old data." },
+        { id: "in",  x: 176, y: 44, w: 158, t: "Ingress", s: "webhook + poller",
+          d: "Two paths into the same queue. Webhooks are fast but lossy — providers drop them and never tell you. A scheduled poller covers the gap and is the only way to reconcile after an outage. Whatever arrives is written down before it is understood." },
+        { id: "q",   x: 356, y: 44, w: 140, t: "Durable queue", s: "at-least-once, keyed",
+          d: "The boundary between accepting an event and understanding it. At-least-once delivery, which means duplicates are normal and every consumer downstream has to be idempotent rather than merely careful." },
+        { id: "w",   x: 518, y: 44, w: 150, t: "Enrichment workers", s: "idempotent, keyed",
+          d: "Parse, validate, join against reference data, emit a typed event. Keyed by the provider's event id so a redelivery overwrites rather than duplicates. A worker that cannot be run twice safely is a bug, not a tuning problem." },
+        { id: "st",  x: 690, y: 20, w: 150, t: "Raw store", s: "immutable payloads",
+          d: "The bytes exactly as they arrived, never rewritten. When the parser turns out to be wrong — and it does — this is what lets you reprocess history instead of losing it." },
+        { id: "st2", x: 690, y: 96, w: 150, t: "Typed store", s: "queryable, rebuildable",
+          d: "Derived, and therefore disposable: it can be rebuilt from the raw store at any time. Nothing here is the only copy of anything." },
+        { id: "api", x: 862, y: 58, w: 124, t: "Query API", s: "reads typed only",
+          d: "Reads the typed store and nothing else. Consumers never touch the queue or the raw bytes, so the internals can be rebuilt without breaking anyone." },
+        { id: "dlq", x: 518, y: 164, w: 150, t: "Dead letter", s: "poison messages",
+          d: "Events that failed enrichment repeatedly. Kept rather than dropped, and replayable once the bug is fixed. A pipeline with no dead-letter path is a pipeline that loses data quietly." }
+      ],
+      edges: [
+        ["src", "in"], ["in", "q"], ["q", "w"],
+        ["w", "st", "", "eh"], ["w", "st2", "", "eh"], ["st2", "api", "", "eh"],
+        ["w", "dlq", "repeated failure", "v"],
+        ["dlq", "q", "replay once fixed", "under", 234]
+      ]
+    },
+
+    "k8s": {
+      w: 1000, h: 230,
+      label: "Autoscaling loop driven by consumer lag rather than CPU",
+      nodes: [
+        { id: "q",   x: 18,  y: 40, w: 172, t: "Queue", s: "lag is the signal",
+          d: "Lag — how far behind the consumer group is — is the only number that describes the thing users feel. CPU can sit at 90% while the system keeps up perfectly, and at 20% while it falls hours behind." },
+        { id: "ad",  x: 232, y: 40, w: 186, t: "Metrics adapter", s: "lag → custom metric",
+          d: "Publishes lag as a Kubernetes external metric. Without this the autoscaler can only see what the kubelet sees, which is CPU and memory — neither of which knows what the workload is for." },
+        { id: "hpa", x: 460, y: 40, w: 214, t: "HorizontalPodAutoscaler", s: "target: lag per pod",
+          d: "Targets a lag-per-pod value, so replicas track backlog rather than busyness. Stabilisation windows on both directions, because a queue that empties in bursts will otherwise flap the deployment." },
+        { id: "dep", x: 716, y: 40, w: 172, t: "Deployment", s: "consumer pods",
+          d: "The consumers themselves. Scale floor stays above zero so there is always something draining the queue, and a PodDisruptionBudget keeps a rolling update from removing every consumer at once." },
+        { id: "drain", x: 452, y: 148, w: 222, t: "Graceful drain", s: "finish in-flight, then exit",
+          d: "On scale-down a pod stops taking new messages, finishes what it holds, then exits. Skipping this converts every scale-in event into a burst of redeliveries — which is survivable only because the consumers are idempotent." }
+      ],
+      edges: [
+        ["q", "ad", "lag"], ["ad", "hpa"], ["hpa", "dep", "desired replicas"],
+        ["dep", "drain", "scale in", "ev"],
+        ["dep", "q", "consume", "under", 212]
+      ]
+    }
+  };
+
+  function esc(s) { return String(s).replace(/[<>&"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+
+  Object.keys(DIAGRAMS).forEach(function (key) {
+    var host = document.getElementById(key + "-scroll");
+    if (!host) return;
+    var g = DIAGRAMS[key], H = 46, byId = {}, parts = [];
+    g.nodes.forEach(function (n) { byId[n.id] = n; });
+
+    /* Explicit routes beat a router that guesses: "h"/"v" are straight runs
+       between facing edges, "eh"/"ev" are single elbows, "under" ducks below
+       the whole diagram and comes back up. Guessing put a wire through the
+       middle of two boxes. */
+    g.edges.forEach(function (e) {
+      var a = byId[e[0]], b = byId[e[1]], lab = e[2], route = e[3] || "h";
+      var am = a.y + H / 2, bm = b.y + H / 2, ac = a.x + a.w / 2, bc = b.x + b.w / 2;
+      var pts, lx, ly;
+      if (route === "h") {
+        var ax = a.x < b.x ? a.x + a.w : a.x, bx = a.x < b.x ? b.x : b.x + b.w;
+        pts = [[ax, am], [bx, bm]];
+        lx = (ax + bx) / 2; ly = am - 7;
+      } else if (route === "v") {
+        var ay = a.y < b.y ? a.y + H : a.y, by = a.y < b.y ? b.y : b.y + H;
+        pts = [[ac, ay], [bc, by]];
+        lx = ac + 6; ly = (ay + by) / 2; 
+      } else if (route === "eh") {
+        var ax2 = a.x < b.x ? a.x + a.w : a.x, bx2 = a.x < b.x ? b.x : b.x + b.w;
+        var mx = (ax2 + bx2) / 2;
+        pts = [[ax2, am], [mx, am], [mx, bm], [bx2, bm]];
+        lx = mx; ly = Math.min(am, bm) - 7;
+      } else if (route === "ev") {
+        var ay2 = a.y < b.y ? a.y + H : a.y, bx3 = a.x < b.x ? b.x : b.x + b.w;
+        pts = [[ac, ay2], [ac, bm], [bx3, bm]];
+        lx = ac + 6; ly = (ay2 + bm) / 2;
+      } else {                                   // "under"
+        var lane = e[4];
+        pts = [[ac, a.y + H], [ac, lane], [bc, lane], [bc, b.y + H]];
+        lx = (ac + bc) / 2; ly = lane - 6;
+      }
+      parts.push('<path class="wire" d="M' + pts.map(function (p) { return p[0] + " " + p[1]; }).join(" L") +
+        '" marker-end="url(#' + key + '-arrow)"/>');
+      if (lab) parts.push('<text class="lbl dim wirelbl" x="' + lx + '" y="' + ly +
+        '" text-anchor="middle">' + esc(lab) + '</text>');
+    });
+
+    g.nodes.forEach(function (n) {
+      parts.push('<g tabindex="0" data-n="' + n.id + '" class="box" role="img" aria-label="' +
+        esc(n.t + ": " + n.s + ". " + n.d) + '">' +
+        '<rect x="' + n.x + '" y="' + n.y + '" width="' + n.w + '" height="' + H + '" rx="2"/>' +
+        '<text class="lbl bt" x="' + (n.x + 11) + '" y="' + (n.y + 19) + '">' + esc(n.t) + '</text>' +
+        '<text class="lbl dim" x="' + (n.x + 11) + '" y="' + (n.y + 34) + '">' + esc(n.s) + '</text></g>');
+    });
+
+    host.innerHTML = '<svg viewBox="0 0 ' + g.w + ' ' + g.h + '" width="' + g.w + '" height="' + g.h +
+      '" style="width:100%;min-width:700px;height:auto" role="group" aria-label="' + esc(g.label) + '">' +
+      '<defs><marker id="' + key + '-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">' +
+      '<path d="M0 0 L8 4 L0 8 z" class="head"/></marker></defs>' + parts.join("") + '</svg>';
+
+    var out = document.getElementById(key + "-readout");
+    var idle = '<span class="hint">Hover or tab a box.</span>';
+    ["mouseover", "focusin"].forEach(function (ev) {
+      host.addEventListener(ev, function (e) {
+        var el = e.target.closest("[data-n]");
+        if (!el) return;
+        var n = byId[el.getAttribute("data-n")];
+        out.innerHTML = '<b>' + esc(n.t) + '</b> &#183; ' + esc(n.s) + '<br>' + esc(n.d);
+      });
+    });
+    ["mouseleave", "focusout"].forEach(function (ev) {
+      host.addEventListener(ev, function () { out.innerHTML = idle; });
+    });
+  });
 })();
 </script>
 
