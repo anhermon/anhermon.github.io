@@ -495,6 +495,86 @@
   .panel svg .dnode { fill: var(--bg); stroke: var(--text-dim); stroke-width: 1.2; }
   .panel svg .dnode:hover { stroke: var(--text); }
 
+
+  /* eval panel */
+  .matrix {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-bottom: 1px solid var(--border);
+  }
+  .matrix .cell {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border-right: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--text-dim);
+  }
+  .matrix .cell:nth-child(2n) { border-right: 0; }
+  .matrix .cell:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+  .matrix .v { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+  .matrix .v.ok { color: var(--accent); }
+  .matrix .v.err { color: var(--err); }
+  .matrix .cell.bad { background: color-mix(in srgb, var(--err) 9%, transparent); }
+
+  ul.runs { list-style: none; margin: 0; padding: 0; }
+  ul.runs li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    flex-wrap: wrap;
+  }
+  ul.runs li:last-child { border-bottom: 0; }
+  ul.runs li:hover, ul.runs li:focus-visible { background: var(--surface); }
+  ul.runs .rid { color: var(--text); font-weight: 600; min-width: 2.2em; }
+  ul.runs .task, ul.runs .dimtxt { color: var(--text-dim); }
+  ul.runs .grow { flex: 1 1 auto; }
+  .chip { padding: 2px 8px; border: 1px solid var(--border-strong); color: var(--text-dim); }
+  .chip.ok { color: var(--accent); border-color: currentColor; }
+  .chip.err { color: var(--err); border-color: currentColor; font-weight: 700; }
+
+  .capline {
+    margin: 0;
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+  .capline.legend { border-bottom: 0; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .capline .sw { display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: -1px; }
+
+  ul.cells .cellname { flex: 0 0 15em; color: var(--text); overflow: hidden; text-overflow: ellipsis; }
+  ul.cells .bar { display: flex; height: 11px; background: var(--border); min-width: 90px; }
+  ul.cells .seg { display: block; }
+  .seg.st-done { background: var(--accent); }
+  .seg.st-degraded { background: var(--text-dim); }
+  .seg.st-failed, .seg.st-aborted { background: var(--err); }
+  .seg.st-running, .seg.st-blocked, .seg.st-pending { background: var(--border-strong); }
+  @media (max-width: 560px) {
+    .capline {
+    margin: 0;
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+  .capline.legend { border-bottom: 0; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .capline .sw { display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: -1px; }
+
+  ul.cells .cellname { flex: 1 0 100%; }
+    .matrix { grid-template-columns: 1fr; }
+    .matrix .cell { border-right: 0; border-bottom: 1px solid var(--border); }
+  }
+
   .visually-hidden {
     position: absolute;
     width: 1px; height: 1px;
@@ -606,6 +686,45 @@
         <summary>Text equivalent &mdash; all 57 agents as a table</summary>
         <div class="wrapper"><table id="dag-table"><caption class="visually-hidden">Every agent in the recorded session</caption></table></div>
       </details>
+    </div>
+  </section>
+
+  <section id="evals" aria-labelledby="evals-heading">
+    <div class="wrap">
+      <div class="panel-head">
+        <h2 id="evals-heading" class="section-title">Evals &mdash; when the exit code lies</h2>
+        <span class="badge rec">RECORDED</span>
+      </div>
+      <p class="provenance">
+        <b>Gate:</b> 9 runs of a local agent harness on 2026-07-30, one bug-fix task,
+        `gemma4` over Ollama. Fresh <code>$HOME</code> per run, memory database asserted
+        absent before each. Success was <em>not</em> judged by the harness: a held-out
+        test file was copied in only after the run had finished, and
+        <code>cargo test</code> decided. Numbers read from that harness's own log files.<br>
+        <b>Arena:</b> 120 recorded runs of a harness-comparison tool I wrote, 25&ndash;26
+        July 2026. Two runs stored no cell data and are excluded from every figure here,
+        leaving 118. <b>Status is completion, not quality</b> &mdash; only 21 cells were
+        ever graded by a human, so this panel ranks whether a cell finished and how long
+        it took, and claims nothing about whether the output was good.
+      </p>
+
+      <div class="panel">
+        <div class="controls" role="tablist" aria-label="Eval view">
+          <button type="button" role="tab" id="tab-gate" aria-controls="view-gate" aria-selected="true">verification gate</button>
+          <button type="button" role="tab" id="tab-arena" aria-controls="view-arena" aria-selected="false">harness arena</button>
+        </div>
+        <div id="view-gate" role="tabpanel" aria-labelledby="tab-gate" tabindex="0"></div>
+        <div id="view-arena" role="tabpanel" aria-labelledby="tab-arena" tabindex="0" hidden></div>
+        <p class="readout" id="ev-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a row for its detail.</span></p>
+      </div>
+
+      <p class="provenance" style="margin-top:22px">
+        <b>The finding:</b> the harness exited 0 and reported <code>outcome=done</code> on
+        every one of the 8 runs of the harder task. The held-out test disagreed twice.
+        A cron loop built on that exit code would have recorded 8 successes and shipped 2
+        broken repos. The fix is not a better model &mdash; it is moving the pass/fail
+        decision outside the thing being graded.
+      </p>
     </div>
   </section>
 
@@ -838,6 +957,109 @@
   document.getElementById("dag-table").innerHTML =
     "<thead><tr><th>agent</th><th>turn</th><th>task class</th><th>model</th><th>status</th><th>elapsed</th><th>out tok</th></tr></thead><tbody>" +
     rows + "</tbody>";
+})();
+</script>
+
+<script>
+/* Panel 2 — evals. Two recorded datasets, one tablist. */
+(function () {
+  "use strict";
+  var gv = document.getElementById("view-gate");
+  if (!gv) return;
+  var D = JSON.parse(document.getElementById("replay-data").textContent);
+  var out = document.getElementById("ev-readout");
+  var idle = '<span class="hint">Hover or tab a row for its detail.</span>';
+  function esc(s) { return String(s).replace(/[<>&"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+
+  // ── verification gate ──────────────────────────────────────────────────
+  var B = D.gate.filter(function (r) { return r.task === "B"; });
+  var bad = B.filter(function (r) { return r.verify_rc !== 0; }).length;
+
+  gv.innerHTML =
+    '<p class="capline">Task B only, n=' + B.length + ' &#183; rows below include the single task-A run</p>' +
+    '<div class="matrix">' +
+      '<div class="cell"><span class="k">exit 0, held-out test passed</span><span class="v ok">' + (B.length - bad) + '</span></div>' +
+      '<div class="cell bad"><span class="k">exit 0, held-out test failed</span><span class="v err">' + bad + '</span></div>' +
+      '<div class="cell"><span class="k">non-zero exit, test passed</span><span class="v">0</span></div>' +
+      '<div class="cell"><span class="k">non-zero exit, test failed</span><span class="v">0</span></div>' +
+    '</div>' +
+    '<ul class="runs" aria-label="Individual gate runs">' +
+    D.gate.map(function (r) {
+      var ok = r.verify_rc === 0;
+      return '<li tabindex="0" data-g="' + r.run + '">' +
+        '<span class="rid">' + r.run + '</span>' +
+        '<span class="task">task ' + r.task + '</span>' +
+        '<span class="chip ok">exit ' + r.rc + '</span>' +
+        '<span class="chip ok">' + r.outcome + '</span>' +
+        '<span class="chip ' + (ok ? "ok" : "err") + '">held-out ' + (ok ? "pass" : "FAIL") + '</span>' +
+        '<span class="grow"></span>' +
+        '<span class="dimtxt">' + r.s + 's &#183; ' + r.turns + ' turns</span>' +
+      '</li>';
+    }).join("") + '</ul>';
+
+  // ── harness arena ──────────────────────────────────────────────────────
+  var av = document.getElementById("view-arena");
+  var A = D.arena;
+  var maxN = Math.max.apply(null, A.cells.map(function (c) { return c.n; }));
+  var ORDER = ["done", "degraded", "blocked", "pending", "running", "aborted", "failed"];
+
+  av.innerHTML = '<ul class="runs cells" aria-label="Harness and model cells">' +
+    A.cells.map(function (c, i) {
+      var segs = ORDER.filter(function (s) { return c.st[s]; }).map(function (s) {
+        return '<span class="seg st-' + s + '" style="flex:' + c.st[s] + '"></span>';
+      }).join("");
+      return '<li tabindex="0" data-c="' + i + '">' +
+        '<span class="cellname">' + esc(c.harness + " / " + c.model) + '</span>' +
+        '<span class="bar" style="flex:0 0 ' + Math.round(18 + 52 * c.n / maxN) + '%">' + segs + '</span>' +
+        '<span class="dimtxt">n=' + c.n + (c.medS ? ' &#183; med ' + c.medS + 's' : '') + '</span>' +
+      '</li>';
+    }).join("") +
+    '</ul><p class="capline legend">' +
+    ORDER.map(function (s) { return '<span class="sw st-' + s + '"></span>' + s; }).join("") +
+    '</p>';
+
+  // ── readout + tabs ─────────────────────────────────────────────────────
+  function show(el) {
+    var g = el.getAttribute("data-g");
+    if (g) {
+      var r = D.gate.filter(function (x) { return x.run === g; })[0];
+      out.innerHTML = '<b>run ' + esc(r.run) + '</b> &#183; task ' + r.task + ' &#183; ' + r.s +
+        's &#183; ' + r.turns + ' turns<br>harness said <b>exit ' + r.rc + ' / ' + esc(r.outcome) +
+        '</b> &#183; held-out <code>cargo test</code> returned <b>' + r.verify_rc + '</b> &rarr; ' +
+        (r.verify_rc === 0 ? 'goal met' : '<b>goal NOT met, reported as success</b>') + '<br>' +
+        'in-file test block after the run: <b>' + (r.tests_edited ? "changed" : "byte-identical") +
+        '</b> <span class="hint">(it was told not to touch the tests)</span>';
+    } else {
+      var c = A.cells[+el.getAttribute("data-c")];
+      out.innerHTML = '<b>' + esc(c.harness + " / " + c.model) + '</b> &#183; ' + c.n + ' cells' +
+        (c.medS ? ' &#183; median wall clock of a finished cell <b>' + c.medS + 's</b>' : '') + '<br>' +
+        ORDER.filter(function (s) { return c.st[s]; }).map(function (s) { return s + " " + c.st[s]; }).join(" &#183; ") +
+        '<br><span class="hint">completion only &mdash; these cells were not graded for quality</span>';
+    }
+  }
+  [gv, av].forEach(function (v) {
+    ["mouseover", "focusin"].forEach(function (ev) {
+      v.addEventListener(ev, function (e) {
+        var el = e.target.closest("[data-g],[data-c]");
+        if (el) show(el);
+      });
+    });
+    ["mouseleave", "focusout"].forEach(function (ev) {
+      v.addEventListener(ev, function () { out.innerHTML = idle; });
+    });
+  });
+
+  var tabs = { "tab-gate": gv, "tab-arena": av };
+  document.getElementById("tab-gate").parentNode.addEventListener("click", function (e) {
+    var b = e.target.closest("button[role=tab]");
+    if (!b) return;
+    Object.keys(tabs).forEach(function (id) {
+      var on = id === b.id;
+      document.getElementById(id).setAttribute("aria-selected", String(on));
+      tabs[id].hidden = !on;
+    });
+    out.innerHTML = idle;
+  });
 })();
 </script>
 
