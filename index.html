@@ -377,9 +377,9 @@
   }
 
   /* ── panels ────────────────────────────────────────────────────────────
-     Every panel carries a provenance badge. RECORDED = real data from a real
-     run, replayed client-side. SCHEMATIC = an architecture drawing, making no
-     claim to be measurement. Nothing on this page is in between. */
+     Every panel carries a provenance badge: RECORDED, real data from a real
+     run, replayed client-side. Nothing on this page is a mockup or a diagram
+     of something that doesn't run yet. */
   .panel-head {
     display: flex;
     flex-wrap: wrap;
@@ -398,7 +398,6 @@
     align-self: center;
   }
   .badge.rec { color: var(--accent); }
-  .badge.schem { color: var(--text-dim); border-style: dashed; }
   .provenance {
     font-family: var(--font-mono);
     font-size: 0.74rem;
@@ -499,14 +498,16 @@
   .panel svg .span.err { fill: var(--err); }
   .panel svg .span.open { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 3 2; }
   .panel svg .span:hover { stroke: var(--text); stroke-width: 1.5; }
-  /* schematics: dashed outlines, so a box never reads as a filled data mark */
-  .panel svg .box rect { fill: var(--bg); stroke: var(--border-strong); stroke-width: 1; stroke-dasharray: 4 3; }
-  .panel svg .box:hover rect, .panel svg .box:focus rect { stroke: var(--accent); stroke-dasharray: none; }
-  .panel svg .bt { fill: var(--text); font-weight: 600; }
-  .panel svg .box .lbl { font-size: 9px; }
-  .panel svg .wire { fill: none; stroke: var(--border-strong); stroke-width: 1; }
-  .panel svg .head { fill: var(--border-strong); }
-  .panel svg .wirelbl { font-size: 9px; }
+  /* telemetry-pipeline panel: rate lines, a lag band, load bars */
+  .panel svg .tl-line { fill: none; stroke: var(--accent); stroke-width: 2; }
+  .panel svg .tl-line.ref { stroke: var(--text-dim); stroke-width: 1.4; stroke-dasharray: 4 3; }
+  .panel svg .tl-band { fill: var(--surface); stroke: var(--border-strong); stroke-width: 1; stroke-dasharray: 3 2; }
+  .panel svg .tl-bar { fill: var(--accent); }
+  .panel svg .tl-bar.err { fill: var(--err); }
+  .panel svg .tl-hit { fill: transparent; cursor: pointer; }
+  .panel svg .tl-g:hover .tl-line, .panel svg .tl-g:focus .tl-line { stroke-width: 3; }
+  .panel svg .tl-g:hover .tl-band, .panel svg .tl-g:focus .tl-band { stroke: var(--accent); }
+  .panel svg .tl-g:hover .tl-bar, .panel svg .tl-g:focus .tl-bar { opacity: 0.8; }
   .controls .note.badge { align-self: center; }
 
 
@@ -653,9 +654,10 @@
         <div class="hero-lines">
           <p><strong>I build systems and the tools around them.</strong></p>
           <p>Right now that's agentic engineering: harnesses, MCP tracing, and observability for agent runs.</p>
-          <p>Below are five panels. Three replay data from runs that actually
-            happened. Two are architecture drawings of systems still being
-            built, and say so. Nothing here is a mockup.</p>
+          <p>Below are four panels. All four replay data from systems that
+            actually ran &mdash; agent sessions, eval harnesses, an MCP proxy,
+            a load-tested pipeline. Nothing here is a mockup or a diagram of
+            something that doesn't exist yet.</p>
         </div>
         <a class="btn" href="#dag">See a real run</a>
       </div>
@@ -780,57 +782,54 @@
     </div>
   </section>
 
-  <section id="ingest" aria-labelledby="ingest-heading">
+  <section id="pipeline" aria-labelledby="pipeline-heading">
     <div class="wrap">
       <div class="panel-head">
-        <h2 id="ingest-heading" class="section-title">Event ingestion &mdash; architecture</h2>
-        <span class="badge schem">SCHEMATIC</span>
+        <h2 id="pipeline-heading" class="section-title">Telemetry pipeline &mdash; load test</h2>
+        <span class="badge rec">RECORDED</span>
       </div>
       <p class="provenance">
-        <b>This is a drawing, not a measurement.</b> I am building this system now and it
-        has produced no data worth showing, so there are no numbers anywhere on it &mdash;
-        no throughput, no latency, no queue depth. Inventing them would make it a nicer
-        picture and a worse portfolio. It becomes a RECORDED panel when it has run
-        long enough to have a real week to replay.<br>
-        What it does show is the shape I actually build to, and where each failure mode is
-        absorbed. Hover or tab a box for what it is for.
+        <b>Source:</b> <a href="https://github.com/anhermon/agent-telemetry-pipeline">anhermon/agent-telemetry-pipeline</a>,
+        built and load-tested 2026-07-31. Java 21 / Spring Boot ingest &rarr; Kafka &rarr; aggregator &rarr; Postgres +
+        Redis, running under its own <code>docker compose</code> stack &mdash; a laptop's Docker VM, 10 CPUs shared with
+        other containers, not dedicated hardware. Every number below is printed next to the command that produced it
+        in that repo's README; nothing here is extrapolated, rounded or invented.<br>
+        <b>Read it as:</b> the shape matters, not the absolute rate &mdash; the aggregator drains faster than events
+        arrive, consumer lag stays bounded and returns to zero, and the dedup ledger rejects almost exactly the
+        duplicate rate the load generator was configured to produce.
       </p>
+
       <div class="panel">
-        <div class="controls"><span class="note badge schem">SCHEMATIC &mdash; no live data</span></div>
-        <div class="panel-scroll" id="ingest-scroll"></div>
-        <p class="readout" id="ingest-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a box.</span></p>
+        <div class="controls" role="tablist" aria-label="Load-test view">
+          <button type="button" role="tab" id="tab-sustained" aria-controls="view-sustained" aria-selected="true">sustained &mdash; 12k/s, 180s</button>
+          <button type="button" role="tab" id="tab-overload" aria-controls="view-overload" aria-selected="false">overload &mdash; 18k/s offered</button>
+        </div>
+        <div id="view-sustained" class="panel-scroll" role="tabpanel" aria-labelledby="tab-sustained" tabindex="0"></div>
+        <div id="view-overload" class="panel-scroll" role="tabpanel" aria-labelledby="tab-overload" tabindex="0" hidden></div>
+        <p class="readout" id="tl-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a line or bar for the exact figures.</span></p>
       </div>
 
       <details class="fallback">
-        <summary>Text equivalent &mdash; the components as a table</summary>
-        <div class="wrapper"><table id="ingest-table"><caption class="visually-hidden">Event ingestion components, in flow order</caption></table></div>
+        <summary>Text equivalent &mdash; the measured figures as a table</summary>
+        <div class="wrapper"><table id="tl-table"></table></div>
       </details>
-    </div>
-  </section>
 
-  <section id="k8s" aria-labelledby="k8s-heading">
-    <div class="wrap">
-      <div class="panel-head">
-        <h2 id="k8s-heading" class="section-title">Scaling the consumers on Kubernetes &mdash; architecture</h2>
-        <span class="badge schem">SCHEMATIC</span>
-      </div>
-      <p class="provenance">
-        <b>Also a drawing.</b> Same rule: this control loop is not yet running under real
-        load, so there are no replica counts, no lag values and no scaling events plotted
-        here. The interesting part is not the numbers anyway &mdash; it is that the signal
-        driving the autoscaler is consumer lag, not CPU. CPU tells you a pod is busy. Lag
-        tells you the system is behind, which is the thing anyone actually cares about.
+      <p class="provenance" style="margin-top:22px">
+        <b>Correctness at volume:</b> a longer unattended run pushed 3,586,900 events through &mdash; 3,527,091
+        counted, 59,809 rejected as duplicates &mdash; and <code>select count(*) from processed_event</code> equalled
+        <code>select sum(events) from cost_rollup</code> exactly. That run's wall-clock rate is not quoted in the
+        source repo, because the host was contended and the generator's pacing slipped; the invariant is what it
+        demonstrates, not the throughput.
       </p>
-      <div class="panel">
-        <div class="controls"><span class="note badge schem">SCHEMATIC &mdash; no live data</span></div>
-        <div class="panel-scroll" id="k8s-scroll"></div>
-        <p class="readout" id="k8s-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a box.</span></p>
-      </div>
 
-      <details class="fallback">
-        <summary>Text equivalent &mdash; the components as a table</summary>
-        <div class="wrapper"><table id="k8s-table"><caption class="visually-hidden">Kubernetes lag-based autoscaling components, in loop order</caption></table></div>
-      </details>
+      <figure class="fallback" style="margin-top:22px">
+        <img src="telemetry-grafana.jpg" width="2091" height="1031" loading="lazy"
+          style="width:100%;height:auto;display:block;border:1px solid var(--border)"
+          alt="Grafana dashboard from the actual load-test run: ingest accepted vs rejected, aggregator counted vs deduplicated, ingest HTTP latency, Kafka consumer lag, aggregator batch apply time, and cost rollups, all near 12,000 events/sec.">
+        <figcaption class="provenance" style="margin:8px 0 0">
+          The actual dashboard from that run &mdash; <code>docs/grafana-under-load.jpg</code> in the repo above, not a mock.
+        </figcaption>
+      </figure>
     </div>
   </section>
 
@@ -1250,145 +1249,190 @@
 </script>
 
 <script>
-/* Panels 4 and 5 — schematics. Deliberately carry no numbers: neither system
-   has run long enough to have data, and a diagram with invented metrics on it
-   is indistinguishable from a fake dashboard. One renderer, two diagrams. */
+/* Panel 4 — agent-telemetry-pipeline load test. Every figure here is copied
+   verbatim from that repo's README (measured on 2026-07-31, commands printed
+   next to each number there). Nothing is interpolated except pixel position
+   along an axis; no data point that isn't in the README is plotted. */
 (function () {
   "use strict";
 
-  var DIAGRAMS = {
-    "ingest": {
-      w: 1000, h: 250,
-      label: "Event ingestion pipeline, provider through to query API",
-      nodes: [
-        { id: "src", x: 14,  y: 44, w: 140, t: "Provider APIs", s: "rate-limited, flaky",
-          d: "Someone else's API, with someone else's rate limits and someone else's outages. Everything downstream is designed on the assumption that this is unreliable and occasionally replays old data." },
-        { id: "in",  x: 176, y: 44, w: 158, t: "Ingress", s: "webhook + poller",
-          d: "Two paths into the same queue. Webhooks are fast but lossy — providers drop them and never tell you. A scheduled poller covers the gap and is the only way to reconcile after an outage. Whatever arrives is written down before it is understood." },
-        { id: "q",   x: 356, y: 44, w: 140, t: "Durable queue", s: "at-least-once, keyed",
-          d: "The boundary between accepting an event and understanding it. At-least-once delivery, which means duplicates are normal and every consumer downstream has to be idempotent rather than merely careful." },
-        { id: "w",   x: 518, y: 44, w: 150, t: "Enrichment workers", s: "idempotent, keyed",
-          d: "Parse, validate, join against reference data, emit a typed event. Keyed by the provider's event id so a redelivery overwrites rather than duplicates. A worker that cannot be run twice safely is a bug, not a tuning problem." },
-        { id: "st",  x: 690, y: 20, w: 150, t: "Raw store", s: "immutable payloads",
-          d: "The bytes exactly as they arrived, never rewritten. When the parser turns out to be wrong — and it does — this is what lets you reprocess history instead of losing it." },
-        { id: "st2", x: 690, y: 96, w: 150, t: "Typed store", s: "queryable, rebuildable",
-          d: "Derived, and therefore disposable: it can be rebuilt from the raw store at any time. Nothing here is the only copy of anything." },
-        { id: "api", x: 862, y: 58, w: 124, t: "Query API", s: "reads typed only",
-          d: "Reads the typed store and nothing else. Consumers never touch the queue or the raw bytes, so the internals can be rebuilt without breaking anyone." },
-        { id: "dlq", x: 518, y: 164, w: 150, t: "Dead letter", s: "poison messages",
-          d: "Events that failed enrichment repeatedly. Kept rather than dropped, and replayable once the bug is fixed. A pipeline with no dead-letter path is a pipeline that loses data quietly." }
-      ],
-      edges: [
-        ["src", "in"], ["in", "q"], ["q", "w"],
-        ["w", "st", "", "eh"], ["w", "st2", "", "eh"], ["st2", "api", "", "eh"],
-        ["w", "dlq", "repeated failure", "v"],
-        ["dlq", "q", "replay once fixed", "under", 234]
+  function esc(s) { return String(s).replace(/[<>&"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+  function n(x) { return x.toLocaleString("en-US"); }
+
+  var RUNS = {
+    sustained: {
+      label: "180s sustained at 12,000 events/sec offered",
+      metrics: [
+        { k: "offered",  t: "Offered rate",        v: "12,000 events/sec", d: "java tools/loadgen.java --rps 12000 --duration 180 --batch 100 --concurrency 64, sustained for 180.01s." },
+        { k: "drained",  t: "Aggregator drain rate", v: "13,240 events/sec", d: "Measured separately from aggregator_events_counted_total over a 30s window while the same load ran. Draining faster than events arrive is the actual test of “keeping up.”" },
+        { k: "accepted", t: "Events accepted",       v: n(2160000), d: "2,160,000 in 180.01s. HTTP responses: 21,600 × 202, zero 429, zero 503 — nothing was shed." },
+        { k: "latency",  t: "Mean request latency",  v: "24.7 ms", d: "100-event batches, measured at the ingest HTTP endpoint." },
+        { k: "lag",      t: "Kafka consumer lag",    v: "6,000–9,000 records behind", d: "Bounded band while load is on; returns to zero when load stops. It does not grow, which is the point." },
+        { k: "landed",   t: "Landed in Postgres",    v: n(2116535), d: "Rows actually written to processed_event / cost_rollup for this run." },
+        { k: "dup",      t: "Rejected as duplicates", v: n(43465) + " (2.01%)", d: "Matches the load generator's configured --dup-rate 0.02 almost exactly — the dedup ledger is doing its job, not over- or under-counting." }
       ]
     },
-
-    "k8s": {
-      w: 1000, h: 230,
-      label: "Autoscaling loop driven by consumer lag rather than CPU",
-      nodes: [
-        { id: "q",   x: 18,  y: 40, w: 172, t: "Queue", s: "lag is the signal",
-          d: "Lag — how far behind the consumer group is — is the only number that describes the thing users feel. CPU can sit at 90% while the system keeps up perfectly, and at 20% while it falls hours behind." },
-        { id: "ad",  x: 232, y: 40, w: 186, t: "Metrics adapter", s: "lag → custom metric",
-          d: "Publishes lag as a Kubernetes external metric. Without this the autoscaler can only see what the kubelet sees, which is CPU and memory — neither of which knows what the workload is for." },
-        { id: "hpa", x: 460, y: 40, w: 214, t: "HorizontalPodAutoscaler", s: "target: lag per pod",
-          d: "Targets a lag-per-pod value, so replicas track backlog rather than busyness. Stabilisation windows on both directions, because a queue that empties in bursts will otherwise flap the deployment." },
-        { id: "dep", x: 716, y: 40, w: 172, t: "Deployment", s: "consumer pods",
-          d: "The consumers themselves. Scale floor stays above zero so there is always something draining the queue, and a PodDisruptionBudget keeps a rolling update from removing every consumer at once." },
-        { id: "drain", x: 452, y: 148, w: 222, t: "Graceful drain", s: "finish in-flight, then exit",
-          d: "On scale-down a pod stops taking new messages, finishes what it holds, then exits. Skipping this converts every scale-in event into a burst of redeliveries — which is survivable only because the consumers are idempotent." }
-      ],
-      edges: [
-        ["q", "ad", "lag"], ["ad", "hpa"], ["hpa", "dep", "desired replicas"],
-        ["dep", "drain", "scale in", "ev"],
-        ["dep", "q", "consume", "under", 212]
+    overload: {
+      label: "30s at 18,000 events/sec offered — past the point this host can absorb",
+      metrics: [
+        { k: "offered",  t: "Offered rate",   v: "18,000 events/sec", d: "java tools/loadgen.java --rps 18000 --duration 30 --batch 100 --concurrency 96." },
+        { k: "accepted", t: "Accepted rate",  v: "16,861 events/sec", d: "Past roughly 17k/sec on this host, the in-flight limiter starts refusing batches rather than queuing unboundedly." },
+        { k: "shed",     t: "Requests shed",  v: "333 of 5,400 (6.2%)", d: "5,067 × 202, 333 × 429 with Retry-After: 1. Shed deliberately and told to the client — not a silent drop, not a crash." },
+        { k: "latency",  t: "Mean request latency", v: "223 ms", d: "Up from 24.7ms at 12k/sec — the cost of running past the host's real ceiling." }
       ]
     }
   };
 
-  function esc(s) { return String(s).replace(/[<>&"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+  function buildSustainedSvg() {
+    var W = 980, x0 = 64, x1 = 940, yAxisMax = 16000;
+    var yTop = 22, yBase = 118;                       // rate chart
+    var yv = function (v) { return yBase - (v / yAxisMax) * (yBase - yTop); };
+    var ticks = [0, 4000, 8000, 12000, 16000];
+    var parts = [];
 
-  Object.keys(DIAGRAMS).forEach(function (key) {
-    var host = document.getElementById(key + "-scroll");
-    if (!host) return;
-    var g = DIAGRAMS[key], H = 46, byId = {}, parts = [];
-    g.nodes.forEach(function (n) { byId[n.id] = n; });
+    parts.push('<text class="lbl dim" x="' + x0 + '" y="12">events/sec, offered vs drained (180s)</text>');
+    ticks.forEach(function (v) {
+      var y = yv(v);
+      parts.push('<line class="tick" x1="' + x0 + '" y1="' + y + '" x2="' + x1 + '" y2="' + y + '"/>');
+      parts.push('<text class="lbl dim" x="' + (x0 - 8) + '" y="' + (y + 3) + '" text-anchor="end">' + (v ? v / 1000 + "k" : "0") + '</text>');
+    });
+    parts.push('<text class="lbl dim" x="' + x0 + '" y="' + (yBase + 14) + '">0s</text>');
+    parts.push('<text class="lbl dim" x="' + x1 + '" y="' + (yBase + 14) + '" text-anchor="end">180s</text>');
 
-    /* Explicit routes beat a router that guesses: "h"/"v" are straight runs
-       between facing edges, "eh"/"ev" are single elbows, "under" ducks below
-       the whole diagram and comes back up. Guessing put a wire through the
-       middle of two boxes. */
-    g.edges.forEach(function (e) {
-      var a = byId[e[0]], b = byId[e[1]], lab = e[2], route = e[3] || "h";
-      var am = a.y + H / 2, bm = b.y + H / 2, ac = a.x + a.w / 2, bc = b.x + b.w / 2;
-      var pts, lx, ly;
-      if (route === "h") {
-        var ax = a.x < b.x ? a.x + a.w : a.x, bx = a.x < b.x ? b.x : b.x + b.w;
-        pts = [[ax, am], [bx, bm]];
-        lx = (ax + bx) / 2; ly = am - 7;
-      } else if (route === "v") {
-        var ay = a.y < b.y ? a.y + H : a.y, by = a.y < b.y ? b.y : b.y + H;
-        pts = [[ac, ay], [bc, by]];
-        lx = ac + 6; ly = (ay + by) / 2; 
-      } else if (route === "eh") {
-        var ax2 = a.x < b.x ? a.x + a.w : a.x, bx2 = a.x < b.x ? b.x : b.x + b.w;
-        var mx = (ax2 + bx2) / 2;
-        pts = [[ax2, am], [mx, am], [mx, bm], [bx2, bm]];
-        lx = mx; ly = Math.min(am, bm) - 7;
-      } else if (route === "ev") {
-        var ay2 = a.y < b.y ? a.y + H : a.y, bx3 = a.x < b.x ? b.x : b.x + b.w;
-        pts = [[ac, ay2], [ac, bm], [bx3, bm]];
-        lx = ac + 6; ly = (ay2 + bm) / 2;
-      } else {                                   // "under"
-        var lane = e[4];
-        pts = [[ac, a.y + H], [ac, lane], [bc, lane], [bc, b.y + H]];
-        lx = (ac + bc) / 2; ly = lane - 6;
-      }
-      parts.push('<path class="wire" d="M' + pts.map(function (p) { return p[0] + " " + p[1]; }).join(" L") +
-        '" marker-end="url(#' + key + '-arrow)"/>');
-      if (lab) parts.push('<text class="lbl dim wirelbl" x="' + lx + '" y="' + ly +
-        '" text-anchor="middle">' + esc(lab) + '</text>');
+    var yOff = yv(12000), yDr = yv(13240);
+    parts.push('<g class="tl-g" tabindex="0" data-k="offered" role="img" aria-label="Offered: 12,000 events per second, sustained for 180 seconds">' +
+      '<rect class="tl-hit" x="' + x0 + '" y="' + (yOff - 8) + '" width="' + (x1 - x0) + '" height="16"/>' +
+      '<line class="tl-line ref" x1="' + x0 + '" y1="' + yOff + '" x2="' + x1 + '" y2="' + yOff + '"/>' +
+      '<text class="lbl dim" x="' + (x1 - 4) + '" y="' + (yOff - 6) + '" text-anchor="end">offered 12,000/s</text></g>');
+    parts.push('<g class="tl-g" tabindex="0" data-k="drained" role="img" aria-label="Drained: 13,240 events per second by the aggregator, ahead of the offered rate">' +
+      '<rect class="tl-hit" x="' + x0 + '" y="' + (yDr - 8) + '" width="' + (x1 - x0) + '" height="16"/>' +
+      '<line class="tl-line" x1="' + x0 + '" y1="' + yDr + '" x2="' + x1 + '" y2="' + yDr + '"/>' +
+      '<text class="lbl" x="' + (x1 - 4) + '" y="' + (yDr - 10) + '" text-anchor="end">drained 13,240/s</text></g>');
+
+    // lag band: 0 -> ramps into the documented 6k-9k band while load is on -> back to 0
+    var lyBase = 250, lyTop = 168, lyBand = 82;        // 82px tall band region
+    var lyHigh = 180, lyLow = 212;                     // top(9k) / bottom(6k) inside that region, fixed illustrative offsets
+    parts.push('<text class="lbl dim" x="' + x0 + '" y="' + (lyTop - 8) + '">Kafka consumer lag (records behind)</text>');
+    [["0", lyBase], ["6k", lyLow], ["9k", lyHigh]].forEach(function (t) {
+      parts.push('<text class="lbl dim" x="' + (x0 - 8) + '" y="' + (t[1] + 3) + '" text-anchor="end">' + t[0] + '</text>');
+    });
+    parts.push('<line class="tick" x1="' + x0 + '" y1="' + lyBase + '" x2="' + x1 + '" y2="' + lyBase + '"/>');
+    var r0 = x0 + 46, r1 = x0 + 96, r2 = x1 - 96, r3 = x1 - 46;
+    parts.push('<g class="tl-g" tabindex="0" data-k="lag" role="img" aria-label="Kafka consumer lag: zero before and after load, 6,000 to 9,000 records behind while the 12,000 per second load is sustained, returns to zero when load stops">' +
+      '<rect class="tl-hit" x="' + x0 + '" y="' + lyHigh + '" width="' + (x1 - x0) + '" height="' + (lyBase - lyHigh) + '"/>' +
+      '<path class="tl-band" d="M' + r0 + ',' + lyBase + ' L' + r1 + ',' + lyHigh + ' L' + r2 + ',' + lyHigh + ' L' + r3 + ',' + lyBase +
+        ' L' + r2 + ',' + lyLow + ' L' + r1 + ',' + lyLow + ' Z"/>' +
+      '<text class="lbl dim" x="' + ((r1 + r2) / 2) + '" y="' + (lyHigh - 6) + '" text-anchor="middle">bounded 6,000&#8211;9,000, returns to 0</text></g>');
+
+    // dedup bar
+    var byBase = 300, byH = 20, total = 2160000, dup = 43465, landed = total - dup;
+    var landedW = (landed / total) * (x1 - x0), dupW = (x1 - x0) - landedW;
+    parts.push('<text class="lbl dim" x="' + x0 + '" y="' + (byBase - 8) + '">2,160,000 accepted, split by outcome</text>');
+    parts.push('<g class="tl-g" tabindex="0" data-k="landed" role="img" aria-label="2,116,535 events landed in Postgres">' +
+      '<rect class="tl-bar" x="' + x0 + '" y="' + byBase + '" width="' + landedW + '" height="' + byH + '"/></g>');
+    parts.push('<g class="tl-g" tabindex="0" data-k="dup" role="img" aria-label="43,465 events rejected as duplicates by the dedup ledger, 2.01 percent, matching the configured 2 percent duplicate rate">' +
+      '<rect class="tl-bar err" x="' + (x0 + landedW) + '" y="' + byBase + '" width="' + dupW + '" height="' + byH + '"/></g>');
+    parts.push('<text class="lbl dim" x="' + x0 + '" y="' + (byBase + byH + 14) + '">landed 2,116,535</text>');
+    parts.push('<text class="lbl dim" x="' + x1 + '" y="' + (byBase + byH + 14) + '" text-anchor="end">duplicates 43,465 (2.01%)</text>');
+
+    return '<svg viewBox="0 0 ' + W + ' 336" style="width:100%;min-width:680px;height:auto" role="group" aria-label="Sustained load test: offered vs drained rate, Kafka consumer lag, and dedup outcome">' + parts.join("") + '</svg>';
+  }
+
+  function buildOverloadSvg() {
+    var W = 980, base = 190, top = 30, x0 = 64;
+    var maxRate = 18000;
+    var bh = function (v) { return (v / maxRate) * (base - top); };
+    var parts = [];
+
+    parts.push('<text class="lbl dim" x="' + x0 + '" y="16">events/sec, offered vs accepted (30s)</text>');
+    parts.push('<line class="tick" x1="' + x0 + '" y1="' + base + '" x2="' + (x0 + 340) + '" y2="' + base + '"/>');
+    var bars = [
+      { k: "offered", x: x0 + 40, v: 18000 },
+      { k: "accepted", x: x0 + 200, v: 16861 }
+    ];
+    bars.forEach(function (b) {
+      var h = bh(b.v), y = base - h;
+      parts.push('<g class="tl-g" tabindex="0" data-k="' + b.k + '" role="img" aria-label="' + esc(b.k) + ': ' + n(b.v) + ' events per second">' +
+        '<rect class="' + (b.k === "offered" ? "tl-band" : "tl-bar") + '" x="' + b.x + '" y="' + y + '" width="90" height="' + h + '"/>' +
+        '<text class="lbl" x="' + (b.x + 45) + '" y="' + (y - 8) + '" text-anchor="middle">' + n(b.v) + '/s</text>' +
+        '<text class="lbl dim" x="' + (b.x + 45) + '" y="' + (base + 16) + '" text-anchor="middle">' + b.k + '</text></g>');
     });
 
-    g.nodes.forEach(function (n) {
-      parts.push('<g tabindex="0" data-n="' + n.id + '" class="box" role="img" aria-label="' +
-        esc(n.t + ": " + n.s + ". " + n.d) + '">' +
-        '<rect x="' + n.x + '" y="' + n.y + '" width="' + n.w + '" height="' + H + '" rx="2"/>' +
-        '<text class="lbl bt" x="' + (n.x + 11) + '" y="' + (n.y + 19) + '">' + esc(n.t) + '</text>' +
-        '<text class="lbl dim" x="' + (n.x + 11) + '" y="' + (n.y + 34) + '">' + esc(n.s) + '</text></g>');
+    // HTTP outcome bar
+    var hx0 = 470, hx1 = 900, hy = 60, total = 5400, ok = 5067, shed = 333;
+    var okW = (ok / total) * (hx1 - hx0), shedW = (hx1 - hx0) - okW;
+    parts.push('<text class="lbl dim" x="' + hx0 + '" y="' + (hy - 10) + '">5,400 requests, by response</text>');
+    parts.push('<g class="tl-g" tabindex="0" data-k="ok" role="img" aria-label="5,067 requests returned 202 Accepted">' +
+      '<rect class="tl-bar" x="' + hx0 + '" y="' + hy + '" width="' + okW + '" height="22"/></g>');
+    parts.push('<g class="tl-g" tabindex="0" data-k="shed" role="img" aria-label="333 requests returned 429 with Retry-After: 1, 6.2 percent of the total, shed deliberately rather than dropped silently">' +
+      '<rect class="tl-bar err" x="' + (hx0 + okW) + '" y="' + hy + '" width="' + shedW + '" height="22"/></g>');
+    parts.push('<text class="lbl dim" x="' + hx0 + '" y="' + (hy + 38) + '">202: 5,067</text>');
+    parts.push('<text class="lbl dim" x="' + hx1 + '" y="' + (hy + 38) + '" text-anchor="end">429 + Retry-After: 333 (6.2%)</text>');
+
+    // latency comparison
+    var ly0 = 150, lbase = 220, lmax = 223;
+    var lh = function (v) { return (v / lmax) * (lbase - ly0); };
+    parts.push('<text class="lbl dim" x="' + hx0 + '" y="' + (ly0 - 6) + '">mean request latency</text>');
+    parts.push('<line class="tick" x1="' + hx0 + '" y1="' + lbase + '" x2="' + hx1 + '" y2="' + lbase + '"/>');
+    var lb = [
+      { k: "lat-sustained", x: hx0 + 30, v: 24.7, label: "24.7ms @ 12k/s" },
+      { k: "lat-overload", x: hx0 + 200, v: 223, label: "223ms @ 18k/s" }
+    ];
+    lb.forEach(function (b) {
+      var h = lh(b.v), y = lbase - h;
+      parts.push('<g class="tl-g" tabindex="0" data-k="' + b.k + '" role="img" aria-label="Mean latency ' + b.v + ' milliseconds">' +
+        '<rect class="' + (b.k === "lat-sustained" ? "tl-bar" : "tl-bar err") + '" x="' + b.x + '" y="' + y + '" width="60" height="' + h + '"/>' +
+        '<text class="lbl dim" x="' + (b.x + 30) + '" y="' + (lbase + 16) + '" text-anchor="middle">' + b.label + '</text></g>');
     });
 
-    host.innerHTML = '<svg viewBox="0 0 ' + g.w + ' ' + g.h + '" width="' + g.w + '" height="' + g.h +
-      '" style="width:100%;min-width:700px;height:auto" role="group" aria-label="' + esc(g.label) + '">' +
-      '<defs><marker id="' + key + '-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">' +
-      '<path d="M0 0 L8 4 L0 8 z" class="head"/></marker></defs>' + parts.join("") + '</svg>';
+    return '<svg viewBox="0 0 ' + W + ' 250" style="width:100%;min-width:680px;height:auto" role="group" aria-label="Overload test: offered vs accepted rate, HTTP outcomes, latency vs the sustained run">' + parts.join("") + '</svg>';
+  }
 
-    var out = document.getElementById(key + "-readout");
-    var idle = '<span class="hint">Hover or tab a box.</span>';
+  var byKey = {};
+  Object.keys(RUNS).forEach(function (rk) {
+    RUNS[rk].metrics.forEach(function (m) { byKey[rk + ":" + m.k] = m; });
+  });
+
+  document.getElementById("view-sustained").innerHTML = buildSustainedSvg();
+  document.getElementById("view-overload").innerHTML = buildOverloadSvg();
+
+  var out = document.getElementById("tl-readout");
+  var idle = '<span class="hint">Hover or tab a line or bar for the exact figures.</span>';
+  ["sustained", "overload"].forEach(function (rk) {
+    var host = document.getElementById("view-" + rk);
     ["mouseover", "focusin"].forEach(function (ev) {
       host.addEventListener(ev, function (e) {
-        var el = e.target.closest("[data-n]");
+        var el = e.target.closest("[data-k]");
         if (!el) return;
-        var n = byId[el.getAttribute("data-n")];
-        out.innerHTML = '<b>' + esc(n.t) + '</b> &#183; ' + esc(n.s) + '<br>' + esc(n.d);
+        var m = byKey[rk + ":" + el.getAttribute("data-k")];
+        if (!m) return;
+        out.innerHTML = '<b>' + esc(m.t) + '</b> &#183; ' + esc(m.v) + '<br>' + esc(m.d);
       });
     });
     ["mouseleave", "focusout"].forEach(function (ev) {
       host.addEventListener(ev, function () { out.innerHTML = idle; });
     });
-
-    var table = document.getElementById(key + "-table");
-    if (table) {
-      table.innerHTML =
-        "<thead><tr><th>component</th><th>role</th><th>notes</th></tr></thead><tbody>" +
-        g.nodes.map(function (n) {
-          return "<tr><td>" + esc(n.t) + "</td><td>" + esc(n.s) + "</td><td>" + esc(n.d) + "</td></tr>";
-        }).join("") + "</tbody>";
-    }
   });
+
+  var tabs = { "tab-sustained": document.getElementById("view-sustained"), "tab-overload": document.getElementById("view-overload") };
+  document.getElementById("tab-sustained").parentNode.addEventListener("click", function (e) {
+    var b = e.target.closest("button[role=tab]");
+    if (!b) return;
+    Object.keys(tabs).forEach(function (id) {
+      var on = id === b.id;
+      document.getElementById(id).setAttribute("aria-selected", String(on));
+      tabs[id].hidden = !on;
+    });
+    out.innerHTML = idle;
+  });
+
+  document.getElementById("tl-table").innerHTML =
+    "<thead><tr><th>run</th><th>metric</th><th>value</th><th>detail</th></tr></thead><tbody>" +
+    Object.keys(RUNS).map(function (rk) {
+      return RUNS[rk].metrics.map(function (m) {
+        return "<tr><td>" + esc(rk) + "</td><td>" + esc(m.t) + "</td><td>" + esc(m.v) + "</td><td>" + esc(m.d) + "</td></tr>";
+      }).join("");
+    }).join("") + "</tbody>";
 })();
 </script>
 
