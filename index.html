@@ -643,6 +643,9 @@
         <div class="hero-lines">
           <p><strong>I build systems and the tools around them.</strong></p>
           <p>Right now that's agentic engineering: harnesses, MCP tracing, and observability for agent runs.</p>
+          <p>Available for freelance and contract work. If your agent pipeline works
+            in a demo and not in production, or has failures you can't see, that's
+            the problem I solve.</p>
           <p>Below are six panels. All six replay data from systems that
             actually ran &mdash; agent sessions, eval harnesses, an MCP proxy,
             a load-tested pipeline, a Kubernetes autoscaler reacting to Kafka
@@ -1043,7 +1046,7 @@
       <article class="work-row">
         <span class="work-index">01</span>
         <div class="work-body">
-          <h3><a href="https://github.com/anhermon/anvil">anvil</a></h3>
+          <h3><a href="https://github.com/anhermon/anvil" aria-label="anvil — agent harness">anvil</a></h3>
           <span class="work-repo">github.com/anhermon/anvil</span>
           <p>A single-binary agent harness in Rust: pluggable LLM providers, sub-agents, a skill library, and persistent episodic memory in SQLite.</p>
           <div class="work-meta">
@@ -1056,7 +1059,7 @@
       <article class="work-row">
         <span class="work-index">02</span>
         <div class="work-body">
-          <h3><a href="https://github.com/anhermon/mcp-trace">mcp-trace</a></h3>
+          <h3><a href="https://github.com/anhermon/mcp-trace" aria-label="mcp-trace — MCP tracing proxy">mcp-trace</a></h3>
           <span class="work-repo">github.com/anhermon/mcp-trace</span>
           <p>A transparent Go proxy for MCP servers. Emits an OpenTelemetry span per JSON-RPC tool call. No code changes on either side — the client just points at the proxy's port instead of the server's.</p>
           <div class="work-meta">
@@ -1069,7 +1072,7 @@
       <article class="work-row">
         <span class="work-index">03</span>
         <div class="work-body">
-          <h3><a href="https://github.com/anhermon/spark-ordernet-mcp">spark-ordernet-mcp</a></h3>
+          <h3><a href="https://github.com/anhermon/spark-ordernet-mcp" aria-label="spark-ordernet-mcp — brokerage MCP server">spark-ordernet-mcp</a></h3>
           <span class="work-repo">github.com/anhermon/spark-ordernet-mcp</span>
           <p>A read-only MCP server over a brokerage API. The read-only guarantee is enforced at the session layer by an exact-GET allowlist rather than by convention, and unavailable FX rates surface as an explicit missing state instead of a guessed conversion.</p>
           <div class="work-meta">
