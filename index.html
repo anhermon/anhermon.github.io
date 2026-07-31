@@ -574,18 +574,7 @@
   .seg.st-failed, .seg.st-aborted { background: var(--err); }
   .seg.st-running, .seg.st-blocked, .seg.st-pending { background: var(--border-strong); }
   @media (max-width: 560px) {
-    .capline {
-    margin: 0;
-    padding: 9px 16px;
-    border-bottom: 1px solid var(--border);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-dim);
-  }
-  .capline.legend { border-bottom: 0; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px 14px; }
-  .capline .sw { display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: -1px; }
-
-  ul.cells .cellname { flex: 1 0 100%; }
+    ul.cells .cellname { flex: 1 0 100%; }
     .matrix { grid-template-columns: 1fr; }
     .matrix .cell { border-right: 0; border-bottom: 1px solid var(--border); }
   }
@@ -654,10 +643,11 @@
         <div class="hero-lines">
           <p><strong>I build systems and the tools around them.</strong></p>
           <p>Right now that's agentic engineering: harnesses, MCP tracing, and observability for agent runs.</p>
-          <p>Below are four panels. All four replay data from systems that
+          <p>Below are six panels. All six replay data from systems that
             actually ran &mdash; agent sessions, eval harnesses, an MCP proxy,
-            a load-tested pipeline. Nothing here is a mockup or a diagram of
-            something that doesn't exist yet.</p>
+            a load-tested pipeline, a Kubernetes autoscaler reacting to Kafka
+            lag, and a multi-tenant ingestion platform. Nothing here is a
+            mockup or a diagram of something that doesn't exist yet.</p>
         </div>
         <a class="btn" href="#dag">See a real run</a>
       </div>
@@ -830,6 +820,219 @@
           The actual dashboard from that run &mdash; <code>docs/grafana-under-load.jpg</code> in the repo above, not a mock.
         </figcaption>
       </figure>
+    </div>
+  </section>
+
+  <section id="k8s" aria-labelledby="k8s-heading">
+    <div class="wrap">
+      <div class="panel-head">
+        <h2 id="k8s-heading" class="section-title">Kubernetes &mdash; scaling on consumer lag, not CPU</h2>
+        <span class="badge rec">RECORDED</span>
+      </div>
+      <p class="provenance">
+        <b>Source:</b> the same <a href="https://github.com/anhermon/agent-telemetry-pipeline">anhermon/agent-telemetry-pipeline</a>
+        stack, deployed a second way &mdash; plain manifests on a <code>kind</code> v0.32.0 single-node cluster with KEDA,
+        run 2026-07-31. Every timestamp below is a line in <code>docs/k8s/hpa-watch.txt</code> and
+        <code>docs/k8s/pods-watch.txt</code>: raw <code>kubectl get hpa -w</code> and <code>kubectl get pods -w</code>
+        output, UTC-prefixed by the capture script and committed unedited.<br>
+        <b>Why lag and not CPU:</b> the aggregator's work is a Postgres upsert per batch. It sits at low CPU while
+        consumer lag climbs, because the bottleneck is I/O. A CPU-based HPA never fires on the thing that actually
+        matters &mdash; falling behind the topic. A KEDA <code>ScaledObject</code> queries the broker for the consumer
+        group's lag and drives a standard HPA off it.<br>
+        <b>Read it as:</b> load starts, lag crosses the threshold inside one 15-second HPA sync, and pods appear.
+      </p>
+
+      <div class="panel">
+        <div class="controls">
+          <span class="note">3,000 rps offered &#183; <code>lagThreshold: 50</code> &#183; <code>maxReplicaCount: 6</code> at capture time &#183; 2026-07-31 08:31 UTC</span>
+        </div>
+        <div class="panel-scroll">
+          <svg viewBox="0 0 1000 268" width="1000" height="268" style="width:100%;min-width:720px;height:auto"
+            role="img" aria-labelledby="k8s-svg-title">
+            <title id="k8s-svg-title">Kafka consumer lag crossing the scaling threshold, and the aggregator pods created in response, over the 79 seconds the watch streams stayed alive.</title>
+
+            <!-- lag sub-chart. Three HPA samples, 15s apart: the only three the
+                 watch printed before the stream died. Stepped, not smoothed —
+                 an HPA reports discrete samples and interpolating between them
+                 would be drawing data that was never measured. -->
+            <text x="8" y="24" class="lbl">consumer lag</text>
+            <text x="8" y="37" class="lbl dim">(per replica)</text>
+            <line class="tick" x1="170" y1="70" x2="980" y2="70"/>
+            <line class="tl-line ref" x1="170" y1="55.3" x2="959.8" y2="55.3"/>
+            <text x="964" y="58" class="lbl dim" text-anchor="start" style="font-size:9px">50</text>
+            <path class="tl-line" d="M170 70 L321.9 70 L321.9 24.1 L483.9 24.1 L483.9 47.4 L959.8 47.4"/>
+            <circle cx="170" cy="70" r="3" class="spine"/>
+            <circle cx="321.9" cy="24.1" r="3" class="spine"/>
+            <circle cx="483.9" cy="47.4" r="3" class="spine"/>
+            <text x="176" y="82" class="lbl dim">0/50</text>
+            <text x="328" y="20" class="lbl">156/50</text>
+            <text x="490" y="43" class="lbl">76.7/50</text>
+            <text x="490" y="33" class="lbl dim">HPA REPLICAS 1 &#8594; 3</text>
+
+            <!-- pod lanes -->
+            <line class="tick" x1="321.9" y1="92" x2="321.9" y2="212" stroke-dasharray="3 3"/>
+            <line class="tick" x1="483.9" y1="92" x2="483.9" y2="212" stroke-dasharray="3 3"/>
+
+            <rect class="node s-completed" x="170" y="104" width="789.8" height="11" rx="1"/>
+            <text x="8" y="113" class="lbl">…-6k6hf</text>
+
+            <rect class="node s-running" x="321.9" y="126" width="10.1" height="11" rx="1"/>
+            <rect class="node s-completed" x="332" y="126" width="627.8" height="11" rx="1"/>
+            <text x="8" y="135" class="lbl">…-sd8zf</text>
+
+            <rect class="node s-running" x="321.9" y="148" width="20.2" height="11" rx="1"/>
+            <rect class="node s-completed" x="342.1" y="148" width="617.7" height="11" rx="1"/>
+            <text x="8" y="157" class="lbl">…-42bzc</text>
+
+            <rect class="node s-running" x="483.9" y="170" width="475.9" height="11" rx="1"/>
+            <text x="8" y="179" class="lbl">…-ppkl2</text>
+
+            <rect class="node s-running" x="483.9" y="192" width="475.9" height="11" rx="1"/>
+            <text x="8" y="201" class="lbl">…-54nlw</text>
+
+            <!-- the capture ends here, and so does what can honestly be drawn -->
+            <line class="tick" x1="959.8" y1="18" x2="959.8" y2="230" style="stroke:var(--err);stroke-width:1.4"/>
+            <text x="955" y="242" class="lbl" text-anchor="end" style="fill:var(--err)">watch stream died &#8212; host contention</text>
+
+            <line class="spine-line" x1="170" y1="216" x2="980" y2="216"/>
+            <g class="lbl dim">
+              <text x="170" y="230" text-anchor="middle">0s</text>
+              <text x="271.3" y="230" text-anchor="middle">10</text>
+              <text x="372.5" y="230" text-anchor="middle">20</text>
+              <text x="473.8" y="230" text-anchor="middle">30</text>
+              <text x="575" y="230" text-anchor="middle">40</text>
+              <text x="676.3" y="230" text-anchor="middle">50</text>
+              <text x="777.5" y="230" text-anchor="middle">60</text>
+              <text x="878.8" y="230" text-anchor="middle">70</text>
+            </g>
+            <text x="170" y="258" class="lbl dim">seconds from 08:31:37 UTC</text>
+            <g class="lbl dim">
+              <rect class="node s-completed" x="640" y="249" width="14" height="8" rx="1"/>
+              <text x="660" y="257">Running</text>
+              <rect class="node s-running" x="740" y="249" width="14" height="8" rx="1"/>
+              <text x="760" y="257">ContainerCreating</text>
+            </g>
+          </svg>
+        </div>
+        <p class="readout">
+          <b>1 &rarr; 3 aggregator pods Running in 17 seconds.</b> Lag went 0 &rarr; 156 in one HPA sync interval;
+          two pods were created at <code>08:31:52</code> and both reported <code>Running</code> by <code>08:31:54</code>.
+          A second pair was created at <code>08:32:08</code> as the HPA moved to <code>REPLICAS 3</code> &mdash;
+          <b>the watch stream died at <code>08:32:55</code> with them still in <code>ContainerCreating</code>, so
+          they are drawn as created, not as running.</b>
+        </p>
+      </div>
+
+      <details class="fallback">
+        <summary>Text equivalent &mdash; the watch output as a table</summary>
+        <div class="wrapper"><table>
+          <tr><th>UTC</th><th>t</th><th>What the watch printed</th></tr>
+          <tr><td>08:31:37</td><td>0s</td><td>1 aggregator pod Running; HPA <code>0/50 (avg)</code>, REPLICAS 1</td></tr>
+          <tr><td>08:31:52</td><td>15s</td><td>HPA <code>156/50 (avg)</code>; pods <code>42bzc</code>, <code>sd8zf</code> Pending &rarr; ContainerCreating</td></tr>
+          <tr><td>08:31:53</td><td>16s</td><td><code>sd8zf</code> Running</td></tr>
+          <tr><td>08:31:54</td><td>17s</td><td><code>42bzc</code> Running &mdash; 3 pods Running</td></tr>
+          <tr><td>08:32:08</td><td>31s</td><td>HPA <code>76667m/50 (avg)</code>, REPLICAS 3; pods <code>ppkl2</code>, <code>54nlw</code> Pending &rarr; ContainerCreating</td></tr>
+          <tr><td>08:32:55</td><td>78s</td><td>both watch streams fail: <code>http2: client connection lost</code></td></tr>
+        </table></div>
+      </details>
+
+      <p class="provenance" style="margin-top:22px">
+        <b>What is not claimed:</b> the scale-<i>down</i>. Lag draining and replicas returning to 1 was never captured
+        &mdash; the watch streams died from host resource contention before load stopped, in both runs. There is no
+        artifact for it, so there is no curve for it here and no number for how long it takes. The
+        <code>stabilizationWindowSeconds: 30</code> in the ScaledObject is configured intent, not a measurement.<br>
+        <b>What the failure taught:</b> the variable that destabilised the host was the number of concurrent JVM pods
+        on one shared <code>kind</code> node, not the request rate &mdash; 3,000 rps had already run clean at one
+        replica. <code>maxReplicaCount</code> was lowered from 6 to 3 in response. That mitigation has
+        <b>not been re-verified under load</b>; a third run on an already-contended host would have risked the same
+        outcome for no new information.
+      </p>
+    </div>
+  </section>
+
+  <section id="tenants" aria-labelledby="tenants-heading">
+    <div class="wrap">
+      <div class="panel-head">
+        <h2 id="tenants-heading" class="section-title">Multi-tenant event ingestion &mdash; two tenants, one fixture set</h2>
+        <span class="badge rec">RECORDED</span>
+      </div>
+      <p class="provenance">
+        <b>Source:</b> <a href="https://github.com/anhermon/event-ingest-platform">anhermon/event-ingest-platform</a>
+        &mdash; Java 21 / Spring Boot, one Maven module per provider, RabbitMQ between ingest and enrichment,
+        Postgres with row-level security per tenant. Every figure below is the JSON body of a real HTTP response,
+        captured in one sitting against a freshly created stack (<code>docker compose down -v &amp;&amp; up -d</code>),
+        and pasted into that repo's README next to the command that produced it.<br>
+        <b>The setup:</b> two tenants replay the <i>identical</i> Slack fixture set, including messages from the same
+        person at the same address. Their configurations differ: Acme allows <code>message</code> and
+        <code>reaction_added</code> and has Gmail enabled; Globex allows <code>message</code> only and has no Gmail
+        integration. Any missing filter or leaked row shows up immediately as a number that should not match, matching.<br>
+        <b>Read it as:</b> the gap between the two columns is the tenant configuration doing its job. If the platform
+        leaked, the columns would converge.
+      </p>
+
+      <div class="panel">
+        <div class="controls">
+          <span class="note">same fixtures into both tenants &#183; queried through the real API with a per-tenant bearer token, not by reaching into the database</span>
+        </div>
+
+        <div class="matrix">
+          <div class="cell"><span>Acme &mdash; <code>canonicalEvents</code></span><span class="v ok">8</span></div>
+          <div class="cell"><span>Globex &mdash; <code>canonicalEvents</code></span><span class="v ok">3</span></div>
+        </div>
+
+        <p class="capline">Same fixture set, both tenants. The gap is Globex's narrower allowlist plus its missing Gmail integration.</p>
+
+        <ul class="runs">
+          <li><span class="rid">1</span><span class="task">webhook delivery, <code>message</code></span><span class="grow"></span><span class="chip ok">Acme accepted 4</span><span class="chip ok">Globex accepted 3</span></li>
+          <li><span class="rid">2</span><span class="task">webhook delivery, type outside the allowlist</span><span class="grow"></span><span class="chip">Acme <code>not_allowed</code> 1</span><span class="chip">Globex <code>not_allowed</code> 2</span></li>
+          <li><span class="rid">3</span><span class="task">redelivery of <code>Ev0PV52K21</code></span><span class="grow"></span><span class="chip">both: <code>duplicate</code></span><span class="dimtxt">200</span></li>
+          <li><span class="rid">4</span><span class="task">signature 30 minutes stale</span><span class="grow"></span><span class="chip err">401</span><span class="dimtxt">outside the freshness window</span></li>
+          <li><span class="rid">5</span><span class="task">bad signature</span><span class="grow"></span><span class="chip err">401</span><span class="dimtxt">verification failed</span></li>
+          <li><span class="rid">6</span><span class="task">Acme's workspace payload, correctly signed with <b>Globex's own secret</b>, posted to Globex's endpoint</span><span class="grow"></span><span class="chip err">403</span><span class="dimtxt">different workspace</span></li>
+          <li><span class="rid">7</span><span class="task">Gmail poll cycle</span><span class="grow"></span><span class="chip ok">Acme 4 accepted</span><span class="chip">Globex &mdash; no integration</span></li>
+        </ul>
+
+        <p class="capline">
+          Scenario 6 is the one worth pausing on: a valid signature on a correct endpoint is <i>not</i> sufficient.
+          The payload's workspace id must also belong to the tenant that owns the endpoint.
+        </p>
+
+        <p class="readout">
+          <b>The same email address resolves to two unrelated actors.</b>
+          <code>angel@example.com</code> is actor <code>35cedd4d-…</code> under Acme and <code>7200111d-…</code> under
+          Globex &mdash; same fixtures, same person, two rows. A missing tenant predicate in the identity resolver
+          would silently merge them into one, and nothing else in the system would complain.
+        </p>
+      </div>
+
+      <details class="fallback">
+        <summary>Text equivalent &mdash; <code>GET /api/insights/actors</code>, per tenant</summary>
+        <div class="wrapper"><table>
+          <tr><th>Tenant</th><th>actor</th><th>slack_events</th><th>gmail_events</th><th>total</th><th>providers</th></tr>
+          <tr><td>Acme</td><td>Angel Hermon</td><td>2</td><td>1</td><td>3</td><td>2</td></tr>
+          <tr><td>Acme</td><td>Dana Levi</td><td>2</td><td>1</td><td>3</td><td>2</td></tr>
+          <tr><td>Acme</td><td>Acme Ops</td><td>&mdash;</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>Acme</td><td>notifications@status.example.net</td><td>&mdash;</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>Globex</td><td>Angel Hermon</td><td>2</td><td>&mdash;</td><td>2</td><td>1</td></tr>
+          <tr><td>Globex</td><td>Dana Levi</td><td>1</td><td>&mdash;</td><td>1</td><td>1</td></tr>
+        </table></div>
+        <div class="wrapper"><table>
+          <tr><th colspan="4"><code>GET /api/insights/drops</code> &mdash; Globex</th></tr>
+          <tr><th>provider</th><th>event_type</th><th>reason</th><th>count</th></tr>
+          <tr><td>slack</td><td>file_shared</td><td>not_in_allowlist</td><td>1</td></tr>
+          <tr><td>slack</td><td>reaction_added</td><td>not_in_allowlist</td><td>1</td></tr>
+        </table></div>
+      </details>
+
+      <p class="provenance" style="margin-top:22px">
+        <b>Why the drops are recorded and not silently discarded:</b> "we never got that event" and "we got it and your
+        allowlist rejected it" are different support tickets. <code>/api/insights/drops</code> is what makes the second
+        one answerable in one query.<br>
+        <b>Adding a provider costs one module.</b> A new integration adds a <code>&lt;module&gt;</code> to the parent
+        POM and a dependency in <code>app/</code>. Ingest, tenancy, dedup, replay protection and row-level security
+        need no source change &mdash; the one exception, an insights query that names providers as result columns, is
+        documented in the repo's README rather than papered over.
+      </p>
     </div>
   </section>
 
