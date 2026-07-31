@@ -637,6 +637,7 @@
     <nav class="nav-links" aria-label="Primary">
       <a href="#dag">Demos</a>
       <a href="#work">Work</a>
+      <a href="/writing/">Writing</a>
       <a href="#stack">Stack</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -799,6 +800,11 @@
         <div class="panel-scroll" id="ingest-scroll"></div>
         <p class="readout" id="ingest-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a box.</span></p>
       </div>
+
+      <details class="fallback">
+        <summary>Text equivalent &mdash; the components as a table</summary>
+        <div class="wrapper"><table id="ingest-table"><caption class="visually-hidden">Event ingestion components, in flow order</caption></table></div>
+      </details>
     </div>
   </section>
 
@@ -820,6 +826,11 @@
         <div class="panel-scroll" id="k8s-scroll"></div>
         <p class="readout" id="k8s-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a box.</span></p>
       </div>
+
+      <details class="fallback">
+        <summary>Text equivalent &mdash; the components as a table</summary>
+        <div class="wrapper"><table id="k8s-table"><caption class="visually-hidden">Kubernetes lag-based autoscaling components, in loop order</caption></table></div>
+      </details>
     </div>
   </section>
 
@@ -1368,6 +1379,15 @@
     ["mouseleave", "focusout"].forEach(function (ev) {
       host.addEventListener(ev, function () { out.innerHTML = idle; });
     });
+
+    var table = document.getElementById(key + "-table");
+    if (table) {
+      table.innerHTML =
+        "<thead><tr><th>component</th><th>role</th><th>notes</th></tr></thead><tbody>" +
+        g.nodes.map(function (n) {
+          return "<tr><td>" + esc(n.t) + "</td><td>" + esc(n.s) + "</td><td>" + esc(n.d) + "</td></tr>";
+        }).join("") + "</tbody>";
+    }
   });
 })();
 </script>
