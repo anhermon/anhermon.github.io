@@ -782,7 +782,8 @@
         <span class="badge rec">RECORDED</span>
       </div>
       <p class="provenance">
-        <b>Source:</b> <a href="https://github.com/anhermon/agent-telemetry-pipeline">anhermon/agent-telemetry-pipeline</a>,
+        <b>Source:</b> <a href="https://github.com/anhermon/agent-telemetry-pipeline">anhermon/agent-telemetry-pipeline</a>
+        (private repo &mdash; ask and I'll grant access, or share the README directly),
         built and load-tested 2026-07-31. Java 21 / Spring Boot ingest &rarr; Kafka &rarr; aggregator &rarr; Postgres +
         Redis, running under its own <code>docker compose</code> stack &mdash; a laptop's Docker VM, 10 CPUs shared with
         other containers, not dedicated hardware. Every number below is printed next to the command that produced it
@@ -834,7 +835,8 @@
       </div>
       <p class="provenance">
         <b>Source:</b> the same <a href="https://github.com/anhermon/agent-telemetry-pipeline">anhermon/agent-telemetry-pipeline</a>
-        stack, deployed a second way &mdash; plain manifests on a <code>kind</code> v0.32.0 single-node cluster with KEDA,
+        (private &mdash; see the note on the load-test panel above) stack, deployed a second way &mdash; plain manifests
+        on a <code>kind</code> v0.32.0 single-node cluster with KEDA,
         run 2026-07-31. Every timestamp below is a line in <code>docs/k8s/hpa-watch.txt</code> and
         <code>docs/k8s/pods-watch.txt</code>: raw <code>kubectl get hpa -w</code> and <code>kubectl get pods -w</code>
         output, UTC-prefixed by the capture script and committed unedited.<br>
@@ -961,6 +963,7 @@
       </div>
       <p class="provenance">
         <b>Source:</b> <a href="https://github.com/anhermon/event-ingest-platform">anhermon/event-ingest-platform</a>
+        (private repo &mdash; ask and I'll grant access, or share the README directly)
         &mdash; Java 21 / Spring Boot, one Maven module per provider, RabbitMQ between ingest and enrichment,
         Postgres with row-level security per tenant. Every figure below is the JSON body of a real HTTP response,
         captured in one sitting against a freshly created stack (<code>docker compose down -v &amp;&amp; up -d</code>),
