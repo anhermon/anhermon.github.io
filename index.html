@@ -174,10 +174,7 @@
     padding: 40px 0 64px;
   }
   .hero .wrap {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 56px;
-    align-items: center;
+    display: block;
     width: 100%;
   }
   .hero-id {
@@ -235,28 +232,6 @@
   }
   .btn:active { transform: translateY(1px); }
 
-  .schematic-frame {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    border: 1px solid var(--border);
-  }
-  .schematic-frame::before,
-  .schematic-frame::after,
-  .schematic-frame .c2,
-  .schematic-frame .c3 {
-    content: "";
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border-color: var(--accent);
-    border-style: solid;
-    border-width: 0;
-  }
-  .schematic-frame::before { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; }
-  .schematic-frame::after { top: -1px; right: -1px; border-top-width: 2px; border-right-width: 2px; }
-  .schematic-frame .c2 { bottom: -1px; left: -1px; border-bottom-width: 2px; border-left-width: 2px; }
-  .schematic-frame .c3 { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
-  #harness-canvas { display: block; width: 100%; height: 100%; }
 
   /* section shell */
   section { padding: 88px 0; border-top: 1px solid var(--border); }
@@ -399,9 +374,113 @@
     border-top: 1px solid var(--border);
   }
 
+  /* ── panels ────────────────────────────────────────────────────────────
+     Every panel carries a provenance badge. RECORDED = real data from a real
+     run, replayed client-side. SCHEMATIC = an architecture drawing, making no
+     claim to be measurement. Nothing on this page is in between. */
+  .panel-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 16px;
+    margin: 0 0 14px;
+  }
+  .panel-head h2 { margin: 0; }
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.09em;
+    padding: 4px 9px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+    align-self: center;
+  }
+  .badge.rec { color: var(--accent); }
+  .badge.schem { color: var(--text-dim); border-style: dashed; }
+  .provenance {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    line-height: 1.7;
+    color: var(--text-dim);
+    margin: 0 0 26px;
+    max-width: 88ch;
+  }
+  .provenance b { color: var(--text); font-weight: 600; }
+
+  .panel {
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  /* wide artefacts scroll inside their own box — the page body never does */
+  .panel-scroll { overflow-x: auto; }
+  .panel-scroll > svg { display: block; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+  }
+  .controls button {
+    font: inherit;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+  }
+  .controls button:hover { color: var(--text); border-color: var(--border-strong); }
+  .controls button[aria-pressed="true"], .controls button[aria-selected="true"] {
+    color: var(--bg);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .controls .spacer { flex: 1 1 auto; }
+  .controls .note { color: var(--text-dim); align-self: center; }
+
+  .readout {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    line-height: 1.75;
+    color: var(--text-dim);
+    padding: 12px;
+    border-top: 1px solid var(--border);
+    min-height: 4.6em;
+  }
+  .readout b { color: var(--text); font-weight: 600; }
+  .readout .hint { opacity: 0.75; }
+
+  /* svg node focus: the global :focus-visible ring is clipped by the svg box on
+     some engines, so focusable shapes also change stroke */
+  .panel svg [tabindex]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .panel svg [tabindex]:focus { stroke: var(--accent); stroke-width: 2; }
+
+  .fallback {
+    margin: 18px 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .fallback summary { cursor: pointer; color: var(--text-dim); padding: 6px 0; }
+  .fallback summary:hover { color: var(--text); }
+  .fallback table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+  .fallback th, .fallback td {
+    border: 1px solid var(--border);
+    padding: 5px 9px;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--text-dim);
+  }
+  .fallback th { color: var(--text); font-weight: 600; }
+  .fallback .wrapper { overflow-x: auto; }
+
   @media (max-width: 860px) {
-    .hero .wrap { grid-template-columns: 1fr; gap: 40px; }
-    .schematic-frame { max-width: 320px; margin: 0 auto; }
     .work-row { grid-template-columns: 1fr; gap: 10px; }
     .work-index { padding-top: 0; }
   }
@@ -421,6 +500,7 @@
   <div class="wrap">
     <a class="wordmark" href="#top">ANGEL HERMON<span> // ENGINEER</span></a>
     <nav class="nav-links" aria-label="Primary">
+      <a href="#dag">Demos</a>
       <a href="#work">Work</a>
       <a href="#stack">Stack</a>
       <a href="#contact">Contact</a>
@@ -437,12 +517,11 @@
         <div class="hero-lines">
           <p><strong>I build systems and the tools around them.</strong></p>
           <p>Right now that's agentic engineering: harnesses, MCP tracing, and observability for agent runs.</p>
+          <p>Below are five panels. Three replay data from runs that actually
+            happened. Two are architecture drawings of systems still being
+            built, and say so. Nothing here is a mockup.</p>
         </div>
-        <a class="btn" href="#work">View the work</a>
-      </div>
-      <div class="schematic-frame" aria-hidden="true">
-        <span class="c2"></span><span class="c3"></span>
-        <canvas id="harness-canvas"></canvas>
+        <a class="btn" href="#dag">See a real run</a>
       </div>
     </div>
   </section>
@@ -540,92 +619,12 @@
   <div class="wrap">Angel Hermon, built without a framework.</div>
 </footer>
 
-<script>
-(function () {
-  "use strict";
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Schematic node graph: represents harness -> sub-agents -> tools/tracing
-  var canvas = document.getElementById("harness-canvas");
-  if (!canvas || !canvas.getContext) return;
-  var ctx = canvas.getContext("2d");
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-  var nodes = [
-    { x: 0.5, y: 0.16, r: 5, label: "harness" },
-    { x: 0.22, y: 0.42, r: 3.4 },
-    { x: 0.5, y: 0.42, r: 3.4 },
-    { x: 0.78, y: 0.42, r: 3.4 },
-    { x: 0.14, y: 0.7, r: 2.6 },
-    { x: 0.34, y: 0.72, r: 2.6 },
-    { x: 0.5, y: 0.86, r: 3.4 },
-    { x: 0.68, y: 0.72, r: 2.6 },
-    { x: 0.86, y: 0.7, r: 2.6 }
-  ];
-  var edges = [
-    [0,1],[0,2],[0,3],
-    [1,4],[1,5],[2,6],[3,7],[3,8]
-  ];
-
-  function accentColor() {
-    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
-  }
-  function dimColor() {
-    return getComputedStyle(document.documentElement).getPropertyValue("--border-strong").trim();
-  }
-
-  function resize() {
-    var rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw(0);
-  }
-
-  function draw(t) {
-    var rect = canvas.getBoundingClientRect();
-    var w = rect.width, h = rect.height;
-    ctx.clearRect(0, 0, w, h);
-    var accent = accentColor();
-    var dim = dimColor();
-
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = dim;
-    edges.forEach(function (e) {
-      var a = nodes[e[0]], b = nodes[e[1]];
-      ctx.beginPath();
-      ctx.moveTo(a.x * w, a.y * h);
-      ctx.lineTo(b.x * w, b.y * h);
-      ctx.stroke();
-    });
-
-    nodes.forEach(function (n, i) {
-      var pulse = reduceMotion ? 0 : Math.sin(t / 900 + i) * 0.4 + 0.6;
-      ctx.beginPath();
-      ctx.fillStyle = accent;
-      ctx.globalAlpha = 0.35 + pulse * 0.35;
-      ctx.arc(n.x * w, n.y * h, n.r + 2.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      ctx.beginPath();
-      ctx.fillStyle = accent;
-      ctx.arc(n.x * w, n.y * h, n.r, 0, Math.PI * 2);
-      ctx.fill();
-    });
-  }
-
-  window.addEventListener("resize", resize);
-  resize();
-
-  if (!reduceMotion) {
-    function loop(t) {
-      draw(t);
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-  }
-})();
-</script>
+<!-- Sanitised replay data for the RECORDED panels. Built by an allowlist:
+     only structure, agent/harness/model identifiers, statuses, durations and
+     token counts are here. No prompts, no file paths, no private repo names,
+     no free text of any kind. -->
+<script id="replay-data" type="application/json">{"dag":{"capturedAt":"2026-07-30T20:30:39.583Z","startedAt":"2026-07-26T15:38:06.878Z","live":true,"totals":{"turns":44,"agents":57,"running":3,"completed":42,"failed":1,"aborted":8},"turns":[{"n":4,"agents":["a830","ada8","a37d","a0a1","a911"]},{"n":5,"agents":["a455","ac6f","a89a"]},{"n":6,"agents":["adb1"]},{"n":14,"agents":["a4e3"]},{"n":16,"agents":["afae"]},{"n":21,"agents":["a950","a1ed","a7aa","a899","a5e2"]},{"n":22,"agents":["ad14","a74e","a317","ae90","ade9","a8c4","a736","a3b5","ab50"]},{"n":23,"agents":["a479","a414","a31b","ae21"]},{"n":25,"agents":["ad63","a77d","a4ca"]},{"n":26,"agents":["a464"]},{"n":28,"agents":["a0c7"]},{"n":31,"agents":["a869","a85f"]},{"n":32,"agents":["a66e","abde","a27c","a5b2","a813","a518","af85","a6d3","a941"]},{"n":36,"agents":["a8a9","ac1d","afbb"]},{"n":37,"agents":["af49","adc0","ad51","a563","a4c9"]},{"n":38,"agents":["aa4a"]},{"n":40,"agents":["a3c3"]},{"n":42,"agents":["a3bf"]},{"n":44,"agents":["a083"]}],"agents":[{"id":"a083","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"running","ms":35982,"t0":0,"out":832,"cls":"api-integration","tools":{"Bash":4}},{"id":"a0a1","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1436449,"t0":33,"out":19950,"cls":"algorithm","tools":{"Bash":38,"mcp__claude-in-chrome__computer":17,"mcp__claude-in-chrome__navigate":4,"Read":2}},{"id":"a0c7","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"killed","ms":49563092,"t0":0,"out":73746,"cls":"docs-explain","tools":{"Bash":62,"Edit":13,"Read":10,"ToolSearch":4}},{"id":"a1ed","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1098949,"t0":14,"out":18462,"cls":"data-transform","tools":{"Bash":20,"Read":5,"Edit":5,"Write":2}},{"id":"a27c","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2415097,"t0":41,"out":28764,"cls":"debug-fix","tools":{"Bash":58,"Edit":13,"Read":8}},{"id":"a317","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1438781,"t0":27,"out":23799,"cls":"debug-fix","tools":{"Bash":51,"mcp__claude-in-chrome__browser_batch":8,"ToolSearch":3,"Read":3}},{"id":"a31b","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":973864,"t0":34,"out":11387,"cls":"docs-explain","tools":{"Bash":33,"mcp__claude-in-chrome__browser_batch":3,"ToolSearch":2,"Skill":1}},{"id":"a37d","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2276827,"t0":22,"out":16384,"cls":"algorithm","tools":{"Bash":35,"mcp__claude-in-chrome__browser_batch":9,"Read":3,"ToolSearch":2}},{"id":"a3b5","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1427202,"t0":1679,"out":26342,"cls":"api-integration","tools":{"Bash":31,"Edit":21,"Read":9,"mcp__claude-in-chrome__computer":3}},{"id":"a3bf","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"running","ms":1746269,"t0":0,"out":88238,"cls":"api-integration","tools":{"Write":49,"Bash":26,"Edit":6}},{"id":"a3c3","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"running","ms":2409985,"t0":0,"out":63393,"cls":"test-writing","tools":{"Bash":40,"Write":33,"Edit":8,"ToolSearch":2}},{"id":"a414","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":992422,"t0":15,"out":18369,"cls":"debug-fix","tools":{"Bash":24,"Write":1,"ToolSearch":1,"mcp__claude-in-chrome__navigate":1}},{"id":"a455","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1063197,"t0":0,"out":19382,"cls":"api-integration","tools":{"Bash":38,"Read":4,"Write":2,"Edit":2}},{"id":"a464","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"killed","ms":52919494,"t0":0,"out":103496,"cls":"data-transform","tools":{"Bash":158,"Edit":33,"Read":17,"Write":10}},{"id":"a479","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":1003135,"t0":0,"out":6991,"cls":"docs-explain","tools":{"Bash":22,"Read":1}},{"id":"a4c9","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":993277,"t0":3822,"out":22907,"cls":"data-transform","tools":{"mcp__claude-in-chrome__computer":11,"mcp__claude-in-chrome__javascript_tool":11,"Bash":8,"mcp__claude-in-chrome__navigate":5}},{"id":"a4ca","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2616524,"t0":26,"out":48573,"cls":"docs-explain","tools":{"Bash":76,"Edit":20,"mcp__claude-in-chrome__computer":10,"mcp__claude-in-chrome__javascript_tool":4}},{"id":"a4e3","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1388371,"t0":0,"out":22308,"cls":"data-transform","tools":{"Bash":17,"mcp__claude-in-chrome__computer":12,"mcp__claude-in-chrome__navigate":9,"mcp__claude-in-chrome__javascript_tool":9}},{"id":"a518","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":3012139,"t0":1976,"out":15228,"cls":"algorithm","tools":{"Bash":35}},{"id":"a563","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":356457,"t0":3337,"out":9908,"cls":"algorithm","tools":{"Bash":5,"Write":2,"Edit":1}},{"id":"a5b2","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":346461,"t0":178,"out":3727,"cls":"debug-fix","tools":{"Bash":14}},{"id":"a5e2","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2239446,"t0":50,"out":37463,"cls":"docs-explain","tools":{"Bash":67,"mcp__claude-in-chrome__navigate":3,"mcp__claude-in-chrome__computer":3,"Edit":3}},{"id":"a66e","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1880894,"t0":0,"out":21394,"cls":"debug-fix","tools":{"Bash":60,"Read":9,"Edit":9,"mcp__claude-in-chrome__navigate":2}},{"id":"a6d3","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2420055,"t0":5121,"out":28882,"cls":"docs-explain","tools":{"Bash":45,"Edit":34,"Read":4,"Write":1}},{"id":"a736","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":5889649,"t0":1562,"out":62432,"cls":"api-integration","tools":{"Bash":140,"Read":14,"Edit":12,"Write":6}},{"id":"a74e","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1576363,"t0":14,"out":24678,"cls":"docs-explain","tools":{"Bash":42,"mcp__claude-in-chrome__browser_batch":5,"Read":4,"ToolSearch":4}},{"id":"a77d","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2740989,"t0":10,"out":55396,"cls":"debug-fix","tools":{"Bash":61,"Edit":22,"Read":13,"Write":6}},{"id":"a7aa","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":923102,"t0":24,"out":15994,"cls":"docs-explain","tools":{"Bash":30,"Read":1,"Write":1}},{"id":"a813","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1993557,"t0":684,"out":37895,"cls":"complex-refactor","tools":{"Bash":101,"Read":18,"Agent":7,"ToolSearch":2}},{"id":"a830","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1205232,"t0":0,"out":21982,"cls":"debug-fix","tools":{"Bash":30,"Read":5,"Write":2}},{"id":"a85f","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":2946484,"t0":23,"out":43643,"cls":"data-transform","tools":{"Bash":79,"mcp__claude-in-chrome__computer":6,"Edit":4,"Write":3}},{"id":"a869","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":2959793,"t0":0,"out":37450,"cls":"docs-explain","tools":{"Bash":70,"Write":5,"Edit":4,"Read":3}},{"id":"a899","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1051177,"t0":37,"out":11313,"cls":"algorithm","tools":{"Bash":30}},{"id":"a89a","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2423523,"t0":919,"out":57269,"cls":"algorithm","tools":{"Bash":58,"mcp__claude-in-chrome__browser_batch":15,"Edit":9,"Read":3}},{"id":"a8a9","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1698595,"t0":0,"out":27790,"cls":"debug-fix","tools":{"Bash":70,"Read":5,"Edit":5,"Monitor":3}},{"id":"a8c4","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2247162,"t0":1008,"out":36188,"cls":"docs-explain","tools":{"Bash":69,"Read":2}},{"id":"a911","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1245942,"t0":43,"out":31143,"cls":"data-transform","tools":{"Bash":48,"Agent":2,"ToolSearch":1,"Read":1}},{"id":"a941","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":3550820,"t0":7630,"out":29057,"cls":"data-transform","tools":{"Read":101,"Bash":57,"Write":2,"Edit":2}},{"id":"a950","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1743181,"t0":0,"out":33755,"cls":"docs-explain","tools":{"Bash":44,"Write":7,"Read":5,"Edit":5}},{"id":"aa4a","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":570864,"t0":0,"out":14597,"cls":"algorithm","tools":{"Bash":12,"Read":2,"Write":1}},{"id":"ab50","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":2146043,"t0":3197,"out":14093,"cls":"api-integration","tools":{"Bash":40,"Read":3,"Edit":3,"Write":2}},{"id":"abde","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1193910,"t0":21,"out":10696,"cls":"data-transform","tools":{"Bash":37,"Read":10,"Edit":4,"ToolSearch":2}},{"id":"ac1d","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":422804,"t0":23,"out":12006,"cls":"complex-refactor","tools":{"Bash":11,"Edit":3,"Read":1,"ToolSearch":1}},{"id":"ac6f","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2913508,"t0":612,"out":45357,"cls":"api-integration","tools":{"Bash":79,"Edit":21,"Write":4,"Read":3}},{"id":"ad14","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":916049,"t0":0,"out":17351,"cls":"docs-explain","tools":{"Bash":34}},{"id":"ad51","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1743320,"t0":3309,"out":34971,"cls":"data-transform","tools":{"Bash":54,"Edit":11,"Write":5,"Agent":3}},{"id":"ad63","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":3128736,"t0":0,"out":33013,"cls":"docs-explain","tools":{"Bash":61,"Edit":11,"Read":3,"Agent":1}},{"id":"ada8","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":591258,"t0":11,"out":10020,"cls":"debug-fix","tools":{"Bash":24}},{"id":"adb1","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":18013659,"t0":0,"out":45153,"cls":"docs-explain","tools":{"Bash":85,"Edit":14,"mcp__claude-in-chrome__browser_batch":13,"mcp__claude-in-chrome__computer":5}},{"id":"adc0","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"killed","ms":613583,"t0":2634,"out":7136,"cls":"data-transform","tools":{"Bash":15,"Write":1}},{"id":"ade9","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1991623,"t0":57,"out":36268,"cls":"data-transform","tools":{"Bash":23,"mcp__claude-in-chrome__javascript_tool":19,"mcp__claude-in-chrome__computer":17,"mcp__claude-in-chrome__navigate":10}},{"id":"ae21","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":952833,"t0":52,"out":16543,"cls":"algorithm","tools":{"Bash":14,"mcp__claude-in-chrome__computer":6,"mcp__claude-in-chrome__navigate":3,"WebSearch":3}},{"id":"ae90","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1141810,"t0":42,"out":21148,"cls":"algorithm","tools":{"Bash":25,"mcp__claude-in-chrome__browser_batch":8,"Read":5,"ToolSearch":2}},{"id":"af49","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2557468,"t0":0,"out":28621,"cls":"docs-explain","tools":{"Bash":39,"Edit":20,"Read":6,"Write":1}},{"id":"af85","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1654665,"t0":2778,"out":25965,"cls":"debug-fix","tools":{"Bash":46,"Edit":9,"Write":3,"ToolSearch":1}},{"id":"afae","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":17176366,"t0":0,"out":24844,"cls":"docs-explain","tools":{"Bash":47,"Edit":9,"Read":4,"Write":2}},{"id":"afbb","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1627192,"t0":2295,"out":22831,"cls":"complex-refactor","tools":{"Bash":55,"Read":3,"Edit":2,"Write":1}}],"delegations":[{"id":"ada8","parent":"ada8","harness":"ollama","calls":1},{"id":"a0a1","parent":"a0a1","harness":"codex","calls":3},{"id":"a911","parent":"a911","harness":"claude","calls":22},{"id":"a911","parent":"a911","harness":"claude","calls":1},{"id":"a455","parent":"a455","harness":"ollama","calls":1},{"id":"a899","parent":"a899","harness":"ollama","calls":1},{"id":"ade9","parent":"ade9","harness":"ollama","calls":1},{"id":"ade9","parent":"ade9","harness":"gemini","calls":1},{"id":"a8c4","parent":"a8c4","harness":"claude","calls":4},{"id":"a8c4","parent":"a8c4","harness":"ollama","calls":6},{"id":"a479","parent":"a479","harness":"ollama","calls":1},{"id":"a31b","parent":"a31b","harness":"codex","calls":1},{"id":"ad63","parent":"ad63","harness":"ollama","calls":1},{"id":"a4ca","parent":"a4ca","harness":"claude","calls":3},{"id":"a464","parent":"a464","harness":"ollama","calls":5},{"id":"a869","parent":"a869","harness":"ollama","calls":2},{"id":"a85f","parent":"a85f","harness":"claude","calls":3},{"id":"a813","parent":"a813","harness":"claude","calls":2},{"id":"a518","parent":"a518","harness":"ollama","calls":5},{"id":"a941","parent":"a941","harness":"ollama","calls":1},{"id":"afbb","parent":"afbb","harness":"ollama","calls":1},{"id":"af49","parent":"af49","harness":"ollama","calls":1},{"id":"adc0","parent":"adc0","harness":"ollama","calls":1}]},"gate":[{"run":"a0","task":"A","s":75,"turns":4,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":true},{"run":"b1","task":"B","s":372,"turns":11,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":true},{"run":"b2","task":"B","s":186,"turns":9,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":false},{"run":"b3","task":"B","s":277,"turns":10,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":false},{"run":"b4","task":"B","s":206,"turns":8,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":true},{"run":"b5","task":"B","s":592,"turns":8,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":true},{"run":"b6","task":"B","s":1040,"turns":18,"rc":0,"outcome":"done","verify_rc":101,"tests_edited":true},{"run":"b7","task":"B","s":279,"turns":9,"rc":0,"outcome":"done","verify_rc":101,"tests_edited":false},{"run":"b8","task":"B","s":591,"turns":9,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":false}],"arena":{"dirs":120,"scored":118,"cells":[{"harness":"claude","model":"haiku","n":88,"st":{"done":79,"running":4,"degraded":2,"failed":1,"blocked":2},"medS":124},{"harness":"opencode","model":"deepseek-v4-flash-free","n":52,"st":{"running":3,"done":43,"failed":1,"degraded":5},"medS":59},{"harness":"claude","model":"sonnet","n":50,"st":{"done":41,"failed":5,"running":2,"blocked":2},"medS":91},{"harness":"agy","model":"claude-sonnet-4-6","n":27,"st":{"done":24,"running":2,"degraded":1},"medS":61},{"harness":"agy","model":"gemini-3.6-flash-medium","n":22,"st":{"degraded":2,"done":20},"medS":31},{"harness":"opencode","model":"north-mini-code-free","n":11,"st":{"done":9,"failed":1,"running":1},"medS":147},{"harness":"little-coder","model":"gemma4:latest","n":8,"st":{"aborted":1,"done":6,"pending":1},"medS":149},{"harness":"little-coder","model":"qwen3.6:35b-a3b","n":6,"st":{"done":4,"failed":1,"pending":1},"medS":282},{"harness":"codex","model":"default","n":5,"st":{"failed":5},"medS":null},{"harness":"opencode","model":"big-pickle","n":3,"st":{"running":1,"done":2},"medS":135},{"harness":"little-coder","model":"qwen3.6:27b-q4_K_M","n":3,"st":{"done":1,"failed":1,"pending":1},"medS":280},{"harness":"claude","model":"opus","n":2,"st":{"done":2},"medS":821},{"harness":"claude","model":"claude-opus-5","n":1,"st":{"done":1},"medS":539},{"harness":"codex","model":"gpt-5.6-terra","n":1,"st":{"done":1},"medS":126},{"harness":"agy","model":"gemini-3.1-pro-high","n":1,"st":{"done":1},"medS":26}]}}</script>
 
 </body>
 </html>
