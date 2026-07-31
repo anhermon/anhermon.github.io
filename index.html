@@ -1277,7 +1277,7 @@
       metrics: [
         { k: "offered",  t: "Offered rate",   v: "18,000 events/sec", d: "java tools/loadgen.java --rps 18000 --duration 30 --batch 100 --concurrency 96." },
         { k: "accepted", t: "Accepted rate",  v: "16,861 events/sec", d: "Past roughly 17k/sec on this host, the in-flight limiter starts refusing batches rather than queuing unboundedly." },
-        { k: "shed",     t: "Requests shed",  v: "333 of 5,400 (6.2%)", d: "5,067 × 202, 333 × 429 with Retry-After: 1. Shed deliberately and told to the client — not a silent drop, not a crash." },
+        { k: "shed",     t: "Requests shed",  v: "333 × 429 (6.2%)", d: "5,067 × 202, 333 × 429 with Retry-After: 1. Shed deliberately and told to the client — not a silent drop, not a crash." },
         { k: "latency",  t: "Mean request latency", v: "223 ms", d: "Up from 24.7ms at 12k/sec — the cost of running past the host's real ceiling." }
       ]
     }
@@ -1361,7 +1361,7 @@
     // HTTP outcome bar
     var hx0 = 470, hx1 = 900, hy = 60, total = 5400, ok = 5067, shed = 333;
     var okW = (ok / total) * (hx1 - hx0), shedW = (hx1 - hx0) - okW;
-    parts.push('<text class="lbl dim" x="' + hx0 + '" y="' + (hy - 10) + '">5,400 requests, by response</text>');
+    parts.push('<text class="lbl dim" x="' + hx0 + '" y="' + (hy - 10) + '">HTTP responses, by outcome</text>');
     parts.push('<g class="tl-g" tabindex="0" data-k="ok" role="img" aria-label="5,067 requests returned 202 Accepted">' +
       '<rect class="tl-bar" x="' + hx0 + '" y="' + hy + '" width="' + okW + '" height="22"/></g>');
     parts.push('<g class="tl-g" tabindex="0" data-k="shed" role="img" aria-label="333 requests returned 429 with Retry-After: 1, 6.2 percent of the total, shed deliberately rather than dropped silently">' +
