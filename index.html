@@ -494,6 +494,11 @@
   .panel svg .node:hover { stroke: var(--text); stroke-width: 1.5; }
   .panel svg .dnode { fill: var(--bg); stroke: var(--text-dim); stroke-width: 1.2; }
   .panel svg .dnode:hover { stroke: var(--text); }
+  .panel svg .tick { stroke: var(--border); stroke-width: 1; }
+  .panel svg .span { fill: var(--accent); }
+  .panel svg .span.err { fill: var(--err); }
+  .panel svg .span.open { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 3 2; }
+  .panel svg .span:hover { stroke: var(--text); stroke-width: 1.5; }
 
 
   /* eval panel */
@@ -725,6 +730,43 @@
         broken repos. The fix is not a better model &mdash; it is moving the pass/fail
         decision outside the thing being graded.
       </p>
+    </div>
+  </section>
+
+  <section id="trace" aria-labelledby="trace-heading">
+    <div class="wrap">
+      <div class="panel-head">
+        <h2 id="trace-heading" class="section-title">Telemetry &mdash; MCP tool calls as OTel spans</h2>
+        <span class="badge rec">RECORDED</span>
+      </div>
+      <p class="provenance">
+        <b>Source:</b> <code>docs/img/demo.cast</code> in
+        <a href="https://github.com/anhermon/mcp-trace">anhermon/mcp-trace</a> &mdash; a
+        public asciinema recording of the project's own demo, made 2026-07-28. The proxy
+        sits between an MCP client and an MCP server, changes nothing about the protocol,
+        and emits one OpenTelemetry span per JSON-RPC <code>tools/call</code>. Every start
+        time, duration and error flag below is read straight out of that recording's
+        <code>span started</code> / <code>span ended</code> log lines.<br>
+        <b>No waterfall, deliberately:</b> each trace here is exactly one span, so there
+        is no parent-child nesting to draw. Anything shaped like a nested waterfall would
+        be invented. The last span was still in flight when the recording stopped and is
+        drawn open-ended.
+      </p>
+
+      <div class="panel">
+        <div class="controls">
+          <span class="note">6 spans &#183; service <code>mcp-trace</code> &#183; 2026-07-28 08:14 UTC</span>
+          <span class="spacer"></span>
+          <span class="note">hover a span for the log line it came from</span>
+        </div>
+        <div class="panel-scroll" id="trace-scroll"></div>
+        <p class="readout" id="trace-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a span.</span></p>
+      </div>
+
+      <details class="fallback">
+        <summary>Text equivalent &mdash; the spans as a table</summary>
+        <div class="wrapper"><table id="trace-table"></table></div>
+      </details>
     </div>
   </section>
 
@@ -1060,6 +1102,86 @@
     });
     out.innerHTML = idle;
   });
+})();
+</script>
+
+<script>
+/* Panel 3 — mcp-trace spans. Transcribed verbatim from the public demo
+   recording at docs/img/demo.cast in anhermon/mcp-trace; `at` is the clock
+   time in the log line, `ms` the duration_ms the proxy itself reported.
+   The id=7 span has no `span ended` line in the recording. */
+(function () {
+  "use strict";
+  var host = document.getElementById("trace-scroll");
+  if (!host) return;
+  var SPANS = [
+    { id: 2, tool: "summarize",   at: "08:14:40.305", off: 0,      ms: 979.891, err: false },
+    { id: 3, tool: "search_docs", at: "08:14:43.312", off: 3.007,  ms: 141.092, err: false },
+    { id: 4, tool: "flaky_tool",  at: "08:14:46.317", off: 6.012,  ms: 281.266, err: true  },
+    { id: 5, tool: "search_docs", at: "08:14:49.324", off: 9.019,  ms: 147.960, err: false },
+    { id: 6, tool: "fetch_url",   at: "08:14:52.326", off: 12.021, ms: 508.414, err: false },
+    { id: 7, tool: "summarize",   at: "08:14:55.331", off: 15.026, ms: null,    err: false }
+  ];
+
+  var W = 1000, X0 = 168, X1 = 976, TOP = 26, ROW = 30, SPAN = 17;
+  var parts = [];
+  function x(sec) { return X0 + (sec / SPAN) * (X1 - X0); }
+
+  for (var t = 0; t <= SPAN; t += 2) {
+    parts.push('<line class="tick" x1="' + x(t).toFixed(1) + '" y1="' + (TOP - 8) +
+      '" x2="' + x(t).toFixed(1) + '" y2="' + (TOP + SPANS.length * ROW - 8) + '"/>');
+    parts.push('<text class="lbl dim" x="' + x(t).toFixed(1) + '" y="' + (TOP - 12) +
+      '" text-anchor="middle">' + t + 's</text>');
+  }
+
+  SPANS.forEach(function (s, i) {
+    var y = TOP + i * ROW, bx = x(s.off);
+    var bw = s.ms === null ? 10 : Math.max(3, x(s.off + s.ms / 1000) - bx);
+    parts.push('<text class="lbl" x="' + (X0 - 10) + '" y="' + (y + 10) + '" text-anchor="end">' +
+      'tools/call ' + s.tool + '</text>');
+    parts.push('<rect class="span' + (s.err ? " err" : "") + (s.ms === null ? " open" : "") +
+      '" x="' + bx.toFixed(1) + '" y="' + y + '" width="' + bw.toFixed(1) + '" height="13" rx="1" ' +
+      'tabindex="0" data-s="' + i + '" role="img" aria-label="span ' + s.id + ', ' + s.tool + ', ' +
+      (s.ms === null ? "still open when the recording ended" : s.ms + " milliseconds" + (s.err ? ", error" : "")) + '">' +
+      '<title>span ' + s.id + ' &#183; ' + s.tool + '</title></rect>');
+    parts.push('<text class="lbl dim" x="' + (bx + bw + 8).toFixed(1) + '" y="' + (y + 10) + '">' +
+      (s.ms === null ? "open" : s.ms.toFixed(1) + "ms") + (s.err ? "  · error=true" : "") + '</text>');
+  });
+
+  var H = TOP + SPANS.length * ROW + 6;
+  host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H +
+    '" style="width:100%;min-width:660px;height:auto" role="group" ' +
+    'aria-label="Six MCP tool-call spans over 16 seconds">' + parts.join("") + '</svg>';
+
+  var out = document.getElementById("trace-readout");
+  var idle = '<span class="hint">Hover or tab a span.</span>';
+  function show(el) {
+    var s = SPANS[+el.getAttribute("data-s")];
+    out.innerHTML = '<b>span id=' + s.id + '</b> &#183; method <code>tools/call</code> &#183; tool <code>' +
+      s.tool + '</code><br>' +
+      'time=2026-07-28T' + s.at + 'Z level=DEBUG msg="span started" id=' + s.id +
+      ' method=tools/call tool=' + s.tool + '<br>' +
+      (s.ms === null
+        ? '<span class="hint">no matching "span ended" line &mdash; the recording stopped first</span>'
+        : 'msg="span ended" id=' + s.id + ' duration_ms=' + s.ms + ' error=' + s.err);
+  }
+  ["mouseover", "focusin"].forEach(function (ev) {
+    host.addEventListener(ev, function (e) {
+      var el = e.target.closest("[data-s]");
+      if (el) show(el);
+    });
+  });
+  ["mouseleave", "focusout"].forEach(function (ev) {
+    host.addEventListener(ev, function () { out.innerHTML = idle; });
+  });
+
+  document.getElementById("trace-table").innerHTML =
+    "<thead><tr><th>span id</th><th>tool</th><th>started (UTC)</th><th>duration_ms</th><th>error</th></tr></thead><tbody>" +
+    SPANS.map(function (s) {
+      return "<tr><td>" + s.id + "</td><td>" + s.tool + "</td><td>2026-07-28T" + s.at +
+        "Z</td><td>" + (s.ms === null ? "&mdash; still open" : s.ms) + "</td><td>" +
+        (s.ms === null ? "&mdash;" : s.err) + "</td></tr>";
+    }).join("") + "</tbody>";
 })();
 </script>
 
