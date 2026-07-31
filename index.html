@@ -51,6 +51,7 @@
     --border-strong: rgba(16,25,45,0.28);
     --grid-line: rgba(20,60,120,0.10);
     --surface: rgba(20,60,120,0.045);
+    --err: #b5340f;
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   }
@@ -65,6 +66,7 @@
       --border-strong: rgba(150,190,255,0.32);
       --grid-line: rgba(120,170,255,0.09);
       --surface: rgba(120,170,255,0.05);
+      --err: #ff8a5c;
     }
   }
 
@@ -168,7 +170,7 @@
 
   /* hero */
   .hero {
-    min-height: calc(100dvh - 64px);
+    min-height: calc(84dvh - 64px);
     display: flex;
     align-items: center;
     padding: 40px 0 64px;
@@ -440,6 +442,20 @@
     border-color: var(--accent);
   }
   .controls .spacer { flex: 1 1 auto; }
+  /* the filter row doubles as the colour legend */
+  .controls button[data-f]::before {
+    content: "";
+    display: inline-block;
+    width: 8px; height: 8px;
+    margin-right: 7px;
+    vertical-align: -1px;
+    background: currentColor;
+  }
+  .controls button[data-f="all"]::before { display: none; }
+  .controls button[data-f="completed"]::before { background: var(--accent); }
+  .controls button[data-f="failed"]::before, .controls button[data-f="killed"]::before { background: var(--err); }
+  .controls button[data-f="killed"]::before { clip-path: polygon(0 0,100% 0,100% 100%,0 100%,0 60%,100% 60%,100% 40%,0 40%); }
+  .controls button[data-f="running"]::before { background: transparent; border: 1.5px dashed var(--accent); }
   .controls .note { color: var(--text-dim); align-self: center; }
 
   .readout {
@@ -461,6 +477,31 @@
     outline-offset: 2px;
   }
   .panel svg [tabindex]:focus { stroke: var(--accent); stroke-width: 2; }
+
+  /* svg vocabulary, shared by every panel; colours come from the theme vars so
+     light and dark are one definition, not two */
+  .panel svg text { font-family: var(--font-mono); fill: var(--text-dim); }
+  .panel svg .lbl { font-size: 10px; }
+  .panel svg .dim { opacity: 0.72; }
+  .panel svg .spine { fill: var(--accent); }
+  .panel svg .spine-line { stroke: var(--border-strong); stroke-width: 1; }
+  .panel svg .edge { fill: none; stroke: var(--border-strong); stroke-width: 1; opacity: 0.5; }
+  .panel svg .node { fill: var(--text-dim); }
+  .panel svg .node.s-completed { fill: var(--accent); }
+  .panel svg .node.s-failed, .panel svg .node.s-killed { fill: var(--err); }
+  .panel svg .node.s-running { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 3 2; }
+  .panel svg .node.muted { opacity: 0.13; }
+  .panel svg .node:hover { stroke: var(--text); stroke-width: 1.5; }
+  .panel svg .dnode { fill: var(--bg); stroke: var(--text-dim); stroke-width: 1.2; }
+  .panel svg .dnode:hover { stroke: var(--text); }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
 
   .fallback {
     margin: 18px 0 0;
@@ -523,6 +564,48 @@
         </div>
         <a class="btn" href="#dag">See a real run</a>
       </div>
+    </div>
+  </section>
+
+  <section id="dag" aria-labelledby="dag-heading">
+    <div class="wrap">
+      <div class="panel-head">
+        <h2 id="dag-heading" class="section-title">Agentic workflow — one session, 57 agents</h2>
+        <span class="badge rec">RECORDED</span>
+      </div>
+      <p class="provenance">
+        <b>Source:</b> one of my own Claude Code sessions, captured from the workflow
+        API of a fleet dashboard I wrote. Session opened 2026-07-26, snapshot taken
+        2026-07-30 while it was still running &mdash; three agents were mid-flight at
+        capture, so this is a live session frozen, not a finished one.<br>
+        <b>What is real:</b> the fan-out shape, every start time, every duration,
+        every status, the model and effort each agent resolved to, and the tool and
+        token counts. <b>What was removed:</b> prompts, summaries, file paths and
+        repo names. Each agent is identified by the first four characters of its id
+        and by the task class the router assigned it.<br>
+        <b>Read it as:</b> 44 conversation turns, 19 of which delegated work. Each row
+        is one turn, scaled to its own elapsed span &mdash; bar lengths are comparable
+        within a row, not across rows. Hover or tab a bar for its exact numbers.
+      </p>
+
+      <div class="panel">
+        <div class="controls" role="group" aria-label="Filter agents by status">
+          <button type="button" data-f="all" aria-pressed="true">all 57</button>
+          <button type="button" data-f="completed" aria-pressed="false">completed 42</button>
+          <button type="button" data-f="failed" aria-pressed="false">failed 9</button>
+          <button type="button" data-f="killed" aria-pressed="false">killed 3</button>
+          <button type="button" data-f="running" aria-pressed="false">running 3</button>
+          <span class="spacer"></span>
+          <span class="note">◇ = delegation to another harness</span>
+        </div>
+        <div class="panel-scroll" id="dag-scroll"></div>
+        <p class="readout" id="dag-readout" role="status" aria-live="polite"><span class="hint">Hover or tab a bar to inspect an agent.</span></p>
+      </div>
+
+      <details class="fallback">
+        <summary>Text equivalent &mdash; all 57 agents as a table</summary>
+        <div class="wrapper"><table id="dag-table"><caption class="visually-hidden">Every agent in the recorded session</caption></table></div>
+      </details>
     </div>
   </section>
 
@@ -625,6 +708,138 @@
      token counts are here. No prompts, no file paths, no private repo names,
      no free text of any kind. -->
 <script id="replay-data" type="application/json">{"dag":{"capturedAt":"2026-07-30T20:30:39.583Z","startedAt":"2026-07-26T15:38:06.878Z","live":true,"totals":{"turns":44,"agents":57,"running":3,"completed":42,"failed":1,"aborted":8},"turns":[{"n":4,"agents":["a830","ada8","a37d","a0a1","a911"]},{"n":5,"agents":["a455","ac6f","a89a"]},{"n":6,"agents":["adb1"]},{"n":14,"agents":["a4e3"]},{"n":16,"agents":["afae"]},{"n":21,"agents":["a950","a1ed","a7aa","a899","a5e2"]},{"n":22,"agents":["ad14","a74e","a317","ae90","ade9","a8c4","a736","a3b5","ab50"]},{"n":23,"agents":["a479","a414","a31b","ae21"]},{"n":25,"agents":["ad63","a77d","a4ca"]},{"n":26,"agents":["a464"]},{"n":28,"agents":["a0c7"]},{"n":31,"agents":["a869","a85f"]},{"n":32,"agents":["a66e","abde","a27c","a5b2","a813","a518","af85","a6d3","a941"]},{"n":36,"agents":["a8a9","ac1d","afbb"]},{"n":37,"agents":["af49","adc0","ad51","a563","a4c9"]},{"n":38,"agents":["aa4a"]},{"n":40,"agents":["a3c3"]},{"n":42,"agents":["a3bf"]},{"n":44,"agents":["a083"]}],"agents":[{"id":"a083","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"running","ms":35982,"t0":0,"out":832,"cls":"api-integration","tools":{"Bash":4}},{"id":"a0a1","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1436449,"t0":33,"out":19950,"cls":"algorithm","tools":{"Bash":38,"mcp__claude-in-chrome__computer":17,"mcp__claude-in-chrome__navigate":4,"Read":2}},{"id":"a0c7","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"killed","ms":49563092,"t0":0,"out":73746,"cls":"docs-explain","tools":{"Bash":62,"Edit":13,"Read":10,"ToolSearch":4}},{"id":"a1ed","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1098949,"t0":14,"out":18462,"cls":"data-transform","tools":{"Bash":20,"Read":5,"Edit":5,"Write":2}},{"id":"a27c","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2415097,"t0":41,"out":28764,"cls":"debug-fix","tools":{"Bash":58,"Edit":13,"Read":8}},{"id":"a317","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1438781,"t0":27,"out":23799,"cls":"debug-fix","tools":{"Bash":51,"mcp__claude-in-chrome__browser_batch":8,"ToolSearch":3,"Read":3}},{"id":"a31b","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":973864,"t0":34,"out":11387,"cls":"docs-explain","tools":{"Bash":33,"mcp__claude-in-chrome__browser_batch":3,"ToolSearch":2,"Skill":1}},{"id":"a37d","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2276827,"t0":22,"out":16384,"cls":"algorithm","tools":{"Bash":35,"mcp__claude-in-chrome__browser_batch":9,"Read":3,"ToolSearch":2}},{"id":"a3b5","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1427202,"t0":1679,"out":26342,"cls":"api-integration","tools":{"Bash":31,"Edit":21,"Read":9,"mcp__claude-in-chrome__computer":3}},{"id":"a3bf","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"running","ms":1746269,"t0":0,"out":88238,"cls":"api-integration","tools":{"Write":49,"Bash":26,"Edit":6}},{"id":"a3c3","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"running","ms":2409985,"t0":0,"out":63393,"cls":"test-writing","tools":{"Bash":40,"Write":33,"Edit":8,"ToolSearch":2}},{"id":"a414","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":992422,"t0":15,"out":18369,"cls":"debug-fix","tools":{"Bash":24,"Write":1,"ToolSearch":1,"mcp__claude-in-chrome__navigate":1}},{"id":"a455","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1063197,"t0":0,"out":19382,"cls":"api-integration","tools":{"Bash":38,"Read":4,"Write":2,"Edit":2}},{"id":"a464","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"killed","ms":52919494,"t0":0,"out":103496,"cls":"data-transform","tools":{"Bash":158,"Edit":33,"Read":17,"Write":10}},{"id":"a479","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":1003135,"t0":0,"out":6991,"cls":"docs-explain","tools":{"Bash":22,"Read":1}},{"id":"a4c9","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":993277,"t0":3822,"out":22907,"cls":"data-transform","tools":{"mcp__claude-in-chrome__computer":11,"mcp__claude-in-chrome__javascript_tool":11,"Bash":8,"mcp__claude-in-chrome__navigate":5}},{"id":"a4ca","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2616524,"t0":26,"out":48573,"cls":"docs-explain","tools":{"Bash":76,"Edit":20,"mcp__claude-in-chrome__computer":10,"mcp__claude-in-chrome__javascript_tool":4}},{"id":"a4e3","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1388371,"t0":0,"out":22308,"cls":"data-transform","tools":{"Bash":17,"mcp__claude-in-chrome__computer":12,"mcp__claude-in-chrome__navigate":9,"mcp__claude-in-chrome__javascript_tool":9}},{"id":"a518","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":3012139,"t0":1976,"out":15228,"cls":"algorithm","tools":{"Bash":35}},{"id":"a563","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":356457,"t0":3337,"out":9908,"cls":"algorithm","tools":{"Bash":5,"Write":2,"Edit":1}},{"id":"a5b2","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":346461,"t0":178,"out":3727,"cls":"debug-fix","tools":{"Bash":14}},{"id":"a5e2","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2239446,"t0":50,"out":37463,"cls":"docs-explain","tools":{"Bash":67,"mcp__claude-in-chrome__navigate":3,"mcp__claude-in-chrome__computer":3,"Edit":3}},{"id":"a66e","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1880894,"t0":0,"out":21394,"cls":"debug-fix","tools":{"Bash":60,"Read":9,"Edit":9,"mcp__claude-in-chrome__navigate":2}},{"id":"a6d3","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2420055,"t0":5121,"out":28882,"cls":"docs-explain","tools":{"Bash":45,"Edit":34,"Read":4,"Write":1}},{"id":"a736","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":5889649,"t0":1562,"out":62432,"cls":"api-integration","tools":{"Bash":140,"Read":14,"Edit":12,"Write":6}},{"id":"a74e","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1576363,"t0":14,"out":24678,"cls":"docs-explain","tools":{"Bash":42,"mcp__claude-in-chrome__browser_batch":5,"Read":4,"ToolSearch":4}},{"id":"a77d","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2740989,"t0":10,"out":55396,"cls":"debug-fix","tools":{"Bash":61,"Edit":22,"Read":13,"Write":6}},{"id":"a7aa","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":923102,"t0":24,"out":15994,"cls":"docs-explain","tools":{"Bash":30,"Read":1,"Write":1}},{"id":"a813","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1993557,"t0":684,"out":37895,"cls":"complex-refactor","tools":{"Bash":101,"Read":18,"Agent":7,"ToolSearch":2}},{"id":"a830","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1205232,"t0":0,"out":21982,"cls":"debug-fix","tools":{"Bash":30,"Read":5,"Write":2}},{"id":"a85f","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":2946484,"t0":23,"out":43643,"cls":"data-transform","tools":{"Bash":79,"mcp__claude-in-chrome__computer":6,"Edit":4,"Write":3}},{"id":"a869","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":2959793,"t0":0,"out":37450,"cls":"docs-explain","tools":{"Bash":70,"Write":5,"Edit":4,"Read":3}},{"id":"a899","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1051177,"t0":37,"out":11313,"cls":"algorithm","tools":{"Bash":30}},{"id":"a89a","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2423523,"t0":919,"out":57269,"cls":"algorithm","tools":{"Bash":58,"mcp__claude-in-chrome__browser_batch":15,"Edit":9,"Read":3}},{"id":"a8a9","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1698595,"t0":0,"out":27790,"cls":"debug-fix","tools":{"Bash":70,"Read":5,"Edit":5,"Monitor":3}},{"id":"a8c4","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2247162,"t0":1008,"out":36188,"cls":"docs-explain","tools":{"Bash":69,"Read":2}},{"id":"a911","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1245942,"t0":43,"out":31143,"cls":"data-transform","tools":{"Bash":48,"Agent":2,"ToolSearch":1,"Read":1}},{"id":"a941","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":3550820,"t0":7630,"out":29057,"cls":"data-transform","tools":{"Read":101,"Bash":57,"Write":2,"Edit":2}},{"id":"a950","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1743181,"t0":0,"out":33755,"cls":"docs-explain","tools":{"Bash":44,"Write":7,"Read":5,"Edit":5}},{"id":"aa4a","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":570864,"t0":0,"out":14597,"cls":"algorithm","tools":{"Bash":12,"Read":2,"Write":1}},{"id":"ab50","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":2146043,"t0":3197,"out":14093,"cls":"api-integration","tools":{"Bash":40,"Read":3,"Edit":3,"Write":2}},{"id":"abde","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1193910,"t0":21,"out":10696,"cls":"data-transform","tools":{"Bash":37,"Read":10,"Edit":4,"ToolSearch":2}},{"id":"ac1d","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":422804,"t0":23,"out":12006,"cls":"complex-refactor","tools":{"Bash":11,"Edit":3,"Read":1,"ToolSearch":1}},{"id":"ac6f","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2913508,"t0":612,"out":45357,"cls":"api-integration","tools":{"Bash":79,"Edit":21,"Write":4,"Read":3}},{"id":"ad14","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":916049,"t0":0,"out":17351,"cls":"docs-explain","tools":{"Bash":34}},{"id":"ad51","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1743320,"t0":3309,"out":34971,"cls":"data-transform","tools":{"Bash":54,"Edit":11,"Write":5,"Agent":3}},{"id":"ad63","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":3128736,"t0":0,"out":33013,"cls":"docs-explain","tools":{"Bash":61,"Edit":11,"Read":3,"Agent":1}},{"id":"ada8","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":591258,"t0":11,"out":10020,"cls":"debug-fix","tools":{"Bash":24}},{"id":"adb1","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":18013659,"t0":0,"out":45153,"cls":"docs-explain","tools":{"Bash":85,"Edit":14,"mcp__claude-in-chrome__browser_batch":13,"mcp__claude-in-chrome__computer":5}},{"id":"adc0","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"killed","ms":613583,"t0":2634,"out":7136,"cls":"data-transform","tools":{"Bash":15,"Write":1}},{"id":"ade9","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1991623,"t0":57,"out":36268,"cls":"data-transform","tools":{"Bash":23,"mcp__claude-in-chrome__javascript_tool":19,"mcp__claude-in-chrome__computer":17,"mcp__claude-in-chrome__navigate":10}},{"id":"ae21","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":952833,"t0":52,"out":16543,"cls":"algorithm","tools":{"Bash":14,"mcp__claude-in-chrome__computer":6,"mcp__claude-in-chrome__navigate":3,"WebSearch":3}},{"id":"ae90","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1141810,"t0":42,"out":21148,"cls":"algorithm","tools":{"Bash":25,"mcp__claude-in-chrome__browser_batch":8,"Read":5,"ToolSearch":2}},{"id":"af49","type":"unspecified","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":2557468,"t0":0,"out":28621,"cls":"docs-explain","tools":{"Bash":39,"Edit":20,"Read":6,"Write":1}},{"id":"af85","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"completed","ms":1654665,"t0":2778,"out":25965,"cls":"debug-fix","tools":{"Bash":46,"Edit":9,"Write":3,"ToolSearch":1}},{"id":"afae","type":"general-purpose","harness":"claude","model":"opus-5","effort":"medium","status":"failed","ms":17176366,"t0":0,"out":24844,"cls":"docs-explain","tools":{"Bash":47,"Edit":9,"Read":4,"Write":2}},{"id":"afbb","type":"general-purpose","harness":"claude","model":"sonnet-5","effort":"medium","status":"completed","ms":1627192,"t0":2295,"out":22831,"cls":"complex-refactor","tools":{"Bash":55,"Read":3,"Edit":2,"Write":1}}],"delegations":[{"id":"ada8","parent":"ada8","harness":"ollama","calls":1},{"id":"a0a1","parent":"a0a1","harness":"codex","calls":3},{"id":"a911","parent":"a911","harness":"claude","calls":22},{"id":"a911","parent":"a911","harness":"claude","calls":1},{"id":"a455","parent":"a455","harness":"ollama","calls":1},{"id":"a899","parent":"a899","harness":"ollama","calls":1},{"id":"ade9","parent":"ade9","harness":"ollama","calls":1},{"id":"ade9","parent":"ade9","harness":"gemini","calls":1},{"id":"a8c4","parent":"a8c4","harness":"claude","calls":4},{"id":"a8c4","parent":"a8c4","harness":"ollama","calls":6},{"id":"a479","parent":"a479","harness":"ollama","calls":1},{"id":"a31b","parent":"a31b","harness":"codex","calls":1},{"id":"ad63","parent":"ad63","harness":"ollama","calls":1},{"id":"a4ca","parent":"a4ca","harness":"claude","calls":3},{"id":"a464","parent":"a464","harness":"ollama","calls":5},{"id":"a869","parent":"a869","harness":"ollama","calls":2},{"id":"a85f","parent":"a85f","harness":"claude","calls":3},{"id":"a813","parent":"a813","harness":"claude","calls":2},{"id":"a518","parent":"a518","harness":"ollama","calls":5},{"id":"a941","parent":"a941","harness":"ollama","calls":1},{"id":"afbb","parent":"afbb","harness":"ollama","calls":1},{"id":"af49","parent":"af49","harness":"ollama","calls":1},{"id":"adc0","parent":"adc0","harness":"ollama","calls":1}]},"gate":[{"run":"a0","task":"A","s":75,"turns":4,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":true},{"run":"b1","task":"B","s":372,"turns":11,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":true},{"run":"b2","task":"B","s":186,"turns":9,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":false},{"run":"b3","task":"B","s":277,"turns":10,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":false},{"run":"b4","task":"B","s":206,"turns":8,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":true},{"run":"b5","task":"B","s":592,"turns":8,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":true},{"run":"b6","task":"B","s":1040,"turns":18,"rc":0,"outcome":"done","verify_rc":101,"tests_edited":true},{"run":"b7","task":"B","s":279,"turns":9,"rc":0,"outcome":"done","verify_rc":101,"tests_edited":false},{"run":"b8","task":"B","s":591,"turns":9,"rc":0,"outcome":"done","verify_rc":0,"tests_edited":false}],"arena":{"dirs":120,"scored":118,"cells":[{"harness":"claude","model":"haiku","n":88,"st":{"done":79,"running":4,"degraded":2,"failed":1,"blocked":2},"medS":124},{"harness":"opencode","model":"deepseek-v4-flash-free","n":52,"st":{"running":3,"done":43,"failed":1,"degraded":5},"medS":59},{"harness":"claude","model":"sonnet","n":50,"st":{"done":41,"failed":5,"running":2,"blocked":2},"medS":91},{"harness":"agy","model":"claude-sonnet-4-6","n":27,"st":{"done":24,"running":2,"degraded":1},"medS":61},{"harness":"agy","model":"gemini-3.6-flash-medium","n":22,"st":{"degraded":2,"done":20},"medS":31},{"harness":"opencode","model":"north-mini-code-free","n":11,"st":{"done":9,"failed":1,"running":1},"medS":147},{"harness":"little-coder","model":"gemma4:latest","n":8,"st":{"aborted":1,"done":6,"pending":1},"medS":149},{"harness":"little-coder","model":"qwen3.6:35b-a3b","n":6,"st":{"done":4,"failed":1,"pending":1},"medS":282},{"harness":"codex","model":"default","n":5,"st":{"failed":5},"medS":null},{"harness":"opencode","model":"big-pickle","n":3,"st":{"running":1,"done":2},"medS":135},{"harness":"little-coder","model":"qwen3.6:27b-q4_K_M","n":3,"st":{"done":1,"failed":1,"pending":1},"medS":280},{"harness":"claude","model":"opus","n":2,"st":{"done":2},"medS":821},{"harness":"claude","model":"claude-opus-5","n":1,"st":{"done":1},"medS":539},{"harness":"codex","model":"gpt-5.6-terra","n":1,"st":{"done":1},"medS":126},{"harness":"agy","model":"gemini-3.1-pro-high","n":1,"st":{"done":1},"medS":26}]}}</script>
+
+<script>
+/* Panel 1 — agent DAG. Replays the sanitised recording embedded above.
+   Own IIFE: a throw in one panel must not take the others down. */
+(function () {
+  "use strict";
+  var host = document.getElementById("dag-scroll");
+  if (!host) return;
+  var dag = JSON.parse(document.getElementById("replay-data").textContent).dag;
+
+  var agent = {};
+  dag.agents.forEach(function (a) { agent[a.id] = a; });
+  var deleg = {};
+  dag.delegations.forEach(function (d) { (deleg[d.parent] || (deleg[d.parent] = [])).push(d); });
+  var turnOf = {};
+  dag.turns.forEach(function (t) { t.agents.forEach(function (id) { turnOf[id] = t.n; }); });
+
+  function dur(ms) {
+    var s = Math.round(ms / 1000);
+    if (s < 90) return s + "s";
+    var m = Math.round(s / 60);
+    return m < 90 ? m + "m" : Math.floor(m / 60) + "h" + ("0" + (m % 60)).slice(-2) + "m";
+  }
+  function num(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function esc(s) { return String(s).replace(/[<>&"]/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+
+  // ── geometry ───────────────────────────────────────────────────────────
+  var W = 1000, X0 = 178, X1 = 984, ROW = 15, HEAD = 19, GAP = 13;
+  var parts = [], y = 16;
+
+  dag.turns.forEach(function (t) {
+    var span = 1;
+    t.agents.forEach(function (id) {
+      span = Math.max(span, agent[id].t0 + agent[id].ms / 1000);
+    });
+    var hy = y + 6;
+    parts.push('<circle cx="18" cy="' + hy + '" r="3.5" class="spine"/>');
+    parts.push('<text x="30" y="' + (hy + 3.5) + '" class="lbl">turn ' + t.n +
+      '<tspan class="dim"> &#183; ' + t.agents.length + ' agent' + (t.agents.length > 1 ? 's' : '') +
+      ' &#183; ' + dur(span * 1000) + ' span</tspan></text>');
+    y += HEAD;
+
+    t.agents.forEach(function (id) {
+      var a = agent[id], by = y;
+      var bx = X0 + (a.t0 / span) * (X1 - X0);
+      var bw = Math.max(3, (a.ms / 1000 / span) * (X1 - X0));
+      if (bx + bw > X1) bw = X1 - bx;
+      // session -> turn -> agent edge, drawn as the fan-out it was
+      parts.push('<path class="edge" d="M18 ' + (hy + 4) + ' C 18 ' + (by + 4) + ' ' +
+        (bx - 22) + ' ' + (by + 4.5) + ' ' + bx + ' ' + (by + 4.5) + '"/>');
+      parts.push('<rect class="node s-' + a.status + '" x="' + bx.toFixed(1) + '" y="' + by +
+        '" width="' + bw.toFixed(1) + '" height="9" rx="1" tabindex="0" data-a="' + a.id + '" ' +
+        'role="img" aria-label="agent ' + a.id + ', ' + a.cls + ', ' + a.status + ', ran ' + dur(a.ms) + '">' +
+        '<title>' + a.id + ' &#183; ' + a.cls + ' &#183; ' + a.status + ' &#183; ' + dur(a.ms) + '</title></rect>');
+      var dl = deleg[a.id];
+      if (dl) {
+        var dx = Math.min(bx + bw + 9, X1 - 4);
+        parts.push('<path class="dnode" transform="translate(' + dx.toFixed(1) + ',' + (by + 4.5) + ')" ' +
+          'd="M0 -5 L5 0 L0 5 L-5 0 Z" tabindex="0" data-d="' + a.id + '" role="img" ' +
+          'aria-label="' + dl.length + ' delegation from agent ' + a.id + '"><title>delegation</title></path>');
+      }
+      y += ROW;
+    });
+    y += GAP;
+  });
+
+  var H = y + 4;
+  host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H +
+    '" style="width:100%;min-width:720px;height:auto" role="group" ' +
+    'aria-label="Fan-out of 57 agents across 19 delegating turns"><line class="spine-line" x1="18" y1="16" x2="18" y2="' +
+    (H - 12) + '"/>' + parts.join("") + '</svg>';
+
+  // ── readout ────────────────────────────────────────────────────────────
+  var out = document.getElementById("dag-readout");
+  var idle = '<span class="hint">Hover or tab a bar to inspect an agent.</span>';
+
+  function show(el) {
+    var id = el.getAttribute("data-a");
+    if (id) {
+      var a = agent[id];
+      var tools = Object.keys(a.tools).map(function (k) {
+        return k.replace(/^mcp__[^_]*[^_]*__/, "").replace(/^mcp__/, "") + "\u00d7" + a.tools[k];
+      }).join(", ");
+      out.innerHTML = '<b>agent ' + esc(a.id) + '</b> &#183; turn ' + turnOf[a.id] + ' &#183; ' +
+        esc(a.cls) + ' &#183; ' + esc(a.type) + '<br>' +
+        esc(a.harness) + ' ' + esc(a.model || "?") + ' @' + esc(a.effort || "default") +
+        ' &#183; <b>' + esc(a.status) + '</b> &#183; ran <b>' + dur(a.ms) + '</b>' +
+        ' &#183; started +' + a.t0 + 's into the turn &#183; ' + num(a.out) + ' output tokens<br>' +
+        (tools ? 'top tools: ' + esc(tools) : 'no tool calls recorded');
+    } else {
+      var dl = deleg[el.getAttribute("data-d")] || [];
+      out.innerHTML = '<b>delegation</b> from agent ' + esc(el.getAttribute("data-d")) + '<br>' +
+        dl.map(function (d) { return esc(d.harness) + ' &#215; ' + d.calls + ' call' + (d.calls > 1 ? 's' : ''); }).join(", ") +
+        '<br><span class="hint">this agent shelled out to another harness rather than doing the work itself</span>';
+    }
+  }
+  ["mouseover", "focusin"].forEach(function (ev) {
+    host.addEventListener(ev, function (e) {
+      var el = e.target.closest("[data-a],[data-d]");
+      if (el) show(el);
+    });
+  });
+  ["mouseleave", "focusout"].forEach(function (ev) {
+    host.addEventListener(ev, function () { out.innerHTML = idle; });
+  });
+
+  // ── status filter ──────────────────────────────────────────────────────
+  var bar = host.parentNode.querySelector(".controls");
+  bar.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-f]");
+    if (!b) return;
+    var f = b.getAttribute("data-f");
+    bar.querySelectorAll("button[data-f]").forEach(function (x) {
+      x.setAttribute("aria-pressed", String(x === b));
+    });
+    host.querySelectorAll(".node").forEach(function (r) {
+      r.classList.toggle("muted", f !== "all" && !r.classList.contains("s-" + f));
+    });
+  });
+
+  // ── text equivalent ────────────────────────────────────────────────────
+  var rows = dag.agents.slice().sort(function (a, b) { return turnOf[a.id] - turnOf[b.id]; })
+    .map(function (a) {
+      return "<tr><td>" + esc(a.id) + "</td><td>" + turnOf[a.id] + "</td><td>" + esc(a.cls) +
+        "</td><td>" + esc(a.harness + " " + a.model) + "</td><td>" + esc(a.status) +
+        "</td><td>" + dur(a.ms) + "</td><td>" + num(a.out) + "</td></tr>";
+    }).join("");
+  document.getElementById("dag-table").innerHTML =
+    "<thead><tr><th>agent</th><th>turn</th><th>task class</th><th>model</th><th>status</th><th>elapsed</th><th>out tok</th></tr></thead><tbody>" +
+    rows + "</tbody>";
+})();
+</script>
 
 </body>
 </html>
