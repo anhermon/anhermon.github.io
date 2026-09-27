@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": "[ ! -f \"/Users/angelhermon/.cursor/skills/impeccable/scripts/hook-before-edit.mjs\" ] || node \"/Users/angelhermon/.cursor/skills/impeccable/scripts/hook-before-edit.mjs\"",
+        "timeout": 5
+      }
+    ]
+  }
+}
