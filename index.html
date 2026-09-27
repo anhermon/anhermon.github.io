@@ -3,63 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Venture Loop | Angel Hermon</title>
-<meta name="description" content="Venture Loop: independent products built, tested, and killed or kept in public by Angel Hermon.">
+<title>Venture Loop — small products, built in public</title>
+<meta name="description" content="Venture Loop builds small, focused products, tests them with real users, and keeps or kills each one based on what actually happens. Currently building: Sababa Ivrit.">
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://anhermon.dev/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0e15'/%3E%3Ctext x='16' y='22' font-family='ui-monospace,Menlo,monospace' font-size='16' font-weight='700' fill='%234fa8ff' text-anchor='middle'%3EVL%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a1512'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='15' font-weight='800' fill='%23ff8a50' text-anchor='middle'%3EVL%3C/text%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Venture Loop">
 <meta property="og:url" content="https://anhermon.dev/">
-<meta property="og:title" content="Venture Loop | Angel Hermon">
-<meta property="og:description" content="Independent products built, tested, and killed or kept in public.">
-<meta property="og:image" content="https://anhermon.dev/og.png">
+<meta property="og:title" content="Venture Loop — small products, built in public">
+<meta property="og:description" content="Small, focused products — built, tested with real users, and kept or killed based on what happens.">
+<meta property="og:image" content="https://anhermon.dev/og.png?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Venture Loop — independent products, built and tested in public.">
+<meta property="og:image:alt" content="Venture Loop — small products, built in public.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Venture Loop | Angel Hermon">
-<meta name="twitter:description" content="Independent products built, tested, and killed or kept in public.">
-<meta name="twitter:image" content="https://anhermon.dev/og.png">
+<meta name="twitter:title" content="Venture Loop — small products, built in public">
+<meta name="twitter:description" content="Small, focused products — built, tested with real users, and kept or killed based on what happens.">
+<meta name="twitter:image" content="https://anhermon.dev/og.png?v=2">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebSite",
+  "@type": "Organization",
   "name": "Venture Loop",
   "url": "https://anhermon.dev",
-  "author": { "@type": "Person", "name": "Angel Hermon", "email": "mailto:angel.hermon.mail@gmail.com" }
+  "email": "mailto:hermonlabs@proton.me"
 }
 </script>
+<link rel="preload" href="/assets/fonts/rubik-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
 <style>
   :root {
     color-scheme: light dark;
-    --bg: #f2f5f9;
-    --text: #10151c;
-    --text-dim: #4c5b6b;
-    --accent: #1463c9;
-    --border: rgba(16,25,45,0.14);
-    --border-strong: rgba(16,25,45,0.28);
-    --grid-line: rgba(20,60,120,0.10);
-    --surface: rgba(20,60,120,0.045);
-    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --bg: #faf5ee;
+    --surface: #ffffff;
+    --text: #21170f;
+    --text-dim: #6d5f52;
+    --accent: #c1481e;
+    --accent-ink: #ffffff;
+    --border: rgba(40,25,12,0.13);
+    --border-strong: rgba(40,25,12,0.26);
+    --chip-live-bg: rgba(31,138,76,0.12);
+    --chip-live-fg: #1a7a43;
+    --chip-live-bd: rgba(31,138,76,0.35);
+    --chip-beta-bg: rgba(193,72,30,0.12);
+    --chip-beta-fg: #a63d19;
+    --chip-beta-bd: rgba(193,72,30,0.35);
+    --font-display: 'Rubik', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-sans: 'Rubik', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0a0e15;
-      --text: #edf1f6;
-      --text-dim: #9aa7ba;
-      --accent: #4fa8ff;
-      --border: rgba(150,190,255,0.16);
-      --border-strong: rgba(150,190,255,0.32);
-      --grid-line: rgba(120,170,255,0.09);
-      --surface: rgba(120,170,255,0.05);
+      --bg: #18130f;
+      --surface: #221b15;
+      --text: #f4ece2;
+      --text-dim: #b6a897;
+      --accent: #ff8a50;
+      --accent-ink: #1a0f06;
+      --border: rgba(255,222,190,0.14);
+      --border-strong: rgba(255,222,190,0.28);
+      --chip-live-bg: rgba(90,214,140,0.14);
+      --chip-live-fg: #7fe0ab;
+      --chip-live-bd: rgba(90,214,140,0.35);
+      --chip-beta-bg: rgba(255,138,80,0.16);
+      --chip-beta-fg: #ffab7a;
+      --chip-beta-bd: rgba(255,138,80,0.4);
     }
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-  section[id] { scroll-margin-top: 88px; }
+  section[id] { scroll-margin-top: 76px; }
   body {
     margin: 0;
     background: var(--bg);
@@ -67,85 +81,71 @@
     font-family: var(--font-sans);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    position: relative;
   }
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
-    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
-  }
-  main, header, footer { position: relative; z-index: 1; }
   a { color: inherit; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding-inline: 24px; }
   .site-nav {
     position: sticky; top: 0; z-index: 10; height: 64px;
     display: flex; align-items: center;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
+    border-block-end: 1px solid var(--border);
   }
   .site-nav .wrap { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .wordmark { font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.03em; text-decoration: none; color: var(--text); white-space: nowrap; }
-  .wordmark span { color: var(--text-dim); }
-  .nav-links { display: flex; gap: 24px; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.02em; }
-  .nav-links a { text-decoration: none; color: var(--text-dim); padding: 4px 2px; border-bottom: 1px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
+  .wordmark { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em; text-decoration: none; color: var(--text); }
+  .nav-links { display: flex; gap: 24px; font-weight: 600; font-size: 0.92rem; }
+  .nav-links a { text-decoration: none; color: var(--text-dim); padding-block: 4px; border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
   .nav-links a:hover, .nav-links a:focus-visible { color: var(--text); border-color: var(--accent); }
-  .hero { min-height: calc(100dvh - 64px); display: flex; align-items: center; padding: 40px 0 64px; }
-  .hero .wrap { max-width: 780px; }
-  .hero-id { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.05em; color: var(--text-dim); margin: 0 0 18px; }
-  .hero-id::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--accent); margin-right: 10px; vertical-align: middle; }
-  h1.hero-title { margin: 0 0 22px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; font-size: clamp(2.6rem, 6vw, 4.4rem); }
-  .hero-lines { margin: 0 0 32px; max-width: 52ch; }
-  .hero-lines p { margin: 0 0 10px; font-size: clamp(1.02rem, 1.6vw, 1.18rem); color: var(--text-dim); }
-  .hero-lines p:last-child { margin-bottom: 0; }
-  .hero-lines strong { color: var(--text); font-weight: 600; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.02em;
-    text-decoration: none; color: var(--accent); border: 1px solid var(--accent);
-    padding: 12px 20px; white-space: nowrap;
-    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+
+  .hero { padding: 40px 0 36px; }
+  .hero .wrap { max-width: 720px; }
+  .hero-kicker { font-weight: 700; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
+  h1.hero-title { margin: 0 0 12px; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; font-size: clamp(1.9rem, 4.6vw, 3rem); }
+  .hero-sub { margin: 0; font-size: clamp(1rem, 1.6vw, 1.15rem); color: var(--text-dim); max-width: 56ch; }
+
+  section { padding: 40px 0 64px; }
+  h2.section-title { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; font-size: clamp(1.3rem, 2.4vw, 1.6rem); margin: 0 0 24px; }
+
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 420px)); gap: 20px; }
+  .product-card {
+    display: block; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 24px; transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   }
-  .btn:hover, .btn:focus-visible { background: var(--accent); color: var(--bg); }
-  .btn:active { transform: translateY(1px); }
-  section { padding: 88px 0; border-top: 1px solid var(--border); }
-  h2.section-title { font-weight: 800; letter-spacing: -0.02em; font-size: clamp(1.7rem, 3vw, 2.3rem); margin: 0 0 40px; }
-  .work-row {
-    display: grid; grid-template-columns: 90px 1fr; gap: 28px; padding: 32px 0;
-    border-top: 1px solid var(--border);
-    transition: border-color 0.25s ease, background-color 0.25s ease;
+  .product-card:hover, .product-card:focus-visible {
+    border-color: var(--border-strong); transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(40,25,12,0.08);
   }
-  .work-row:last-child { border-bottom: 1px solid var(--border); }
-  .work-row:hover, .work-row:focus-within { background: var(--surface); border-color: var(--border-strong); }
-  .work-index { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim); padding-top: 4px; }
-  .work-body h3 { margin: 0 0 4px; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; }
-  .work-body h3 a { text-decoration: none; color: var(--text); border-bottom: 1px solid transparent; transition: border-color 0.2s ease, color 0.2s ease; }
-  .work-body h3 a:hover, .work-body h3 a:focus-visible { color: var(--accent); border-color: var(--accent); }
-  .work-body p { margin: 0 0 14px; color: var(--text-dim); max-width: 60ch; font-size: 1rem; }
-  .work-meta { display: flex; flex-wrap: wrap; gap: 8px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.02em; }
-  .work-meta span { border: 1px solid var(--border); padding: 4px 9px; color: var(--text-dim); }
-  .contact-inner > p.lede, .contact-inner > p, .contact-inner > .contact-links { max-width: 62ch; }
-  .contact-inner p.lede { font-size: clamp(1.3rem, 2.4vw, 1.7rem); font-weight: 700; letter-spacing: -0.015em; margin: 0 0 32px; }
-  .contact-inner > p:not(.lede) { font-size: 1.05rem; line-height: 1.65; color: var(--text-dim); margin: 0 0 20px; }
-  .contact-links { display: flex; flex-direction: column; gap: 4px; margin-bottom: 36px; }
-  .contact-links a { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-dim); font-family: var(--font-mono); font-size: 0.95rem; padding: 10px 0; border-bottom: 1px solid var(--border); transition: color 0.2s ease, padding-left 0.2s ease; }
-  .contact-links a:hover, .contact-links a:focus-visible { color: var(--accent); padding-left: 6px; }
-  .contact-links svg { flex-shrink: 0; width: 18px; height: 18px; }
-  footer.site-footer { padding: 28px 0 40px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); border-top: 1px solid var(--border); }
+  .card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 12px; }
+  .card-top h3 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; letter-spacing: -0.01em; }
+  .chip { display: inline-flex; align-items: center; font-weight: 700; font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .chip-live { background: var(--chip-live-bg); color: var(--chip-live-fg); border: 1px solid var(--chip-live-bd); }
+  .chip-beta { background: var(--chip-beta-bg); color: var(--chip-beta-fg); border: 1px solid var(--chip-beta-bd); }
+  .chip-coming { background: transparent; color: var(--text-dim); border: 1px dashed var(--border-strong); }
+  .product-card p { margin: 0 0 16px; color: var(--text-dim); font-size: 0.95rem; }
+  .card-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-dim); }
+  .card-meta span { border: 1px solid var(--border); padding: 3px 9px; border-radius: 999px; }
+  .card-cta { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-weight: 700; font-size: 0.88rem; color: var(--accent); }
+
+  .contact-inner { max-width: 640px; }
+  .contact-inner p { margin: 0 0 20px; color: var(--text-dim); font-size: 1.02rem; line-height: 1.6; }
+  .contact-link {
+    display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+    color: var(--accent-ink); background: var(--accent); font-weight: 700; font-size: 0.98rem;
+    padding: 13px 22px; border-radius: 999px; transition: opacity 0.2s ease, transform 0.15s ease;
+  }
+  .contact-link:hover, .contact-link:focus-visible { opacity: 0.88; }
+  .contact-link:active { transform: translateY(1px); }
+
+  footer.site-footer { padding: 24px 0 36px; font-size: 0.82rem; color: var(--text-dim); border-block-start: 1px solid var(--border); }
+
   @media (max-width: 480px) {
-    .wrap { padding: 0 18px; }
+    .wrap { padding-inline: 18px; }
     .nav-links { display: none; }
-    section { padding: 64px 0; }
-    .hero { padding: 24px 0 48px; }
+    .hero { padding: 24px 0 28px; }
+    section { padding: 28px 0 48px; }
+    .product-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -153,9 +153,9 @@
 
 <header class="site-nav">
   <div class="wrap">
-    <a class="wordmark" href="#top">VENTURE LOOP<span> // ANGEL HERMON</span></a>
+    <a class="wordmark" href="#top">Venture Loop</a>
     <nav class="nav-links" aria-label="Primary">
-      <a href="#building">Building</a>
+      <a href="#products">Products</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
@@ -164,61 +164,49 @@
 <main id="top">
   <section class="hero" aria-labelledby="hero-heading">
     <div class="wrap">
-      <p class="hero-id">VENTURE LOOP</p>
-      <h1 id="hero-heading" class="hero-title">Independent products, built in public.</h1>
-      <div class="hero-lines">
-        <p><strong>One person, one product at a time, verified before it's called done.</strong></p>
-        <p>Everything below is marked with its real status — nothing on this page describes a feature before it ships.</p>
-      </div>
-      <a class="btn" href="#building">See what's building</a>
+      <p class="hero-kicker">Venture Loop</p>
+      <h1 id="hero-heading" class="hero-title">Small products, built and tested in public.</h1>
+      <p class="hero-sub">Every status below is real — nothing here describes a feature before it ships.</p>
     </div>
   </section>
 
-  <section id="building" aria-labelledby="building-heading">
+  <section id="products" aria-labelledby="products-heading">
     <div class="wrap">
-      <h2 id="building-heading" class="section-title">Building now</h2>
+      <h2 id="products-heading" class="section-title">Products</h2>
+      <div class="product-grid">
 
-      <article class="work-row">
-        <span class="work-index">01</span>
-        <div class="work-body">
-          <h3><a href="/sababa-ivrit/">Sababa Ivrit</a></h3>
-          <p>A Telegram bot teaching Hebrew for real bureaucracy — bank, kupat holim, misrad ha'pnim, a lease — to olim. Free 14-day trial. All drill content is an early beta draft, not yet reviewed by a native speaker.</p>
-          <div class="work-meta">
-            <span>Beta</span>
+        <a class="product-card" href="/sababa-ivrit/" onclick="vlTrackCTA('hub_product_sababa')">
+          <div class="card-top">
+            <h3>Sababa Ivrit</h3>
+            <span class="chip chip-beta">Beta</span>
+          </div>
+          <p>A Telegram bot teaching Hebrew for real bureaucracy — bank forms, the clinic, the rental lease — to new immigrants. Free 14-day trial. Drill content is an early beta draft, not yet reviewed by a native speaker.</p>
+          <div class="card-meta">
             <span>Telegram bot</span>
             <span>Recruiting testers</span>
           </div>
-        </div>
-      </article>
+          <span class="card-cta">View product →</span>
+        </a>
 
+      </div>
     </div>
   </section>
 
   <section id="contact" aria-labelledby="contact-heading">
     <div class="wrap contact-inner">
       <h2 id="contact-heading" class="section-title">Contact</h2>
-      <p class="lede">Built and run by Angel Hermon.</p>
-      <p>Software engineer running Venture Loop as a series of small, fast experiments: build a minimum version, put it in front of real users, and keep or kill it based on what happens.</p>
-      <div class="contact-links">
-        <a href="mailto:angel.hermon.mail@gmail.com">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="1.5"/><path d="M3.5 6l8.5 7 8.5-7"/></svg>
-          angel.hermon.mail@gmail.com
-        </a>
-        <a href="https://github.com/anhermon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.4.4-.4.9-.5 1.7V21"/></svg>
-          github.com/anhermon
-        </a>
-        <a href="https://www.linkedin.com/in/angel-hermon-5a163a66/">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="2"/><path d="M7.5 10v7M7.5 7.2v.1M12 17v-4.5c0-1.4 1-2.5 2.4-2.5s2.1 1 2.1 2.6V17"/></svg>
-          linkedin.com/in/angel-hermon-5a163a66
-        </a>
-      </div>
+      <p>Venture Loop is a small studio: build fast, test with real users in public, and keep or kill each product based on what actually happens.</p>
+      <p>Bugs, ideas, partnerships — email:</p>
+      <a class="contact-link" href="mailto:hermonlabs@proton.me">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg>
+        hermonlabs@proton.me
+      </a>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
-  <div class="wrap">Venture Loop, built without a framework.</div>
+  <div class="wrap">Venture Loop</div>
 </footer>
 
 <script src="/assets/analytics.js"></script>
