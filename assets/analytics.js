@@ -1,8 +1,8 @@
-// PostHog Cloud EU, cookieless. Set POSTHOG_KEY once VEN-39 provisions the project key —
-// until then this loads nothing and every page still has to work with zero network requests.
+// PostHog Cloud EU, cookieless. Project 285746 is shared with the Sababa Ivrit bot
+// (VEN-39/VEN-40), so every event here is tagged source: "site" to tell them apart.
 (function () {
   "use strict";
-  var POSTHOG_KEY = "";
+  var POSTHOG_KEY = "phc_vzjAcjG3oSwRFqrcrDh7RRsntq8VeKw2Er7yQmv4BQvF";
   var POSTHOG_HOST = "https://eu.i.posthog.com";
 
   if (!POSTHOG_KEY) return;
@@ -17,7 +17,9 @@
     persistence: "memory",
     autocapture: true,
     capture_pageview: true,
+    session_recording: { maskAllInputs: true },
   });
+  posthog.register({ source: "site" });
 
   window.vlTrackCTA = function (cta) {
     posthog.capture("cta_click", {

@@ -20,6 +20,7 @@ import json
 import os
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 
 API_HOST = "https://eu.posthog.com"  # private API host for EU cloud (not eu.i.posthog.com, which is ingestion-only)
@@ -86,7 +87,8 @@ def find_by_name(items, name):
 
 
 def ensure_dashboard(project_id, token):
-    existing = api("GET", f"/api/projects/{project_id}/dashboards/?search={DASHBOARD_NAME}", token)
+    query = urllib.parse.urlencode({"search": DASHBOARD_NAME})
+    existing = api("GET", f"/api/projects/{project_id}/dashboards/?{query}", token)
     match = find_by_name(existing.get("results", []), DASHBOARD_NAME)
     if match:
         return api("PATCH", f"/api/projects/{project_id}/dashboards/{match['id']}/", token, {"name": DASHBOARD_NAME})
@@ -94,7 +96,8 @@ def ensure_dashboard(project_id, token):
 
 
 def ensure_insight(project_id, token, spec, dashboard_id):
-    existing = api("GET", f"/api/projects/{project_id}/insights/?search={spec['name']}", token)
+    query = urllib.parse.urlencode({"search": spec["name"]})
+    existing = api("GET", f"/api/projects/{project_id}/insights/?{query}", token)
     match = find_by_name(existing.get("results", []), spec["name"])
     body = dict(spec, dashboards=[dashboard_id])
     if match:
