@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<!-- OG card template. Render at 1200x630 from the repo root server, e.g. headless Chrome screenshot of /scripts/og.html -> og.png -->
+<!-- OG card template. Render at 1200x630 from the repo root server: headless Chrome screenshot of /scripts/og.html -> /og.png -->
 <html><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>OG card</title><link rel="stylesheet" href="/assets/site.css">
 <style>
 html,body{margin:0;width:1200px;height:630px;overflow:hidden}
-body{padding:64px 72px;display:flex;flex-direction:column}
-.k{font:500 15px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);display:flex;justify-content:space-between}
-h1{font-size:104px;line-height:.92;margin-top:40px;max-width:900px}
-.sub{margin-top:28px;font:400 26px/1.3 var(--sans);color:var(--ink)}
-.wfo{margin-top:auto;display:grid;gap:7px;border-top:1px solid var(--ink);padding-top:18px}
-.wfo i{display:block;height:10px;border:1.5px solid var(--ink);margin-left:calc(var(--s)*1%);width:calc(var(--w)*1%)}
-.wfo .r{background:var(--ink)} .wfo .b{background:var(--span);border-color:var(--span)} .wfo .e{border-color:var(--err);background:color-mix(in srgb,var(--err) 22%,var(--paper))}
+body::after{display:none}
+body{background:#07080A url(/scripts/og-bg.webp) 0 0/1200px 630px no-repeat;padding:58px 64px;display:flex;flex-direction:column}
+.k{font:500 15px var(--mono);color:var(--dim);display:flex;gap:18px}
+h1{margin-top:auto;font-size:112px;max-width:6.4em;font-weight:260;font-stretch:76%}
+h1 .tr{font-weight:800;font-stretch:100%}
+.sub{margin-top:26px;font:380 25px/1.3 var(--sans);color:var(--dim)}
 </style></head><body>
-<div class="k"><span>Angel Hermon</span><span>anhermon.dev</span></div>
-<h1>Agents that fail should leave a <em>trace</em>.</h1>
+<div class="k"><span style="color:var(--bone)">Angel Hermon</span><span>anhermon.dev</span></div>
+<h1>Agents that fail should leave a <span class="tr">trace</span>.</h1>
 <p class="sub">Observable, deterministic AI agent pipelines.</p>
-<div class="wfo"><i class="r" style="--s:0;--w:100"></i><i style="--s:.5;--w:8.9"></i><i class="b" style="--s:9.6;--w:27.2"></i><i style="--s:37;--w:14.9"></i><i class="e" style="--s:52.1;--w:22"></i><i style="--s:74.4;--w:9.1"></i><i style="--s:83.7;--w:12"></i></div>
 </body></html>

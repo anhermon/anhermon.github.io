@@ -49,7 +49,7 @@ code { font: 400 .86em var(--mono); }
 
 /* Display grammar: section statements are huge, condensed and light, and "expose" heavier on reveal. */
 .say {
-  font-size: clamp(44px, 8.2vw, 128px); line-height: .9; letter-spacing: -.04em;
+  font-size: clamp(52px, 8.2vw, 128px); line-height: .9; letter-spacing: -.04em;
   font-weight: 300; font-stretch: 78%; text-wrap: balance;
 }
 .say .dimmed { color: var(--faint); }
@@ -76,11 +76,12 @@ code { font: 400 .86em var(--mono); }
 .quiet:hover { color: var(--bone); }
 
 /* ---------- HERO ---------- */
-.hero { position: relative; min-height: 100svh; display: grid; grid-template-rows: 1fr auto auto; overflow: hidden; isolation: isolate; }
+.hero { touch-action: pan-y; position: relative; min-height: 100svh; display: grid; grid-template-rows: 1fr auto auto; overflow: hidden; isolation: isolate; }
 .hero-media { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
 .hero-media picture, .hero-media .poster, .hero-media canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero-media .poster { object-fit: cover; object-position: 78% 50%; transform: translate3d(var(--hx, 0), var(--hy, 0), 0) scale(1.06); }
-.hero-media canvas { display: block; opacity: 0; transition: opacity .9s; mix-blend-mode: screen; touch-action: pan-y; }
+.hero-media .poster { object-fit: cover; object-position: 78% 50%; }
+.hero-media .poster, .hero-media canvas { transform: translate3d(var(--hx, 0), var(--hy, 0), 0) scale(1.06); }
+.hero-media canvas { display: block; opacity: 0; transition: opacity .9s; mix-blend-mode: screen; }
 html[data-hero="gl"] .hero-media canvas { opacity: 1; }
 .hero-media::after { /* text-side falloff so the headline sits on darkness */
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -190,14 +191,20 @@ html.js .shot[data-r].in img, html.js .contact-art[data-r].in img { transform: s
   position: relative; display: grid; gap: 22px; padding: clamp(20px, 3vw, 40px);
   background: linear-gradient(180deg, var(--plate2), var(--plate)); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden;
 }
-.call-lane { position: relative; height: 40px; overflow: hidden; }
+.call-lane { position: relative; height: 44px; overflow: hidden; }
 .call {
   position: absolute; left: 0; top: 4px; font: 500 12.5px/1 var(--mono); padding: 9px 12px; border-radius: 999px;
   color: var(--void); background: var(--signal); white-space: nowrap; box-shadow: 0 0 24px rgba(127,162,255,.45);
 }
 .call.burnt { background: var(--burn); box-shadow: 0 0 30px rgba(255,159,67,.6); }
 .call.passed { background: var(--pass); box-shadow: 0 0 30px rgba(200,255,106,.45); }
-.beam { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+.call-lane::before { /* the strand the call rides on */
+  content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lc, var(--signal)) 30%, var(--lc, var(--signal)) 70%, transparent);
+  box-shadow: 0 0 12px 1px var(--lc, var(--signal)); opacity: .55; transition: background .4s, box-shadow .4s;
+}
+.gate-stage[data-s="no"] { --lc: var(--burn); }
+.gate-stage[data-s="ok"] { --lc: var(--pass); }
 .allow {
   position: relative; border-radius: 4px; padding: 18px 20px;
   background:
@@ -249,7 +256,7 @@ html.js .outcomes li.on { opacity: 1; }
 /* Desktop: the proof row is a horizontal track pinned while you scroll past it (native sticky, no hijack). */
 @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
   html.js .proof { height: var(--proof-h, auto); }
-  html.js .proof-pin { position: sticky; top: 0; height: 100vh; display: grid; grid-template-rows: auto 1fr; overflow: hidden; }
+  html.js .proof-pin { position: sticky; top: 0; height: 100vh; display: grid; grid-template-rows: auto 1fr; grid-template-columns: minmax(0, 1fr); overflow: hidden; }
   html.js .proof-head { padding-top: clamp(72px, 9vh, 120px); padding-bottom: 4vh; width: 100%; }
   html.js .repos { display: flex; gap: 0; background: none; border: 0; padding: 0 var(--gut); align-items: stretch; transform: translate3d(var(--tx, 0), 0, 0); will-change: transform; height: min(56vh, 520px); align-self: start; }
   html.js .repo { flex: 0 0 min(36vw, 520px); border-left: 1px solid var(--rule); padding: 28px 36px 32px; }
@@ -263,7 +270,7 @@ html.js .outcomes li.on { opacity: 1; }
 .engage .say { max-width: 8.5em; }
 .engage .lead { margin-top: 28px; max-width: 44ch; }
 .steps { margin-top: clamp(56px, 8vw, 110px); display: grid; gap: 40px; counter-reset: s; }
-.steps li { display: grid; grid-template-columns: auto 1fr; column-gap: 22px; align-items: start; }
+.steps li { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; column-gap: 22px; align-items: start; }
 .steps .big { grid-row: span 2; font-size: clamp(88px, 11vw, 180px); line-height: .78; font-weight: 200; font-stretch: 75%; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 1px rgba(236,230,216,.55); }
 .steps h3 { font-size: clamp(22px, 2vw, 28px); font-weight: 520; font-stretch: 88%; letter-spacing: -.015em; line-height: 1.15; margin: 4px 0 10px; }
 .steps p { color: var(--dim); max-width: 34ch; }

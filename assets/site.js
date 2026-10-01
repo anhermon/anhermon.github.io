@@ -109,13 +109,13 @@
   ];
   var allowLis = [].slice.call(document.querySelectorAll("#allow li"));
   var ALLOWED = allowLis.map(function (li) { return li.textContent; });
-  var callEl = document.getElementById("call"), verdict = document.getElementById("verdict");
+  var stage = gate.querySelector(".gate-stage"), callEl = document.getElementById("call"), verdict = document.getElementById("verdict");
   var outs = document.querySelectorAll("#outcomes li");
   var gi = 0, gTimer = null, gVisible = false;
   function clearAllow() { allowLis.forEach(function (li) { li.className = li.className.replace(/ ?(scan|hit|near)/g, ""); }); }
   function step() {
     var c = CALLS[gi], ok = c.m === "GET" && ALLOWED.indexOf(c.p) >= 0; // same rule as Session.request()
-    clearAllow(); callEl.className = "call"; callEl.textContent = c.m + " " + c.p; verdict.className = "verdict"; verdict.textContent = "";
+    clearAllow(); stage.dataset.s = ""; callEl.className = "call"; callEl.textContent = c.m + " " + c.p; verdict.className = "verdict"; verdict.textContent = "";
     var lane = callEl.parentNode.clientWidth, w = callEl.offsetWidth;
     var a = callEl.animate([{ transform: "translateX(" + (-w) + "px)" }, { transform: "translateX(" + Math.max(0, (lane - w) / 2) + "px)" }], { duration: 700, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" });
     a.onfinish = function () {
@@ -127,7 +127,7 @@
           clearInterval(scan); clearAllow();
           if (c.near != null) allowLis[c.near].classList.add("near");
           if (ok) allowLis[ALLOWED.indexOf(c.p)].classList.add("hit");
-          callEl.classList.add(ok ? "passed" : "burnt");
+          callEl.classList.add(ok ? "passed" : "burnt"); stage.dataset.s = ok ? "ok" : "no";
           verdict.className = "verdict " + (ok ? "ok" : "no");
           verdict.textContent = ok ? "exact match · request goes to the API" : "ValueError: " + c.m + " " + c.p + " is not a permitted read-only endpoint";
           outs[gi].classList.add("on");
@@ -141,7 +141,7 @@
   }
   if (reduce.matches || !("IntersectionObserver" in window) || !callEl.animate) {
     outs.forEach(function (li) { li.classList.add("on"); });
-    var last = CALLS[3]; allowLis[ALLOWED.indexOf(last.p)].classList.add("hit"); callEl.classList.add("passed");
+    var last = CALLS[3]; allowLis[ALLOWED.indexOf(last.p)].classList.add("hit"); callEl.classList.add("passed"); stage.dataset.s = "ok";
     verdict.className = "verdict ok"; verdict.textContent = "exact match · request goes to the API";
   } else {
     new IntersectionObserver(function (es) {

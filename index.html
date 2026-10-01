@@ -71,7 +71,7 @@
     </div>
     <div class="runbar">
       <span class="run-id">agent.run · 8 spans · 4.82s</span>
-      <output class="read" id="readout" aria-live="off">drag across the run</output>
+      <output class="read" id="readout" aria-live="off">8 spans, one timeout</output>
       <output class="runlog" id="runlog" aria-live="polite">run 1</output>
       <button class="replay" type="button" id="replay">Replay run</button>
       <span class="note">Strands drawn from an illustrative 8-span run, not a customer trace. Same seed, same frame.</span>
@@ -140,7 +140,6 @@
       <figure class="gate" id="gate" aria-labelledby="gate-cap">
         <div class="gate-stage" aria-hidden="true">
           <div class="call-lane"><span class="call" id="call">GET /api/Account/GetHoldingsSummery</span></div>
-          <svg class="beam" viewBox="0 0 100 10" preserveAspectRatio="none"><line id="beam-in" x1="0" y1="5" x2="100" y2="5"/></svg>
           <div class="allow">
             <p class="allow-h">GET_ALLOWED · 15 exact paths</p>
             <ol id="allow">
