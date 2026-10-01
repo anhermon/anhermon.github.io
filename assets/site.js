@@ -151,15 +151,51 @@
     }, function () { location.href = "mailto:" + email; });
   });
 
-  // Qualification form -> pre-filled mailto. Nothing leaves the browser until the visitor sends it.
-  document.getElementById("lead").addEventListener("submit", function (e) {
+  // Forms POST to the hermon-forms endpoint (Cloudflare Pages Function + D1). The lead form falls back
+  // to a pre-filled mailto on network error, timeout or non-2xx (except validation errors).
+  var FORMS = "https://hermon-forms.pages.dev/api/";
+  function post(path, data) {
+    var ctl = window.AbortController ? new AbortController() : null;
+    var t = setTimeout(function () { if (ctl) ctl.abort(); }, 10000);
+    return fetch(FORMS + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data), signal: ctl && ctl.signal })
+      .then(function (r) { clearTimeout(t); return r.json().catch(function () { return {}; }).then(function (d) { d.status = r.status; return d; }); },
+            function (err) { clearTimeout(t); throw err; });
+  }
+  function status(f, state, msg) { var el = f.querySelector(".form-status"); el.dataset.state = state; el.textContent = msg; }
+  function fields(f) { var o = {}; Array.prototype.forEach.call(f.elements, function (el) { if (el.name) o[el.name] = el.type === "checkbox" ? el.checked : el.value.trim(); }); return o; }
+
+  var lead = document.getElementById("lead");
+  lead.addEventListener("submit", function (e) {
     e.preventDefault();
-    var f = e.target;
-    if (!f.reportValidity()) return;
-    var v = function (n) { return f.elements[n].value.trim(); };
-    var body = "Name: " + v("name") + "\nEmail: " + v("email") + "\nCompany: " + (v("company") || "-") +
-      "\nLooking for: " + v("kind") + "\nTimeline: " + (v("timeline") || "-") + "\n\nWhat runs today, and what goes wrong:\n" + v("problem") + "\n";
+    if (!lead.reportValidity()) return;
+    var v = fields(lead), btn = lead.querySelector("button[type=submit]");
+    var mailto = function () {
+      var body = "Name: " + v.name + "\nEmail: " + v.email + "\nCompany: " + (v.company || "-") +
+        "\nLooking for: " + v.kind + "\nTimeline: " + (v.timeline || "-") + "\n\nWhat runs today, and what goes wrong:\n" + v.problem + "\n";
+      vlTrackCTA("lead_fallback_mailto");
+      status(lead, "err", "Couldn't send directly, so your mail app is opening with the details filled in.");
+      location.href = "mailto:angel.hermon.mail@gmail.com?subject=" + encodeURIComponent("Inquiry via anhermon.dev: " + v.kind) + "&body=" + encodeURIComponent(body);
+    };
     vlTrackCTA("form_submit");
-    location.href = "mailto:angel.hermon.mail@gmail.com?subject=" + encodeURIComponent("Inquiry via anhermon.dev: " + v("kind")) + "&body=" + encodeURIComponent(body);
+    btn.disabled = true; status(lead, "", "Sending...");
+    post("lead", v).then(function (d) {
+      btn.disabled = false;
+      if (d.ok) { vlTrackCTA("lead_sent"); lead.reset(); status(lead, "ok", "Sent. I reply to every genuine inquiry by email."); }
+      else if (d.status === 422 || d.status === 429) status(lead, "err", d.error || "Please check the form.");
+      else mailto();
+    }, function () { btn.disabled = false; mailto(); });
+  });
+
+  var notes = document.getElementById("notes");
+  notes.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!notes.reportValidity()) return;
+    var v = fields(notes); v.source_page = location.pathname;
+    notes.querySelector("button").disabled = true;
+    post("subscribe", v).then(function (d) {
+      notes.querySelector("button").disabled = false;
+      if (d.ok) { vlTrackCTA("notes_subscribe"); notes.reset(); status(notes, "ok", "Saved. A confirmation email with a link will follow; you are only added after you click it."); }
+      else status(notes, "err", d.error || "Couldn't save that. Email me instead.");
+    }, function () { notes.querySelector("button").disabled = false; status(notes, "err", "Couldn't reach the server. Email me instead."); });
   });
 })();

@@ -329,3 +329,13 @@ textarea { min-height: 140px; resize: vertical; }
 }
 @media (max-width: 360px) { .gate-stage { padding: 16px 8px; } .allow { padding: 12px 8px; } .allow ol { font-size: 9px; } }
 .btn-sm { min-height: 36px; padding: 0 14px; font-size: 14px; }
+
+/* lead + notes forms (POST to hermon-forms.pages.dev; mailto fallback) */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.notes { margin-top: 28px; gap: 14px; }
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--dim); line-height: 1.45; }
+.consent input { width: 18px; height: 18px; min-height: 0; margin-top: 2px; flex: none; padding: 0; accent-color: var(--signal); }
+.form-status { font-size: 14px; min-height: 1.4em; color: var(--dim); }
+.form-status:empty { display: none; }
+.form-status[data-state="ok"] { color: var(--signal); }
+.form-status[data-state="err"] { color: #ff9b8f; }

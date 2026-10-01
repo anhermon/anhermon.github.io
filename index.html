@@ -217,7 +217,7 @@
     <div class="wrap">
       <div class="head">
         <h2 id="h-contact" class="say" data-r>Describe your pipeline.</h2>
-        <p class="intro" data-r style="--i:1">The more specific, the more useful my reply. Submitting opens a pre-filled email in your mail app, addressed to me; nothing is sent until you press send in it.</p>
+        <p class="intro" data-r style="--i:1">The more specific, the more useful my reply. Submitting sends these details straight to me; if that fails, a pre-filled email opens in your mail app instead.</p>
         <p class="reply" data-r style="--i:2">I reply to every genuine inquiry by email.</p>
         <div class="direct" data-r style="--i:3">
           <a href="mailto:angel.hermon.mail@gmail.com" onclick="vlTrackCTA('mailto_direct')">angel.hermon.mail@gmail.com</a>
@@ -241,11 +241,22 @@
           <label class="f"><span class="label">Company / team <i>optional</i></span><input name="company" autocomplete="organization"></label>
           <label class="f"><span class="label">Timeline <i>optional</i></span><input name="timeline" placeholder="e.g. a first answer this month"></label>
         </div>
+        <label class="hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="submit">
-          <button class="btn" type="submit">Open email with these details <svg class="arr" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M1 6h9.5M6.5 2 10.5 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
+          <button class="btn" type="submit">Send these details <svg class="arr" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M1 6h9.5M6.5 2 10.5 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
         </div>
-        <p class="privacy">This page sets no cookies. Anonymous page analytics (PostHog, EU) measure visits and clicks; form contents are not collected by the site.</p>
+        <p class="form-status" role="status"></p>
+        <p class="privacy">What is stored: only the fields above plus the time, in a private database (Cloudflare), used only to reply to you; I get a notification with the same text. No IP address, no tracking. Email me and I delete it. This page sets no cookies; anonymous page analytics (PostHog, EU) count visits and clicks, never form contents.</p>
       </form>
+      <form id="notes" class="notes" novalidate data-r style="--i:4">
+          <label class="f"><span class="label">Monthly notes <i>optional</i></span><input name="email" type="email" autocomplete="email" required placeholder="you@company.com" aria-describedby="notes-consent"></label>
+          <label class="consent"><input type="checkbox" name="consent" required> <span id="notes-consent">Email me Angel Hermon's notes on agent observability, at most once a month. I can unsubscribe with one click in any email.</span></label>
+          <input type="hidden" name="consent_version" value="notes-v1">
+          <label class="hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
+          <div class="submit"><button class="btn-2" type="submit">Subscribe</button></div>
+          <p class="form-status" role="status"></p>
+          <p class="privacy">Double opt-in: you are only added after clicking the link in a confirmation email. Stored: your email, which box you ticked, its exact wording and the time. Nothing else.</p>
+        </form>
     </div>
   </section>
 </main>
