@@ -2,31 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Angel Hermon — Observable, deterministic AI agent pipelines</title>
 <meta name="description" content="Freelance software engineer. I make AI agent and MCP pipelines observable and reproducible: OpenTelemetry tracing, deterministic steps, read-only tool boundaries. Go, Rust, Python, TypeScript.">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0E0F0C" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07080A">
 <link rel="canonical" href="https://anhermon.dev/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/assets/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/bricolage-grotesque-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" type="image/avif" media="(max-width: 760px)" imagesrcset="/assets/img/hero-m-640.avif 640w, /assets/img/hero-m-976.avif 976w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" type="image/avif" media="(min-width: 761px)" imagesrcset="/assets/img/hero-960.avif 960w, /assets/img/hero-1536.avif 1536w" imagesizes="100vw" fetchpriority="high">
 <link rel="stylesheet" href="/assets/site.css">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Angel Hermon">
 <meta property="og:url" content="https://anhermon.dev/">
 <meta property="og:title" content="Angel Hermon — Observable, deterministic AI agent pipelines">
 <meta property="og:description" content="Freelance engineer for teams running AI agents and MCP servers in production: tracing, reproducibility, guarded tool access.">
-<meta property="og:image" content="https://anhermon.dev/og.png?v=4">
+<meta property="og:image" content="https://anhermon.dev/og.png?v=5">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Angel Hermon: observable, deterministic AI agent pipelines.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Angel Hermon — Observable, deterministic AI agent pipelines">
 <meta name="twitter:description" content="Freelance engineer for teams running AI agents and MCP servers in production.">
-<meta name="twitter:image" content="https://anhermon.dev/og.png?v=4">
-<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<meta name="twitter:image" content="https://anhermon.dev/og.png?v=5">
+<script>document.documentElement.classList.add('js')</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -46,204 +46,193 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<div class="rail" aria-hidden="true">
-  <span class="id">trace 4bf92f35 · anhermon.dev</span>
-  <div class="line"><div class="fill"></div>
-    <ol><li style="--p:0" data-for="top"></li><li style="--p:17" data-for="problem"></li><li style="--p:33" data-for="method"></li><li style="--p:50" data-for="proof"></li><li style="--p:67" data-for="engage"></li><li style="--p:83" data-for="contact"></li><li style="--p:100" data-for="end"></li></ol>
-  </div>
-</div>
-
 <header class="top">
-  <div class="wrap">
-    <a class="brand" href="#top">Angel Hermon</a>
-    <nav aria-label="Primary"><a href="#method">Method</a><a href="#proof">Work</a><a href="#contact">Contact</a></nav>
-    <div class="tools">
-      <button class="btn-plain theme" type="button"><span>Theme</span><span class="tv"></span></button>
-      <button class="btn-plain copy" type="button" data-email="angel.hermon.mail@gmail.com" aria-describedby="copy-hint">
-        <span class="lbl"><span class="full">angel.hermon.mail@gmail.com</span><span class="short">Copy email</span></span>
-      </button>
-      <span id="copy-hint" class="sr">Copies the email address to your clipboard</span>
-    </div>
-  </div>
+  <a class="brand" href="#top">Angel Hermon</a>
+  <a class="quiet" href="#contact" onclick="vlTrackCTA('header_contact')">Contact</a>
 </header>
 <p class="sr" aria-live="polite" id="live"></p>
 
 <main id="main">
   <section class="hero" id="top" aria-labelledby="h1">
-    <div class="wrap g">
-      <p class="meta label"><span>Freelance engineer</span><span>Agent &amp; MCP pipelines</span></p>
-      <h1 id="h1">Agents that fail should leave a <em>trace</em>.</h1>
-      <div class="side">
-        <p class="lede">I make AI agent and MCP pipelines observable and reproducible, so when a run fails, slows down or costs more, your team can see why and run it again.</p>
-        <p class="stack">go · rust · python · typescript</p>
-      </div>
-      <div class="act">
-        <a class="btn" href="#contact" onclick="vlTrackCTA('hero_contact')">Describe your pipeline <svg class="arr" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M1 6h9.5M6.5 2 10.5 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></a>
-        <span class="note">I reply to every genuine inquiry by email.</span>
-      </div>
-
-      <figure class="trace run" id="trace" aria-labelledby="trace-cap">
-        <div class="trace-bar">
-          <span class="label" style="text-transform:none">agent.run · 8 spans · 4.82s</span>
-          <div class="runs">
-            <output id="runlog" aria-live="polite"><b>run 1</b></output>
-            <button class="btn-plain" type="button" id="replay">Replay run</button>
-          </div>
-        </div>
-        <div class="wf-axis" aria-hidden="true">
-          <span class="dim label" style="font-size:10px">span</span>
-          <div class="ruler">
-            <svg preserveAspectRatio="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"><line x1="0.000%" x2="0.000%" y1="0" y2="100%"/><line x1="5.187%" x2="5.187%" y1="60%" y2="100%"/><line x1="10.373%" x2="10.373%" y1="60%" y2="100%"/><line x1="15.560%" x2="15.560%" y1="60%" y2="100%"/><line x1="20.747%" x2="20.747%" y1="0" y2="100%"/><line x1="25.934%" x2="25.934%" y1="60%" y2="100%"/><line x1="31.120%" x2="31.120%" y1="60%" y2="100%"/><line x1="36.307%" x2="36.307%" y1="60%" y2="100%"/><line x1="41.494%" x2="41.494%" y1="0" y2="100%"/><line x1="46.680%" x2="46.680%" y1="60%" y2="100%"/><line x1="51.867%" x2="51.867%" y1="60%" y2="100%"/><line x1="57.054%" x2="57.054%" y1="60%" y2="100%"/><line x1="62.241%" x2="62.241%" y1="0" y2="100%"/><line x1="67.427%" x2="67.427%" y1="60%" y2="100%"/><line x1="72.614%" x2="72.614%" y1="60%" y2="100%"/><line x1="77.801%" x2="77.801%" y1="60%" y2="100%"/><line x1="82.988%" x2="82.988%" y1="0" y2="100%"/><line x1="88.174%" x2="88.174%" y1="60%" y2="100%"/><line x1="93.361%" x2="93.361%" y1="60%" y2="100%"/><line x1="98.548%" x2="98.548%" y1="60%" y2="100%"/></svg>
-            <span style="left:0">0</span><span style="left:20.75%">1s</span><span style="left:41.49%">2s</span><span style="left:62.24%">3s</span><span style="left:82.99%">4s</span>
-          </div>
-        </div>
-        <ol class="wf">
-          <li class="wf-row" data-k="root" style="--i:0;--s:0;--w:100"><span class="nm"><span>agent.run</span><span class="t">4.82s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
-          <li class="wf-row" style="--i:1;--s:0.5;--w:8.9;--d:1"><span class="nm"><span>plan</span><span class="t">0.43s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
-          <li class="wf-row" data-k="span" style="--i:2;--s:9.6;--w:27.2;--d:1"><span class="nm"><span>llm.chat</span><span class="t">1.31s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
-          <li class="wf-row" style="--i:3;--s:37;--w:14.9;--d:1"><span class="nm"><span>tools/call search</span><span class="t">0.72s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
-          <li class="wf-row" data-k="err" style="--i:4;--s:52.1;--w:22;--d:1"><span class="nm"><span>tools/call fetch</span><span class="t">timeout</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
-          <li class="wf-row" style="--i:5;--s:74.4;--w:9.1;--d:2"><span class="nm"><span>retry fetch</span><span class="t">0.44s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
-          <li class="wf-row" style="--i:6;--s:83.7;--w:12;--d:1"><span class="nm"><span>llm.chat</span><span class="t">0.58s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
-          <li class="wf-row" style="--i:7;--s:96.1;--w:2.9;--d:1"><span class="nm"><span>respond</span><span class="t">0.14s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
-        </ol>
-        <figcaption id="trace-cap">Illustration of what a traced agent run looks like, not a real customer trace. Replaying a deterministic run should land on the same bars.</figcaption>
-      </figure>
+    <div class="hero-media" id="hero-media">
+      <picture>
+        <source media="(max-width: 760px)" type="image/avif" srcset="/assets/img/hero-m-640.avif 640w, /assets/img/hero-m-976.avif 976w" sizes="100vw">
+        <source media="(max-width: 760px)" type="image/webp" srcset="/assets/img/hero-m-640.webp 640w, /assets/img/hero-m-976.webp 976w" sizes="100vw">
+        <source type="image/avif" srcset="/assets/img/hero-960.avif 960w, /assets/img/hero-1536.avif 1536w" sizes="100vw">
+        <img class="poster" id="poster" src="/assets/img/hero-1536.webp" srcset="/assets/img/hero-960.webp 960w, /assets/img/hero-1536.webp 1536w" sizes="100vw" width="1536" height="1024" alt="A thread of blue light passing through a row of glass panes in the dark." fetchpriority="high" decoding="async">
+      </picture>
+      <canvas id="strands" aria-hidden="true"></canvas>
+      <div class="cursor" id="cursor" aria-hidden="true"></div>
+    </div>
+    <div class="hero-copy">
+      <h1 id="h1">Agents that fail should leave a <span class="tr">trace</span>.</h1>
+      <p class="lede">I make AI agent and MCP pipelines observable and reproducible.</p>
+      <a class="btn" href="#contact" onclick="vlTrackCTA('hero_contact')">Describe your pipeline <svg class="arr" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M1 6h9.5M6.5 2 10.5 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></a>
+    </div>
+    <div class="runbar">
+      <span class="run-id">agent.run · 8 spans · 4.82s</span>
+      <output class="read" id="readout" aria-live="off">drag across the run</output>
+      <output class="runlog" id="runlog" aria-live="polite">run 1</output>
+      <button class="replay" type="button" id="replay">Replay run</button>
+      <span class="note">Strands drawn from an illustrative 8-span run, not a customer trace. Same seed, same frame.</span>
     </div>
   </section>
 
-  <section class="sec prob" id="problem" aria-labelledby="h-problem">
-    <div class="wrap g">
-      <div class="head">
-        <p class="sec-head label"><span class="tick"></span><span class="idx">02</span><span>agent.pipeline / symptoms</span></p>
-        <h2 id="h-problem">The system already runs. Nobody can say why it did that.</h2>
-      </div>
+  <section class="problem" id="problem" aria-labelledby="h-problem">
+    <div class="backdrop" aria-hidden="true"><img src="/assets/img/backdrop-1280.avif" width="1280" height="720" alt="" loading="lazy" decoding="async"></div>
+    <div class="wrap">
+      <h2 id="h-problem" class="say" data-r><span>The system already runs.</span> <span class="dimmed">Nobody can say why it did that.</span></h2>
       <ul class="logs">
-        <li><span class="lv w">WARN</span><q>it got slower</q></li>
-        <li><span class="lv w">WARN</span><q>it cost more</q></li>
-        <li><span class="lv e">ERROR</span><q>it behaved differently</q></li>
+        <li data-r style="--i:0"><span class="lv">warn</span><q>it got slower</q></li>
+        <li data-r style="--i:1"><span class="lv">warn</span><q>it cost more</q></li>
+        <li data-r style="--i:2" class="err"><span class="lv">error</span><q>it behaved differently</q></li>
       </ul>
-      <p class="after"><strong>This is for engineering teams with an agent or MCP-based system in production</strong> and a problem of exactly that shape: it failed, got slow, cost more or changed behaviour, and the logs do not say which step, which tool call or which prompt.</p>
+      <p class="after" data-r><strong>This is for engineering teams with an agent or MCP-based system in production</strong> and a problem of exactly that shape: it failed, got slow, cost more or changed behaviour, and the logs do not say which step, which tool call or which prompt.</p>
     </div>
   </section>
 
-  <section class="sec" id="method" aria-labelledby="h-method">
-    <div class="wrap">
-      <p class="sec-head label"><span class="tick"></span><span class="idx">03</span><span>agent.pipeline / method</span></p>
-      <h2 id="h-method" style="margin-bottom:48px">Three spans of work.</h2>
-      <ol class="steps">
-        <li class="step">
-          <span class="n">01</span>
-          <div class="txt">
-            <h3>Observe</h3>
-            <p>Instrument agent runs and MCP tool calls with OpenTelemetry, so every call has a name, a duration, an outcome and trace context, in the backend you already use.</p>
-            <p class="tags">OTLP · Jaeger · Tempo · Honeycomb</p>
-          </div>
-          <figure class="art art-observe"><img src="/assets/img/observe.webp" width="1000" height="81" alt="A timeline with tick marks and three marked events, one highlighted." decoding="async"></figure>
-        </li>
-        <li class="step">
-          <span class="n">02</span>
-          <div class="txt">
-            <h3>Pin down</h3>
-            <p>Separate what the model decides from what code should decide. Fixed logic moves out of prompts into testable steps, so a run can be replayed, diffed and reviewed.</p>
-            <p class="tags">replay · diff · tests</p>
-          </div>
-          <figure class="art art-replay">
-            <svg viewBox="0 0 400 170" role="img" aria-label="Two identical runs stacked; every step lines up, difference zero.">
-              <line class="ax" x1="56" y1="10" x2="56" y2="150"/>
-              <line class="gd" x1="118" y1="10" x2="118" y2="150"/><line class="gd" x1="290" y1="10" x2="290" y2="150"/>
-              <text x="0" y="21">run 1</text>
-              <rect class="bx" x="56" y="14" width="340" height="7" style="fill:currentColor"/>
-              <rect class="bx" x="60" y="27" width="56" height="7"/>
-              <rect class="bs" x="118" y="40" width="110" height="7"/>
-              <rect class="bx" x="230" y="53" width="60" height="7"/>
-              <rect class="bx" x="292" y="66" width="100" height="7"/>
-              <text x="0" y="97">run 2</text>
-              <rect class="bx" x="56" y="90" width="340" height="7" style="fill:currentColor"/>
-              <rect class="bx" x="60" y="103" width="56" height="7"/>
-              <rect class="bs" x="118" y="116" width="110" height="7"/>
-              <rect class="bx" x="230" y="129" width="60" height="7"/>
-              <rect class="bx" x="292" y="142" width="100" height="7"/>
-              <text class="eq" x="0" y="166">diff 0</text>
-            </svg>
-          </figure>
-        </li>
-        <li class="step">
-          <span class="n">03</span>
-          <div class="txt">
-            <h3>Guard</h3>
-            <p>Design MCP servers and tool layers with explicit boundaries: read-only by construction, allowlisted calls, secrets kept out of the model's context.</p>
-            <p class="tags">allowlist · read-only · secrets</p>
-          </div>
-          <figure class="art art-guard"><img src="/assets/img/guard.webp" width="520" height="462" alt="Lines stop at a boundary; one line leaves through a narrow gate, representing an allowlist." decoding="async"></figure>
-        </li>
-      </ol>
-    </div>
-  </section>
+  <section class="method" id="method" aria-labelledby="h-method">
+    <h2 id="h-method" class="sr">Method: observe, pin down, guard</h2>
 
-  <section class="sec" id="proof" aria-labelledby="h-proof">
-    <div class="wrap">
-      <p class="sec-head label"><span class="tick"></span><span class="idx">04</span><span>agent.pipeline / public work</span></p>
-      <div class="g">
-        <h2 id="h-proof" style="grid-column:1/-1">Read the code before you talk to me.</h2>
+    <article class="plate p-observe" aria-labelledby="h-observe">
+      <figure class="shot" data-r>
+        <div class="px" data-px="0.12"><img src="/assets/img/observe-1024.avif" srcset="/assets/img/observe-640.avif 640w, /assets/img/observe-1024.avif 1024w" sizes="(min-width: 900px) 46vw, 100vw" width="1024" height="1280" alt="A blue light thread running along a row of small metal tick marks, like a measuring instrument." loading="lazy" decoding="async"></div>
+        <ol class="ticks" aria-hidden="true">
+          <li style="--x:31%;--y:41%;--i:0">plan <b>0.43s</b></li>
+          <li style="--x:52%;--y:34%;--i:1">llm.chat <b>1.31s</b></li>
+          <li style="--x:73%;--y:26%;--i:2">tools/call fetch <b class="burn">timeout</b></li>
+        </ol>
+      </figure>
+      <div class="txt">
+        <p class="num" aria-hidden="true">01</p>
+        <h3 id="h-observe" data-r>Observe</h3>
+        <p data-r style="--i:1">Instrument agent runs and MCP tool calls with OpenTelemetry, so every call has a name, a duration, an outcome and trace context, in the backend you already use.</p>
+        <p class="tags" data-r style="--i:2">OTLP · Jaeger · Tempo · Honeycomb</p>
       </div>
-      <p class="proof-intro dim" style="margin-top:20px">Five public, open-source repositories, all my own. Limits are listed where the READMEs list them.</p>
-      <ul class="repos">
-        <li class="repo">
+    </article>
+
+    <article class="plate p-pin" aria-labelledby="h-pin">
+      <div class="txt">
+        <p class="num" aria-hidden="true">02</p>
+        <h3 id="h-pin" data-r>Pin down</h3>
+        <p data-r style="--i:1">Separate what the model decides from what code should decide. Fixed logic moves out of prompts into testable steps, so a run can be replayed, diffed and reviewed.</p>
+        <p class="tags" data-r style="--i:2">replay · diff · tests</p>
+      </div>
+      <figure class="shot" data-r>
+        <div class="px" data-px="0.1"><img src="/assets/img/replay-1024.avif" srcset="/assets/img/replay-640.avif 640w, /assets/img/replay-1024.avif 1024w" sizes="(min-width: 900px) 42vw, 100vw" width="1024" height="1280" alt="Two blue light threads, one fainter, landing on the same point of a slate surface." loading="lazy" decoding="async"></div>
+        <figcaption class="diff" aria-hidden="true"><span>run 1</span><span>run 2</span><b>diff 0</b></figcaption>
+      </figure>
+    </article>
+
+    <article class="plate p-guard" aria-labelledby="h-guard">
+      <div class="guard-head">
+        <figure class="shot" data-r>
+          <div class="px" data-px="0.08"><img src="/assets/img/guard-1024.avif" srcset="/assets/img/guard-640.avif 640w, /assets/img/guard-1024.avif 1024w" sizes="(min-width: 900px) 40vw, 100vw" width="1024" height="1280" alt="Many light strands stop at the face of a steel plate; one passes through a narrow slot." loading="lazy" decoding="async"></div>
+        </figure>
+        <div class="txt">
+          <p class="num" aria-hidden="true">03</p>
+          <h3 id="h-guard" data-r>Guard</h3>
+          <p data-r style="--i:1">Design MCP servers and tool layers with explicit boundaries: read-only by construction, allowlisted calls, secrets kept out of the model's context.</p>
+          <p class="tags" data-r style="--i:2">allowlist · read-only · secrets</p>
+        </div>
+      </div>
+
+      <figure class="gate" id="gate" aria-labelledby="gate-cap">
+        <div class="gate-stage" aria-hidden="true">
+          <div class="call-lane"><span class="call" id="call">GET /api/Account/GetHoldingsSummery</span></div>
+          <svg class="beam" viewBox="0 0 100 10" preserveAspectRatio="none"><line id="beam-in" x1="0" y1="5" x2="100" y2="5"/></svg>
+          <div class="allow">
+            <p class="allow-h">GET_ALLOWED · 15 exact paths</p>
+            <ol id="allow">
+              <li>/api/Auth/GetAuthData</li><li>/api/DataProvider/GetStaticData</li><li>/api/DataProvider/GetChartData</li><li>/api/DataProvider/GetLatestNews</li><li>/api/Account/GetHoldings</li><li class="slot">/api/Account/GetHoldingsSummery</li><li>/api/Account/GetAccountSecurities</li><li>/api/Account/GetAccountTransactions</li><li>/api/Account/GetNewAccountTransactions</li><li>/api/Account/GetNewAccountDollarTransactions</li><li>/api/Account/GetAccountDailyYields</li><li>/api/Account/GetAccountMonthlyYields</li><li>/api/Orders/GetAllOrdersForAccountByDate</li><li>/api/Orders/GetOrderHistory</li><li>/api/StandingOrders/GetAllStandingOrdersData</li>
+            </ol>
+          </div>
+          <p class="verdict" id="verdict"></p>
+        </div>
+        <ol class="outcomes" id="outcomes">
+          <li class="no"><code>POST /api/Orders/SendOrder</code><span>rejected: not a GET</span></li>
+          <li class="no"><code>GET /api/Orders/SendOrder</code><span>rejected: path not in the set</span></li>
+          <li class="no"><code>GET /api/Account/GetHoldingsSumm<mark>a</mark>ry</code><span>rejected: the set holds the server's own spelling, Summ<b>e</b>ry</span></li>
+          <li class="ok"><code>GET /api/Account/GetHoldingsSummery</code><span>exact match: passes</span></li>
+        </ol>
+        <figcaption id="gate-cap"><a href="https://github.com/anhermon/spark-ordernet-mcp">spark-ordernet-mcp</a>: <code>Session.request()</code> raises unless the method is GET and the path is in one exact 15-entry allowlist. Paths shown are real; timing is illustrative.</figcaption>
+      </figure>
+    </article>
+  </section>
+
+  <section class="proof" id="proof" aria-labelledby="h-proof">
+    <div class="proof-pin">
+      <div class="proof-head">
+        <h2 id="h-proof" class="say" data-r>Read the code before you talk to me.</h2>
+        <p class="dimtxt" data-r style="--i:1">Five public, open-source repositories, all my own. Limits are listed where the READMEs list them.</p>
+      </div>
+      <ul class="repos" id="repos">
+        <li class="repo" data-r style="--i:0">
+          <span class="ix">01</span>
           <h3><a href="https://github.com/anhermon/mcp-trace">mcp-trace</a></h3>
           <p class="what">Transparent Go proxy for MCP servers: one OpenTelemetry span per <code>tools/call</code>, no client or server changes. Speaks stdio, Streamable HTTP and HTTP+SSE.</p>
           <p class="limit"><b>limit</b> On HTTP+SSE, a server that advertises an absolute POST endpoint bypasses the proxy and you get zero tool-call spans. The README says so.</p>
-          <dl><div><dt>lang</dt><dd>Go</dd></div><div><dt>licence</dt><dd>MIT</dd></div><div><dt>release</dt><dd class="fig">v2.0.3</dd></div></dl>
+          <dl><div><dt>lang</dt><dd>Go</dd></div><div><dt>licence</dt><dd>MIT</dd></div><div><dt>release</dt><dd>v2.0.3</dd></div></dl>
         </li>
-        <li class="repo">
+        <li class="repo" data-r style="--i:1">
+          <span class="ix">02</span>
           <h3><a href="https://github.com/anhermon/sealref">sealref</a></h3>
           <p class="what">Keeps API keys out of a coding agent's context. Secrets live in the macOS Keychain; the agent only sees <code>sealref://</code> references, and injected values are scrubbed from command output.</p>
           <p class="limit"><b>limit</b> macOS only: it is built on the Keychain.</p>
           <dl><div><dt>lang</dt><dd>Python</dd></div><div><dt>licence</dt><dd>MIT</dd></div><div><dt>os</dt><dd>macOS</dd></div></dl>
         </li>
-        <li class="repo">
+        <li class="repo" data-r style="--i:2">
+          <span class="ix">03</span>
           <h3><a href="https://github.com/anhermon/spark-ordernet-mcp">spark-ordernet-mcp</a></h3>
           <p class="what">Read-only MCP server over a brokerage API. The read-only guarantee is enforced at the session layer with an exact-GET allowlist, not by convention.</p>
           <dl><div><dt>lang</dt><dd>Python</dd></div><div><dt>licence</dt><dd>MIT</dd></div></dl>
         </li>
-        <li class="repo">
+        <li class="repo" data-r style="--i:3">
+          <span class="ix">04</span>
           <h3><a href="https://github.com/anhermon/anvil">anvil</a></h3>
           <p class="what">Single-binary agent harness in Rust: pluggable LLM providers, sub-agents, a skill library, and episodic memory in SQLite.</p>
           <dl><div><dt>lang</dt><dd>Rust</dd></div><div><dt>licence</dt><dd>MIT / Apache-2.0</dd></div></dl>
         </li>
-        <li class="repo">
+        <li class="repo" data-r style="--i:4">
+          <span class="ix">05</span>
           <h3><a href="https://github.com/anhermon/awesome-agent-observability">awesome-agent-observability</a></h3>
           <p class="what">Curated list of tracing, evaluation, guardrail, gateway and MCP tooling for agent observability. Every entry checked to resolve and be maintained as of the last audit.</p>
-          <dl><div><dt>licence</dt><dd>CC0-1.0</dd></div><div><dt>stars</dt><dd class="fig">33 <span class="dim">· 1 Oct 2026</span></dd></div></dl>
+          <dl><div><dt>licence</dt><dd>CC0-1.0</dd></div><div><dt>stars</dt><dd>33 <span class="dimtxt">· 1 Oct 2026</span></dd></div></dl>
         </li>
       </ul>
     </div>
   </section>
 
-  <section class="sec eng" id="engage" aria-labelledby="h-engage">
+  <section class="engage" id="engage" aria-labelledby="h-engage">
     <div class="wrap">
-      <p class="sec-head label"><span class="tick"></span><span class="idx">05</span><span>agent.pipeline / engagement</span></p>
-      <h2 id="h-engage">How we would work together.</h2>
-      <p class="lead dim" style="margin-top:20px">I do not publish a price list; scope decides the shape, and I quote after the first call.</p>
-      <ol class="tl">
-        <li><div class="bar" aria-hidden="true"></div><p class="label">step 1</p><h3>You describe the system</h3><p>Using the form below: what runs, what goes wrong, what you already use for monitoring.</p></li>
-        <li><div class="bar" aria-hidden="true"></div><p class="label">step 2</p><h3>A short intro call</h3><p>Or an email thread, to confirm whether this is something I can help with. If it is not, I will say so and, where I can, point you elsewhere.</p></li>
-        <li><div class="bar" aria-hidden="true"></div><p class="label">step 3</p><h3>A scoped proposal</h3><p>In writing: a time-boxed review with findings, a defined implementation task, or part-time contract work. You see the scope and rate before anything starts.</p></li>
+      <h2 id="h-engage" class="say" data-r>How we would work together.</h2>
+      <p class="dimtxt lead" data-r style="--i:1">I do not publish a price list; scope decides the shape, and I quote after the first call.</p>
+      <ol class="steps">
+        <li data-r style="--i:0"><span class="big" aria-hidden="true">1</span><h3>You describe the system</h3><p>Using the form below: what runs, what goes wrong, what you already use for monitoring.</p></li>
+        <li data-r style="--i:1"><span class="big" aria-hidden="true">2</span><h3>A short intro call</h3><p>Or an email thread, to confirm whether this is something I can help with. If it is not, I will say so and, where I can, point you elsewhere.</p></li>
+        <li data-r style="--i:2"><span class="big" aria-hidden="true">3</span><h3>A scoped proposal</h3><p>In writing: a time-boxed review with findings, a defined implementation task, or part-time contract work. You see the scope and rate before anything starts.</p></li>
       </ol>
       <div class="fit">
-        <div><h3><span class="dot ok" aria-hidden="true"></span>Good fit</h3><ul><li>An existing agent or MCP system</li><li>A named problem</li><li>A technical owner on your side</li></ul></div>
-        <div><h3><span class="dot no" aria-hidden="true"></span>Poor fit</h3><ul><li>Building a product from a slide</li><li>Work that needs a full-time on-site presence</li></ul></div>
+        <div data-r><h3>Good fit</h3><ul><li>An existing agent or MCP system</li><li>A named problem</li><li>A technical owner on your side</li></ul></div>
+        <div data-r style="--i:1" class="poor"><h3>Poor fit</h3><ul><li>Building a product from a slide</li><li>Work that needs a full-time on-site presence</li></ul></div>
       </div>
     </div>
   </section>
 
-  <section class="sec contact" id="contact" aria-labelledby="h-contact">
-    <div class="wrap g">
+  <section class="contact" id="contact" aria-labelledby="h-contact">
+    <figure class="contact-art" data-r aria-hidden="true">
+      <div class="px" data-px="0.1"><img src="/assets/img/contact-1536.avif" srcset="/assets/img/contact-800.avif 800w, /assets/img/contact-1536.avif 1536w" sizes="100vw" width="1536" height="1024" alt="" loading="lazy" decoding="async"></div>
+    </figure>
+    <div class="wrap">
       <div class="head">
-        <p class="sec-head label"><span class="tick"></span><span class="idx">06</span><span>agent.pipeline / contact</span></p>
-        <h2 id="h-contact">Describe your <em>pipeline</em>.</h2>
-        <p class="intro dim">The more specific, the more useful my reply. Submitting opens a pre-filled email in your mail app, addressed to me; nothing is sent until you press send in it.</p>
-        <p class="direct"><span class="dim">or write directly</span> <a href="mailto:angel.hermon.mail@gmail.com" onclick="vlTrackCTA('mailto_direct')">angel.hermon.mail@gmail.com</a></p>
+        <h2 id="h-contact" class="say" data-r>Describe your pipeline.</h2>
+        <p class="intro" data-r style="--i:1">The more specific, the more useful my reply. Submitting opens a pre-filled email in your mail app, addressed to me; nothing is sent until you press send in it.</p>
+        <p class="reply" data-r style="--i:2">I reply to every genuine inquiry by email.</p>
+        <div class="direct" data-r style="--i:3">
+          <a href="mailto:angel.hermon.mail@gmail.com" onclick="vlTrackCTA('mailto_direct')">angel.hermon.mail@gmail.com</a>
+          <button class="copy" type="button" data-email="angel.hermon.mail@gmail.com" aria-describedby="copy-hint"><span class="lbl">Copy</span></button>
+          <span id="copy-hint" class="sr">Copies the email address to your clipboard</span>
+        </div>
       </div>
       <form id="lead" novalidate>
         <div class="f-row">
@@ -270,11 +259,9 @@
   </section>
 </main>
 
-<footer class="foot" id="end">
-  <div class="wrap">
-    <span>span 07 / end · Angel Hermon, software engineer · 2026</span>
-    <span><a href="https://github.com/anhermon">GitHub</a> · <a href="mailto:angel.hermon.mail@gmail.com">Email</a></span>
-  </div>
+<footer class="foot">
+  <span>Angel Hermon, software engineer · 2026</span>
+  <span><a href="https://github.com/anhermon">GitHub</a> · <a href="mailto:angel.hermon.mail@gmail.com">Email</a></span>
 </footer>
 
 <script>window.vlTrackCTA = window.vlTrackCTA || function () {};</script>
