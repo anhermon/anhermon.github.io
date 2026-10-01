@@ -32,7 +32,7 @@ catch (e) { fail(); }
 const gl = renderer && renderer.gl;
 if (gl) init();
 
-function fail() { doc.dataset.hero = "poster"; RUN.replay = null; }
+function fail() { doc.dataset.hero = "poster"; RUN.replay = null; document.getElementById("readout").textContent = "8 spans, one timeout"; }
 
 function init() {
   gl.clearColor(0, 0, 0, 1);
@@ -149,7 +149,7 @@ function init() {
     if (last) { const dt = now - last; if (frames < 90) { frames++; if (dt > 24) slow++; } }
     last = now;
     if (frames >= 90 && slow > 60) { // sustained < ~40fps (Low Power Mode cap, weak GPU): fall back to the photograph
-      doc.dataset.hero = "poster"; RUN.replay = null; return;
+      fail(); return;
     }
     if (exposing) {
       const p = Math.min(1, (now - t0) / DUR); setExpose(ease(p));
@@ -166,7 +166,7 @@ function init() {
   function kick() { if (!raf && visible && !document.hidden) raf = requestAnimationFrame(tick); }
   function done() {
     const h = frameHash();
-    if (!h) { doc.dataset.hero = "poster"; RUN.replay = null; return; }
+    if (!h) { fail(); return; }
     if (run === 1) { hash1 = h; RUN.log(h); } else RUN.log(hash1, h);
   }
   RUN.replay = function (n) { run = n; t0 = 0; exposing = true; setExpose(0); kick(); };

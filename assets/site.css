@@ -130,11 +130,11 @@ html.js .say[data-r] { font-weight: 200; transition: opacity 1s var(--ease), tra
 html.js .say[data-r].in { font-weight: 330; }
 /* Image plates: masked wipe + slow settle */
 /* (mask sits on the inner layer: Chrome's IntersectionObserver counts the target's own clip-path) */
-html.js .shot[data-r], html.js .contact-art[data-r] { opacity: 1; transform: none; background: none; }
-html.js .shot[data-r] > .px, html.js .contact-art[data-r] > .px { clip-path: inset(0 0 100% 0); transition: clip-path 1.4s var(--ease); }
-html.js .shot[data-r].in > .px, html.js .contact-art[data-r].in > .px { clip-path: inset(0 0 0 0); }
-html.js .shot[data-r] img, html.js .contact-art[data-r] img { transform: scale(1.32); transition: transform 2.2s var(--ease); }
-html.js .shot[data-r].in img, html.js .contact-art[data-r].in img { transform: scale(1.14); }
+html.js .shot[data-r]{ opacity: 1; transform: none; background: none; }
+html.js .shot[data-r] > .px{ clip-path: inset(0 0 100% 0); transition: clip-path 1.4s var(--ease); }
+html.js .shot[data-r].in > .px{ clip-path: inset(0 0 0 0); }
+html.js .shot[data-r] img{ transform: scale(1.32); transition: transform 2.2s var(--ease); }
+html.js .shot[data-r].in img{ transform: scale(1.14); }
 .px { will-change: transform; transform: translate3d(0, var(--py, 0px), 0); }
 
 /* ---------- PROBLEM ---------- */
@@ -181,8 +181,12 @@ html.js .shot[data-r].in img, html.js .contact-art[data-r].in img { transform: s
   .p-pin { grid-template-columns: 5fr 5fr; }
   .p-pin .txt { padding-left: 8%; }
   .p-pin .shot { margin-top: 18vh; }
-  .guard-head { display: grid; grid-template-columns: 4fr 6fr; gap: clamp(28px, 5vw, 80px); align-items: end; }
-  .p-guard .guard-head .txt { padding-bottom: 4vh; }
+  .p-guard .txt { display: grid; grid-template-columns: 5fr 6fr; column-gap: clamp(28px, 5vw, 80px); align-items: end; }
+  .p-guard .txt .num, .p-guard .txt h3 { grid-column: 1; }
+  .p-guard .txt h3 { grid-row: 2 / span 2; margin-bottom: 0; }
+  .p-guard .txt p:not(.num) { grid-column: 2; }
+  .p-guard .txt p:not(.num):not(.tags) { grid-row: 2; }
+  .p-guard .txt .tags { grid-row: 3; }
 }
 
 /* Guard: the real allowlist as a machined plate */
@@ -286,12 +290,8 @@ html.js .shot[data-r].in img, html.js .contact-art[data-r].in img { transform: s
 @media (min-width: 760px) { .fit { grid-template-columns: 1fr 1fr; } }
 
 /* ---------- CONTACT ---------- */
-.contact { position: relative; padding-bottom: clamp(80px, 10vw, 140px); }
-.contact-art { position: relative; height: clamp(320px, 62vw, 760px); overflow: hidden; }
-.contact-art .px, .contact-art img { width: 100%; height: 100%; }
-.contact-art img { object-fit: cover; object-position: 60% 50%; }
-.contact-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, var(--void) 2%, rgba(7,8,10,0) 45%), linear-gradient(180deg, var(--void), rgba(7,8,10,0) 18%); }
-.contact .wrap { position: relative; margin-top: clamp(-260px, -16vw, -80px); display: grid; gap: clamp(48px, 6vw, 80px); }
+.contact { position: relative; padding: clamp(96px, 12vw, 180px) 0 clamp(80px, 10vw, 140px); border-top: 1px solid var(--rule); }
+.contact .wrap { position: relative; display: grid; gap: clamp(48px, 6vw, 80px); }
 .contact .say { max-width: 8em; }
 .intro { margin-top: 28px; max-width: 46ch; color: var(--dim); }
 .reply { margin-top: 18px; font-size: clamp(20px, 2vw, 26px); font-stretch: 88%; letter-spacing: -.015em; }
@@ -342,11 +342,12 @@ textarea { min-height: 140px; resize: vertical; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html.js [data-r] { opacity: 1; transform: none; clip-path: none; }
-  html.js .shot[data-r] img, html.js .contact-art[data-r] img { transform: none; }
-  html.js .shot[data-r] > .px, html.js .contact-art[data-r] > .px { clip-path: none; }
+  html.js .shot[data-r] img{ transform: none; }
+  html.js .shot[data-r] > .px{ clip-path: none; }
   html.js .say[data-r] { font-weight: 330; }
   .ticks li { opacity: 1; transform: translate(-50%, -190%); }
   .logs li q { color: var(--bone); }
   .logs li.err q { color: var(--burn); }
   .px { transform: none !important; }
 }
+@media (max-width: 360px) { .gate-stage { padding: 16px 8px; } .allow { padding: 12px 8px; } .allow ol { font-size: 9px; } }
