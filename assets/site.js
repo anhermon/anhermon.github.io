@@ -5,7 +5,12 @@
 
   // Theme: auto -> light -> dark -> auto. Stored per viewer; page works without storage.
   var themeBtn = document.querySelector(".theme");
-  function themeLabel() { themeBtn.firstChild.textContent = "Theme: " + (root.dataset.theme || "auto"); }
+  var metas = document.querySelectorAll('meta[name="theme-color"]');
+  function themeLabel() {
+    var t = root.dataset.theme || "";
+    themeBtn.querySelector(".tv").textContent = ": " + (t || "auto");
+    metas.forEach(function (m, i) { m.content = t ? (t === "dark" ? "#0E0F0C" : "#F4F1EA") : (i ? "#0E0F0C" : "#F4F1EA"); });
+  }
   themeLabel();
   themeBtn.addEventListener("click", function () {
     var next = { "": "light", light: "dark", dark: "" }[root.dataset.theme || ""];
@@ -37,7 +42,7 @@
     trace.classList.remove("run");
     void trace.offsetWidth; // restart CSS animations
     trace.classList.add("run");
-    runlog.innerHTML = "run " + (run - 1) + " → <b>run " + run + "</b> · diff <span class=\"zero\">0</span>";
+    runlog.innerHTML = "<b>run " + run + "</b> vs run " + (run - 1) + " · diff <span class=\"zero\">0</span>";
   });
 
   // Rail ticks light as their section reaches the upper half of the viewport.

@@ -78,6 +78,7 @@ code { font: .9em var(--mono); }
   border: 1px solid var(--rule); padding: 9px 12px; cursor: pointer; border-radius: 2px; white-space: nowrap; }
 .btn-plain:hover { border-color: var(--ink); }
 .copy .full { display: none; }
+@media (max-width: 400px) { .theme .tv { display: none; } .top .wrap { gap: 12px; } }
 .copy[data-state="copied"] { border-color: var(--ok); color: var(--ok); }
 @media (min-width: 760px) { .top nav { display: flex; } }
 @media (min-width: 1000px) { .copy .full { display: inline; } .copy .short { display: none; } }
@@ -126,7 +127,7 @@ h1 { font: 400 clamp(48px, 8.2vw, 112px)/.94 var(--serif); letter-spacing: -.025
 .btn { display: inline-flex; align-items: center; gap: 12px; background: var(--ink); color: var(--paper); text-decoration: none;
   font: 500 15px/1 var(--sans); padding: 16px 20px; border: 1px solid var(--ink); border-radius: 2px; cursor: pointer; }
 .btn:hover { background: var(--span); border-color: var(--span); color: var(--paper); }
-.btn .arr { font-family: var(--mono); transition: transform .2s; }
+.btn .arr { flex: none; transition: transform .2s; }
 .btn:hover .arr { transform: translateX(3px); }
 .note { font-size: 14px; color: var(--ink-dim); }
 
@@ -175,13 +176,13 @@ h1 { font: 400 clamp(48px, 8.2vw, 112px)/.94 var(--serif); letter-spacing: -.025
 
 /* problem */
 .logs { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
-.logs li { display: grid; grid-template-columns: auto 1fr; gap: 4px 24px; padding: 18px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+.logs li { display: grid; grid-template-columns: 1fr; gap: 4px 24px; padding: 18px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
 .logs .ts { font: 400 12px var(--mono); color: var(--ink-dim); }
 .logs .lv { font: 500 12px var(--mono); letter-spacing: .06em; }
 .logs .lv.w { color: var(--ink-dim); } .logs .lv.e { color: var(--err); }
 .logs q { grid-column: 1 / -1; font: 400 clamp(28px, 4vw, 44px)/1.1 var(--serif); letter-spacing: -.015em; quotes: "\201C" "\201D"; }
 @media (min-width: 760px) {
-  .logs li { grid-template-columns: 9rem 5rem 1fr; }
+  .logs li { grid-template-columns: 5rem 1fr; }
   .logs q { grid-column: auto; }
   .prob .head { grid-column: 1 / span 5; }
   .prob .logs { grid-column: 6 / span 7; margin-top: 0; }
@@ -230,7 +231,10 @@ h1 { font: 400 clamp(48px, 8.2vw, 112px)/.94 var(--serif); letter-spacing: -.025
 @media (prefers-reduced-motion: reduce) { .repo::after { transition: none; } }
 .repo h3 { font: 400 clamp(30px, 3.4vw, 44px)/1 var(--serif); letter-spacing: -.02em; }
 .repo h3 a { text-decoration: none; }
-.repo h3 a::after { content: " \2197"; font: 400 .5em var(--mono); vertical-align: .55em; color: var(--ink-dim); }
+.repo h3 a::after { content: ""; display: inline-block; width: 11px; height: 11px; margin-left: 10px; vertical-align: .9em; background: var(--ink-dim);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 10 10 2M4 2h6v6' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 10 10 2M4 2h6v6' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E") center / contain no-repeat; }
+.repo h3 a:hover::after { background: var(--span); }
 .repo h3 a:hover { color: var(--span); }
 .repo .what { max-width: 54ch; }
 .repo .limit { font: 400 13px/1.5 var(--mono); color: var(--ink-dim); max-width: 64ch; }
