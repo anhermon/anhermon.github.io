@@ -6,21 +6,27 @@
 <title>Angel Hermon — Observable, deterministic AI agent pipelines</title>
 <meta name="description" content="Freelance software engineer. I make AI agent and MCP pipelines observable and reproducible: OpenTelemetry tracing, deterministic steps, read-only tool boundaries. Go, Rust, Python, TypeScript.">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E0F0C" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://anhermon.dev/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='15' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3EAH%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Angel Hermon">
 <meta property="og:url" content="https://anhermon.dev/">
 <meta property="og:title" content="Angel Hermon — Observable, deterministic AI agent pipelines">
 <meta property="og:description" content="Freelance engineer for teams running AI agents and MCP servers in production: tracing, reproducibility, guarded tool access.">
-<meta property="og:image" content="https://anhermon.dev/og.png?v=3">
+<meta property="og:image" content="https://anhermon.dev/og.png?v=4">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Angel Hermon — observable, deterministic AI agent pipelines.">
+<meta property="og:image:alt" content="Angel Hermon: observable, deterministic AI agent pipelines.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Angel Hermon — Observable, deterministic AI agent pipelines">
 <meta name="twitter:description" content="Freelance engineer for teams running AI agents and MCP servers in production.">
-<meta name="twitter:image" content="https://anhermon.dev/og.png?v=3">
+<meta name="twitter:image" content="https://anhermon.dev/og.png?v=4">
+<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -36,170 +42,243 @@
   }
 }
 </script>
-<style>
-  :root {
-    color-scheme: light dark;
-    --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --dim: #475569;
-    --accent: #0369a1; --accent-ink: #ffffff; --border: #dbe3ec; --code: #eef2f7;
-    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg: #0b1220; --surface: #121b2e; --text: #e6edf6; --dim: #9fb0c5;
-      --accent: #38bdf8; --accent-ink: #06202e; --border: #243350; --code: #0f1a2d; }
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 1rem/1.6 var(--font); -webkit-font-smoothing: antialiased; }
-  a { color: var(--accent); }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .wrap { max-width: 880px; margin: 0 auto; padding-inline: 24px; }
-  header.top { border-bottom: 1px solid var(--border); }
-  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 60px; }
-  .brand { font-weight: 700; text-decoration: none; color: var(--text); }
-  nav { display: flex; gap: 20px; font-size: .92rem; font-weight: 500; }
-  nav a { color: var(--dim); text-decoration: none; }
-  nav a:hover { color: var(--text); }
-  .btn { display: inline-block; background: var(--accent); color: var(--accent-ink); font-weight: 600; text-decoration: none;
-    padding: 12px 22px; border-radius: 8px; border: 0; font: inherit; font-weight: 600; cursor: pointer; }
-  .btn:hover { opacity: .9; }
-  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--border); }
-  .hero { padding: 64px 0 48px; }
-  .kicker { font: 600 .8rem var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
-  h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 18px; max-width: 20ch; }
-  .lede { font-size: 1.15rem; color: var(--dim); max-width: 60ch; margin: 0 0 28px; }
-  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .cta-note { font-size: .88rem; color: var(--dim); }
-  section { padding: 44px 0; border-top: 1px solid var(--border); }
-  h2 { font-size: 1.45rem; letter-spacing: -.01em; margin: 0 0 8px; }
-  .sub { color: var(--dim); margin: 0 0 24px; max-width: 62ch; }
-  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
-  .card h3 { margin: 0 0 8px; font-size: 1.05rem; }
-  .card p { margin: 0; color: var(--dim); font-size: .95rem; }
-  .card .meta { display: block; margin-top: 12px; font: .78rem var(--mono); color: var(--dim); }
-  .proof .card { display: flex; flex-direction: column; }
-  .proof h3 a { text-decoration: none; color: var(--text); }
-  .proof h3 a:hover { color: var(--accent); }
-  ol.steps { margin: 0; padding-left: 1.2em; color: var(--dim); }
-  ol.steps li { margin-bottom: 8px; } ol.steps strong { color: var(--text); }
-  ul.plain { margin: 0; padding-left: 1.2em; color: var(--dim); } ul.plain li { margin-bottom: 6px; }
-  form { display: grid; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px; }
-  label { display: grid; gap: 6px; font-size: .9rem; font-weight: 600; }
-  label span.opt { font-weight: 400; color: var(--dim); }
-  input, select, textarea { font: inherit; font-weight: 400; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; width: 100%; }
-  textarea { min-height: 110px; resize: vertical; }
-  .row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-  .form-note { font-size: .85rem; color: var(--dim); margin: 0; }
-  code { font-family: var(--mono); font-size: .88em; background: var(--code); padding: 1px 5px; border-radius: 4px; }
-  footer { border-top: 1px solid var(--border); padding: 28px 0 40px; font-size: .85rem; color: var(--dim); }
-  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
-  @media (max-width: 560px) { .wrap { padding-inline: 18px; } nav { display: none; } .hero { padding: 40px 0 32px; } .btn { width: 100%; text-align: center; } }
-</style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="rail" aria-hidden="true">
+  <span class="id">trace 4bf92f35 · anhermon.dev</span>
+  <div class="line"><div class="fill"></div>
+    <ol><li style="--p:0" data-for="top"></li><li style="--p:17" data-for="problem"></li><li style="--p:33" data-for="method"></li><li style="--p:50" data-for="proof"></li><li style="--p:67" data-for="engage"></li><li style="--p:83" data-for="contact"></li><li style="--p:100" data-for="end"></li></ol>
+  </div>
+</div>
+
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#top">Angel Hermon</a>
-    <nav aria-label="Primary"><a href="#work">What I do</a><a href="#proof">Public work</a><a href="#engage">Engagement</a><a href="#contact">Contact</a></nav>
+    <nav aria-label="Primary"><a href="#method">Method</a><a href="#proof">Work</a><a href="#contact">Contact</a></nav>
+    <div class="tools">
+      <button class="btn-plain theme" type="button"><span>Theme</span></button>
+      <button class="btn-plain copy" type="button" data-email="angel.hermon.mail@gmail.com" aria-describedby="copy-hint">
+        <span class="lbl"><span class="full">angel.hermon.mail@gmail.com</span><span class="short">Copy email</span></span>
+      </button>
+      <span id="copy-hint" class="sr">Copies the email address to your clipboard</span>
+    </div>
   </div>
 </header>
+<p class="sr" aria-live="polite" id="live"></p>
 
-<main id="top">
-  <div class="wrap"><div class="hero">
-    <p class="kicker">Freelance / contract engineering</p>
-    <h1>AI agent pipelines you can observe and reproduce.</h1>
-    <p class="lede">I help teams that run LLM agents and MCP servers see what those systems actually do, and make their behavior predictable enough to debug, review and trust. Software engineer; Go, Rust, Python, TypeScript.</p>
-    <div class="cta-row">
-      <a class="btn" href="#contact" onclick="vlTrackCTA('hero_contact')">Describe your pipeline</a>
-      <span class="cta-note">I reply to every genuine inquiry by email.</span>
-    </div>
-  </div></div>
-
-  <section id="work"><div class="wrap">
-    <h2>Who it is for, and what I do</h2>
-    <p class="sub">For engineering teams with an agent or MCP-based system that already runs, and a problem of the form "it failed / got slow / cost more / behaved differently, and we cannot tell why".</p>
-    <div class="grid">
-      <div class="card"><h3>Make runs observable</h3><p>Instrument agent runs and MCP tool calls with OpenTelemetry so every call has a name, duration, outcome and trace context, in the backend you already use (Jaeger, Tempo, Honeycomb, any OTLP endpoint).</p></div>
-      <div class="card"><h3>Make steps deterministic</h3><p>Separate what the model decides from what code should decide. Move fixed logic out of prompts into testable steps, so a pipeline can be re-run, diffed and reviewed.</p></div>
-      <div class="card"><h3>Put guards on tool access</h3><p>Design MCP servers and tool layers with explicit boundaries: read-only by construction, allowlisted calls, secrets kept out of model context.</p></div>
-    </div>
-  </div></section>
-
-  <section id="proof" class="proof"><div class="wrap">
-    <h2>Public work</h2>
-    <p class="sub">All repositories below are my own, public, and open source. Read the code before you talk to me.</p>
-    <div class="grid">
-      <div class="card"><h3><a href="https://github.com/anhermon/mcp-trace">mcp-trace</a></h3><p>Transparent Go proxy for MCP servers: one OpenTelemetry span per <code>tools/call</code>, no client or server changes. Supports HTTP+SSE servers today; Streamable HTTP and stdio are not supported, and the README says so up front.</p><span class="meta">Go · MIT · v2.0.3</span></div>
-      <div class="card"><h3><a href="https://github.com/anhermon/sealref">sealref</a></h3><p>Keeps API keys out of a coding agent's context. Secrets live in the macOS Keychain; the agent only sees <code>sealref://</code> references, and injected values are scrubbed from command output.</p><span class="meta">Python · MIT · macOS</span></div>
-      <div class="card"><h3><a href="https://github.com/anhermon/spark-ordernet-mcp">spark-ordernet-mcp</a></h3><p>Read-only MCP server over a brokerage API. The read-only guarantee is enforced at the session layer with an exact-GET allowlist, not by convention.</p><span class="meta">MCP server</span></div>
-      <div class="card"><h3><a href="https://github.com/anhermon/anvil">anvil</a></h3><p>Single-binary agent harness in Rust: pluggable LLM providers, sub-agents, a skill library, and episodic memory in SQLite.</p><span class="meta">Rust</span></div>
-      <div class="card"><h3><a href="https://github.com/anhermon/awesome-agent-observability">awesome-agent-observability</a></h3><p>Curated list of tracing, evaluation, guardrail, gateway and MCP tooling for agent observability. Every entry checked to resolve and be maintained as of the last audit.</p><span class="meta">32 GitHub stars (1 Oct 2026)</span></div>
-    </div>
-  </div></section>
-
-  <section id="engage"><div class="wrap">
-    <h2>How we would work together</h2>
-    <p class="sub">I do not publish a price list; scope decides the shape, and I quote after the first call.</p>
-    <ol class="steps">
-      <li><strong>You describe the system</strong> using the form below: what runs, what goes wrong, what you already use for monitoring.</li>
-      <li><strong>Short intro call</strong> (or an email thread) to confirm whether this is something I can help with. If it is not, I will say so and, where I can, point you elsewhere.</li>
-      <li><strong>A scoped proposal</strong> in writing: a time-boxed review with findings, or a defined implementation task, or part-time contract work. You see the scope and rate before anything starts.</li>
-    </ol>
-    <p class="sub" style="margin-top:20px">Good fit: an existing agent/MCP system, a named problem, a technical owner on your side. Poor fit: building a product from a slide, or work needing a full-time on-site presence.</p>
-  </div></section>
-
-  <section id="contact"><div class="wrap">
-    <h2>Describe your pipeline</h2>
-    <p class="sub">The more specific, the more useful my reply. Submitting opens a pre-filled email in your mail app, addressed to me; nothing is sent until you press send in it.</p>
-    <form id="lead" novalidate>
-      <div class="row">
-        <label>Your name<input name="name" autocomplete="name" required></label>
-        <label>Email<input name="email" type="email" autocomplete="email" required></label>
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="h1">
+    <div class="wrap g">
+      <p class="meta label"><span>Freelance engineer</span><span>Agent &amp; MCP pipelines</span></p>
+      <h1 id="h1">Agents that fail should leave a <em>trace</em>.</h1>
+      <div class="side">
+        <p class="lede">I make AI agent and MCP pipelines observable and reproducible, so when a run fails, slows down or costs more, your team can see why and run it again.</p>
+        <p class="stack">go · rust · python · typescript</p>
       </div>
-      <div class="row">
-        <label>Company / team (optional)<input name="company" autocomplete="organization"></label>
-        <label>What are you looking for?
-          <select name="kind">
+      <div class="act">
+        <a class="btn" href="#contact" onclick="vlTrackCTA('hero_contact')">Describe your pipeline <span class="arr" aria-hidden="true">→</span></a>
+        <span class="note">I reply to every genuine inquiry by email.</span>
+      </div>
+
+      <figure class="trace run" id="trace" aria-labelledby="trace-cap">
+        <div class="trace-bar">
+          <span class="label" style="text-transform:none">agent.run · 8 spans · 4.82s</span>
+          <div class="runs">
+            <output id="runlog" aria-live="polite"><b>run 1</b></output>
+            <button class="btn-plain" type="button" id="replay">Replay run</button>
+          </div>
+        </div>
+        <div class="wf-axis" aria-hidden="true">
+          <span class="dim label" style="font-size:10px">span</span>
+          <div class="ruler">
+            <svg preserveAspectRatio="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"><line x1="0.000%" x2="0.000%" y1="0" y2="100%"/><line x1="5.187%" x2="5.187%" y1="60%" y2="100%"/><line x1="10.373%" x2="10.373%" y1="60%" y2="100%"/><line x1="15.560%" x2="15.560%" y1="60%" y2="100%"/><line x1="20.747%" x2="20.747%" y1="0" y2="100%"/><line x1="25.934%" x2="25.934%" y1="60%" y2="100%"/><line x1="31.120%" x2="31.120%" y1="60%" y2="100%"/><line x1="36.307%" x2="36.307%" y1="60%" y2="100%"/><line x1="41.494%" x2="41.494%" y1="0" y2="100%"/><line x1="46.680%" x2="46.680%" y1="60%" y2="100%"/><line x1="51.867%" x2="51.867%" y1="60%" y2="100%"/><line x1="57.054%" x2="57.054%" y1="60%" y2="100%"/><line x1="62.241%" x2="62.241%" y1="0" y2="100%"/><line x1="67.427%" x2="67.427%" y1="60%" y2="100%"/><line x1="72.614%" x2="72.614%" y1="60%" y2="100%"/><line x1="77.801%" x2="77.801%" y1="60%" y2="100%"/><line x1="82.988%" x2="82.988%" y1="0" y2="100%"/><line x1="88.174%" x2="88.174%" y1="60%" y2="100%"/><line x1="93.361%" x2="93.361%" y1="60%" y2="100%"/><line x1="98.548%" x2="98.548%" y1="60%" y2="100%"/></svg>
+            <span style="left:0">0</span><span style="left:20.75%">1s</span><span style="left:41.49%">2s</span><span style="left:62.24%">3s</span><span style="left:82.99%">4s</span>
+          </div>
+        </div>
+        <ol class="wf">
+          <li class="wf-row" data-k="root" style="--i:0;--s:0;--w:100"><span class="nm"><span>agent.run</span><span class="t">4.82s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
+          <li class="wf-row" style="--i:1;--s:0.5;--w:8.9;--d:1"><span class="nm"><span>plan</span><span class="t">0.43s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
+          <li class="wf-row" data-k="span" style="--i:2;--s:9.6;--w:27.2;--d:1"><span class="nm"><span>llm.chat</span><span class="t">1.31s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
+          <li class="wf-row" style="--i:3;--s:37;--w:14.9;--d:1"><span class="nm"><span>tools/call search</span><span class="t">0.72s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
+          <li class="wf-row" data-k="err" style="--i:4;--s:52.1;--w:22;--d:1"><span class="nm"><span>tools/call fetch</span><span class="t">timeout</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
+          <li class="wf-row" style="--i:5;--s:74.4;--w:9.1;--d:2"><span class="nm"><span>retry fetch</span><span class="t">0.44s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
+          <li class="wf-row" style="--i:6;--s:83.7;--w:12;--d:1"><span class="nm"><span>llm.chat</span><span class="t">0.58s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
+          <li class="wf-row" style="--i:7;--s:96.1;--w:2.9;--d:1"><span class="nm"><span>respond</span><span class="t">0.14s</span></span><span class="track"><span class="slot"><span class="ghost"></span><span class="bar"></span></span></span></li>
+        </ol>
+        <figcaption id="trace-cap">Illustration of what a traced agent run looks like, not a real customer trace. Replaying a deterministic run should land on the same bars.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec prob" id="problem" aria-labelledby="h-problem">
+    <div class="wrap g">
+      <div class="head">
+        <p class="sec-head label"><span class="tick"></span><span class="idx">02</span><span>agent.pipeline / symptoms</span></p>
+        <h2 id="h-problem">The system already runs. Nobody can say why it did that.</h2>
+      </div>
+      <ul class="logs">
+        <li><span class="ts">run 2291 · 14:02:11</span><span class="lv w">WARN</span><q>it got slower</q></li>
+        <li><span class="ts">run 2292 · 14:09:47</span><span class="lv w">WARN</span><q>it cost more</q></li>
+        <li><span class="ts">run 2293 · 14:15:03</span><span class="lv e">ERROR</span><q>it behaved differently</q></li>
+      </ul>
+      <p class="after"><strong>This is for engineering teams with an agent or MCP-based system in production</strong> and a problem of exactly that shape: it failed, got slow, cost more or changed behaviour, and the logs do not say which step, which tool call or which prompt.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="method" aria-labelledby="h-method">
+    <div class="wrap">
+      <p class="sec-head label"><span class="tick"></span><span class="idx">03</span><span>agent.pipeline / method</span></p>
+      <h2 id="h-method" style="margin-bottom:48px">Three spans of work.</h2>
+      <ol class="steps">
+        <li class="step">
+          <span class="n">01</span>
+          <div class="txt">
+            <h3>Observe</h3>
+            <p>Instrument agent runs and MCP tool calls with OpenTelemetry, so every call has a name, a duration, an outcome and trace context, in the backend you already use.</p>
+            <p class="tags">OTLP · Jaeger · Tempo · Honeycomb</p>
+          </div>
+          <figure class="art art-observe"><img src="/assets/img/observe.webp" width="1000" height="81" alt="A timeline with tick marks and three marked events, one highlighted." decoding="async"></figure>
+        </li>
+        <li class="step">
+          <span class="n">02</span>
+          <div class="txt">
+            <h3>Pin down</h3>
+            <p>Separate what the model decides from what code should decide. Fixed logic moves out of prompts into testable steps, so a run can be replayed, diffed and reviewed.</p>
+            <p class="tags">replay · diff · tests</p>
+          </div>
+          <figure class="art art-replay">
+            <svg viewBox="0 0 400 170" role="img" aria-label="Two identical runs stacked; every step lines up, difference zero.">
+              <line class="ax" x1="56" y1="10" x2="56" y2="150"/>
+              <line class="gd" x1="118" y1="10" x2="118" y2="150"/><line class="gd" x1="290" y1="10" x2="290" y2="150"/>
+              <text x="0" y="21">run 1</text>
+              <rect class="bx" x="56" y="14" width="340" height="7" style="fill:currentColor"/>
+              <rect class="bx" x="60" y="27" width="56" height="7"/>
+              <rect class="bs" x="118" y="40" width="110" height="7"/>
+              <rect class="bx" x="230" y="53" width="60" height="7"/>
+              <rect class="bx" x="292" y="66" width="100" height="7"/>
+              <text x="0" y="97">run 2</text>
+              <rect class="bx" x="56" y="90" width="340" height="7" style="fill:currentColor"/>
+              <rect class="bx" x="60" y="103" width="56" height="7"/>
+              <rect class="bs" x="118" y="116" width="110" height="7"/>
+              <rect class="bx" x="230" y="129" width="60" height="7"/>
+              <rect class="bx" x="292" y="142" width="100" height="7"/>
+              <text class="eq" x="0" y="166">diff 0</text>
+            </svg>
+          </figure>
+        </li>
+        <li class="step">
+          <span class="n">03</span>
+          <div class="txt">
+            <h3>Guard</h3>
+            <p>Design MCP servers and tool layers with explicit boundaries: read-only by construction, allowlisted calls, secrets kept out of the model's context.</p>
+            <p class="tags">allowlist · read-only · secrets</p>
+          </div>
+          <figure class="art art-guard"><img src="/assets/img/guard.webp" width="520" height="462" alt="Lines stop at a boundary; one line leaves through a narrow gate, representing an allowlist." decoding="async"></figure>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="proof" aria-labelledby="h-proof">
+    <div class="wrap">
+      <p class="sec-head label"><span class="tick"></span><span class="idx">04</span><span>agent.pipeline / public work</span></p>
+      <div class="g">
+        <h2 id="h-proof" style="grid-column:1/-1">Read the code before you talk to me.</h2>
+      </div>
+      <p class="proof-intro dim" style="margin-top:20px">Five public, open-source repositories, all my own. Limits are listed where the READMEs list them.</p>
+      <ul class="repos">
+        <li class="repo">
+          <h3><a href="https://github.com/anhermon/mcp-trace">mcp-trace</a></h3>
+          <p class="what">Transparent Go proxy for MCP servers: one OpenTelemetry span per <code>tools/call</code>, no client or server changes. Speaks stdio, Streamable HTTP and HTTP+SSE.</p>
+          <p class="limit"><b>limit</b> On HTTP+SSE, a server that advertises an absolute POST endpoint bypasses the proxy and you get zero tool-call spans. The README says so.</p>
+          <dl><div><dt>lang</dt><dd>Go</dd></div><div><dt>licence</dt><dd>MIT</dd></div><div><dt>release</dt><dd class="fig">v2.0.3</dd></div></dl>
+        </li>
+        <li class="repo">
+          <h3><a href="https://github.com/anhermon/sealref">sealref</a></h3>
+          <p class="what">Keeps API keys out of a coding agent's context. Secrets live in the macOS Keychain; the agent only sees <code>sealref://</code> references, and injected values are scrubbed from command output.</p>
+          <p class="limit"><b>limit</b> macOS only: it is built on the Keychain.</p>
+          <dl><div><dt>lang</dt><dd>Python</dd></div><div><dt>licence</dt><dd>MIT</dd></div><div><dt>os</dt><dd>macOS</dd></div></dl>
+        </li>
+        <li class="repo">
+          <h3><a href="https://github.com/anhermon/spark-ordernet-mcp">spark-ordernet-mcp</a></h3>
+          <p class="what">Read-only MCP server over a brokerage API. The read-only guarantee is enforced at the session layer with an exact-GET allowlist, not by convention.</p>
+          <dl><div><dt>lang</dt><dd>Python</dd></div><div><dt>licence</dt><dd>MIT</dd></div></dl>
+        </li>
+        <li class="repo">
+          <h3><a href="https://github.com/anhermon/anvil">anvil</a></h3>
+          <p class="what">Single-binary agent harness in Rust: pluggable LLM providers, sub-agents, a skill library, and episodic memory in SQLite.</p>
+          <dl><div><dt>lang</dt><dd>Rust</dd></div><div><dt>licence</dt><dd>MIT / Apache-2.0</dd></div></dl>
+        </li>
+        <li class="repo">
+          <h3><a href="https://github.com/anhermon/awesome-agent-observability">awesome-agent-observability</a></h3>
+          <p class="what">Curated list of tracing, evaluation, guardrail, gateway and MCP tooling for agent observability. Every entry checked to resolve and be maintained as of the last audit.</p>
+          <dl><div><dt>licence</dt><dd>CC0-1.0</dd></div><div><dt>stars</dt><dd class="fig">33 <span class="dim">· 1 Oct 2026</span></dd></div></dl>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec eng" id="engage" aria-labelledby="h-engage">
+    <div class="wrap">
+      <p class="sec-head label"><span class="tick"></span><span class="idx">05</span><span>agent.pipeline / engagement</span></p>
+      <h2 id="h-engage">How we would work together.</h2>
+      <p class="lead dim" style="margin-top:20px">I do not publish a price list; scope decides the shape, and I quote after the first call.</p>
+      <ol class="tl">
+        <li><div class="bar" aria-hidden="true"></div><p class="label">step 1</p><h3>You describe the system</h3><p>Using the form below: what runs, what goes wrong, what you already use for monitoring.</p></li>
+        <li><div class="bar" aria-hidden="true"></div><p class="label">step 2</p><h3>A short intro call</h3><p>Or an email thread, to confirm whether this is something I can help with. If it is not, I will say so and, where I can, point you elsewhere.</p></li>
+        <li><div class="bar" aria-hidden="true"></div><p class="label">step 3</p><h3>A scoped proposal</h3><p>In writing: a time-boxed review with findings, a defined implementation task, or part-time contract work. You see the scope and rate before anything starts.</p></li>
+      </ol>
+      <div class="fit">
+        <div><h3><span class="dot ok" aria-hidden="true"></span>Good fit</h3><ul><li>An existing agent or MCP system</li><li>A named problem</li><li>A technical owner on your side</li></ul></div>
+        <div><h3><span class="dot no" aria-hidden="true"></span>Poor fit</h3><ul><li>Building a product from a slide</li><li>Work that needs a full-time on-site presence</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec contact" id="contact" aria-labelledby="h-contact">
+    <div class="wrap g">
+      <div class="head">
+        <p class="sec-head label"><span class="tick"></span><span class="idx">06</span><span>agent.pipeline / contact</span></p>
+        <h2 id="h-contact">Describe your <em>pipeline</em>.</h2>
+        <p class="intro dim">The more specific, the more useful my reply. Submitting opens a pre-filled email in your mail app, addressed to me; nothing is sent until you press send in it.</p>
+        <p class="direct"><span class="dim">or write directly</span> <a href="mailto:angel.hermon.mail@gmail.com" onclick="vlTrackCTA('mailto_direct')">angel.hermon.mail@gmail.com</a></p>
+      </div>
+      <form id="lead" novalidate>
+        <div class="f-row">
+          <label class="f"><span class="label">Your name</span><input name="name" autocomplete="name" required></label>
+          <label class="f"><span class="label">Email</span><input name="email" type="email" autocomplete="email" required></label>
+        </div>
+        <label class="f"><span class="label">Looking for</span><span class="sel"><select name="kind">
             <option>Observability / tracing for an agent or MCP system</option>
             <option>Making an agent pipeline more deterministic</option>
             <option>MCP server or tool-access design</option>
             <option>Something else</option>
-          </select>
-        </label>
-      </div>
-      <label>What runs today, and what goes wrong?<textarea name="problem" required placeholder="Stack, how agents are run, what you cannot currently see or reproduce."></textarea></label>
-      <label>Timeline (optional)<input name="timeline" placeholder="e.g. need a first answer this month"></label>
-      <div class="cta-row">
-        <button class="btn" type="submit">Open email with these details</button>
-        <span class="cta-note">Or write directly: <a href="mailto:angel.hermon.mail@gmail.com" onclick="vlTrackCTA('mailto_direct')">angel.hermon.mail@gmail.com</a></span>
-      </div>
-      <p class="form-note">This page sets no cookies. Anonymous page analytics (PostHog, EU) measure visits and clicks; form contents are not collected by the site.</p>
-    </form>
-  </div></section>
+          </select></span></label>
+        <label class="f"><span class="label">What runs today, and what goes wrong?</span><textarea name="problem" required placeholder="Stack, how agents are run, what you cannot currently see or reproduce."></textarea></label>
+        <div class="f-row">
+          <label class="f"><span class="label">Company / team <i>optional</i></span><input name="company" autocomplete="organization"></label>
+          <label class="f"><span class="label">Timeline <i>optional</i></span><input name="timeline" placeholder="e.g. a first answer this month"></label>
+        </div>
+        <div class="submit">
+          <button class="btn" type="submit">Open email with these details <span class="arr" aria-hidden="true">→</span></button>
+        </div>
+        <p class="privacy">This page sets no cookies. Anonymous page analytics (PostHog, EU) measure visits and clicks; form contents are not collected by the site.</p>
+      </form>
+    </div>
+  </section>
 </main>
 
-<footer>
+<footer class="foot" id="end">
   <div class="wrap">
-    <span>Angel Hermon · Software engineer</span>
+    <span>span 07 / end · Angel Hermon, software engineer · 2026</span>
     <span><a href="https://github.com/anhermon">GitHub</a> · <a href="mailto:angel.hermon.mail@gmail.com">Email</a></span>
   </div>
 </footer>
 
-<script>
-document.getElementById('lead').addEventListener('submit', function (e) {
-  e.preventDefault();
-  var f = e.target;
-  if (!f.reportValidity()) return;
-  var v = function (n) { return f.elements[n].value.trim(); };
-  var body = 'Name: ' + v('name') + '\nEmail: ' + v('email') + '\nCompany: ' + (v('company') || '-') +
-    '\nLooking for: ' + v('kind') + '\nTimeline: ' + (v('timeline') || '-') + '\n\nWhat runs today, and what goes wrong:\n' + v('problem') + '\n';
-  vlTrackCTA('form_submit');
-  location.href = 'mailto:angel.hermon.mail@gmail.com?subject=' + encodeURIComponent('Inquiry via anhermon.dev: ' + v('kind')) + '&body=' + encodeURIComponent(body);
-});
-</script>
-<script src="/assets/analytics.js" defer></script>
 <script>window.vlTrackCTA = window.vlTrackCTA || function () {};</script>
+<script src="/assets/site.js" defer></script>
+<script src="/assets/analytics.js" defer></script>
 </body>
 </html>
