@@ -13,23 +13,15 @@
     revealables.forEach(function (el) { io.observe(el); });
   } else revealables.forEach(function (el) { el.classList.add("in"); });
 
-  // One passive scroll -> rAF loop: image parallax, hero drift, pinned proof track.
+  // One passive scroll -> rAF loop: header backdrop, image parallax, hero drift.
   var pxEls = [].slice.call(document.querySelectorAll("[data-px]"));
   var heroMedia = document.getElementById("hero-media");
-  var proof = document.getElementById("proof"), repos = document.getElementById("repos");
-  var trackLen = 0, proofTop = 0, proofOn = false, ticking = false;
-  function measureProof() {
-    proofOn = !reduce.matches && innerWidth >= 900;
-    proof.style.removeProperty("--proof-h");
-    if (!proofOn) { repos.style.removeProperty("--tx"); return; }
-    trackLen = Math.max(0, repos.scrollWidth - innerWidth);
-    proof.style.setProperty("--proof-h", (innerHeight + trackLen) + "px");
-    proofTop = proof.getBoundingClientRect().top + scrollY;
-  }
+  var top = document.querySelector(".top"), ticking = false;
   function frame() {
     ticking = false;
-    if (reduce.matches) return;
     var vh = innerHeight, y = scrollY;
+    top.classList.toggle("solid", y > 8);
+    if (reduce.matches) return;
     for (var i = 0; i < pxEls.length; i++) {
       var el = pxEls[i], r = el.parentNode.getBoundingClientRect();
       if (r.bottom < -200 || r.top > vh + 200) continue;
@@ -38,16 +30,11 @@
       el.style.setProperty("--py", Math.max(-lim, Math.min(lim, -c * parseFloat(el.dataset.px))).toFixed(1) + "px");
     }
     if (y < vh * 1.2) heroMedia.style.setProperty("--hy", (y * 0.22).toFixed(1) + "px");
-    if (proofOn) {
-      var p = Math.min(1, Math.max(0, (y - proofTop) / (trackLen || 1)));
-      repos.style.setProperty("--tx", (-p * trackLen).toFixed(1) + "px");
-    }
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   addEventListener("scroll", onScroll, { passive: true });
-  addEventListener("resize", function () { measureProof(); onScroll(); });
-  addEventListener("load", function () { measureProof(); onScroll(); });
-  measureProof(); frame();
+  addEventListener("resize", onScroll);
+  frame();
 
   // Desktop pointer parallax on the hero photo (hero.js adds its own strand parallax).
   if (matchMedia("(pointer: fine)").matches) {
