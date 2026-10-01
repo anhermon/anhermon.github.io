@@ -3,212 +3,203 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Venture Loop — small products, built in public</title>
-<meta name="description" content="Venture Loop builds small, focused products, tests them with real users, and keeps or kills each one based on what actually happens. Currently building: Sababa Ivrit.">
+<title>Angel Hermon — Observable, deterministic AI agent pipelines</title>
+<meta name="description" content="Freelance software engineer. I make AI agent and MCP pipelines observable and reproducible: OpenTelemetry tracing, deterministic steps, read-only tool boundaries. Go, Rust, Python, TypeScript.">
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://anhermon.dev/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a1512'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='15' font-weight='800' fill='%23ff8a50' text-anchor='middle'%3EVL%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='15' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3EAH%3C/text%3E%3C/svg%3E">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Venture Loop">
+<meta property="og:site_name" content="Angel Hermon">
 <meta property="og:url" content="https://anhermon.dev/">
-<meta property="og:title" content="Venture Loop — small products, built in public">
-<meta property="og:description" content="Small, focused products — built, tested with real users, and kept or killed based on what happens.">
-<meta property="og:image" content="https://anhermon.dev/og.png?v=2">
+<meta property="og:title" content="Angel Hermon — Observable, deterministic AI agent pipelines">
+<meta property="og:description" content="Freelance engineer for teams running AI agents and MCP servers in production: tracing, reproducibility, guarded tool access.">
+<meta property="og:image" content="https://anhermon.dev/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Venture Loop — small products, built in public.">
+<meta property="og:image:alt" content="Angel Hermon — observable, deterministic AI agent pipelines.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Venture Loop — small products, built in public">
-<meta name="twitter:description" content="Small, focused products — built, tested with real users, and kept or killed based on what happens.">
-<meta name="twitter:image" content="https://anhermon.dev/og.png?v=2">
+<meta name="twitter:title" content="Angel Hermon — Observable, deterministic AI agent pipelines">
+<meta name="twitter:description" content="Freelance engineer for teams running AI agents and MCP servers in production.">
+<meta name="twitter:image" content="https://anhermon.dev/og.png?v=3">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Venture Loop",
-  "url": "https://anhermon.dev",
-  "email": "mailto:hermonlabs@proton.me"
+  "@type": "ProfilePage",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Angel Hermon",
+    "url": "https://anhermon.dev/",
+    "jobTitle": "Software engineer",
+    "email": "mailto:angel.hermon.mail@gmail.com",
+    "sameAs": ["https://github.com/anhermon"],
+    "knowsAbout": ["AI agent observability", "OpenTelemetry", "Model Context Protocol", "Go", "Rust", "Python", "TypeScript"]
+  }
 }
 </script>
-<link rel="preload" href="/assets/fonts/rubik-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css">
 <style>
   :root {
     color-scheme: light dark;
-    --bg: #faf5ee;
-    --surface: #ffffff;
-    --text: #21170f;
-    --text-dim: #6d5f52;
-    --accent: #c1481e;
-    --accent-ink: #ffffff;
-    --border: rgba(40,25,12,0.13);
-    --border-strong: rgba(40,25,12,0.26);
-    --chip-live-bg: rgba(31,138,76,0.12);
-    --chip-live-fg: #1a7a43;
-    --chip-live-bd: rgba(31,138,76,0.35);
-    --chip-beta-bg: rgba(193,72,30,0.12);
-    --chip-beta-fg: #a63d19;
-    --chip-beta-bd: rgba(193,72,30,0.35);
-    --font-display: 'Rubik', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-sans: 'Rubik', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --dim: #475569;
+    --accent: #0369a1; --accent-ink: #ffffff; --border: #dbe3ec; --code: #eef2f7;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #18130f;
-      --surface: #221b15;
-      --text: #f4ece2;
-      --text-dim: #b6a897;
-      --accent: #ff8a50;
-      --accent-ink: #1a0f06;
-      --border: rgba(255,222,190,0.14);
-      --border-strong: rgba(255,222,190,0.28);
-      --chip-live-bg: rgba(90,214,140,0.14);
-      --chip-live-fg: #7fe0ab;
-      --chip-live-bd: rgba(90,214,140,0.35);
-      --chip-beta-bg: rgba(255,138,80,0.16);
-      --chip-beta-fg: #ffab7a;
-      --chip-beta-bd: rgba(255,138,80,0.4);
-    }
+    :root { --bg: #0b1220; --surface: #121b2e; --text: #e6edf6; --dim: #9fb0c5;
+      --accent: #38bdf8; --accent-ink: #06202e; --border: #243350; --code: #0f1a2d; }
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-  section[id] { scroll-margin-top: 76px; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-sans);
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: inherit; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 1rem/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .wrap { max-width: 1080px; margin: 0 auto; padding-inline: 24px; }
-  .site-nav {
-    position: sticky; top: 0; z-index: 10; height: 64px;
-    display: flex; align-items: center;
-    background: color-mix(in srgb, var(--bg) 90%, transparent);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    border-block-end: 1px solid var(--border);
-  }
-  .site-nav .wrap { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .wordmark { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em; text-decoration: none; color: var(--text); }
-  .nav-links { display: flex; gap: 24px; font-weight: 600; font-size: 0.92rem; }
-  .nav-links a { text-decoration: none; color: var(--text-dim); padding-block: 4px; border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
-  .nav-links a:hover, .nav-links a:focus-visible { color: var(--text); border-color: var(--accent); }
-
-  .hero { padding: 40px 0 36px; }
-  .hero .wrap { max-width: 720px; }
-  .hero-kicker { font-weight: 700; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
-  h1.hero-title { margin: 0 0 12px; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; font-size: clamp(1.9rem, 4.6vw, 3rem); }
-  .hero-sub { margin: 0; font-size: clamp(1rem, 1.6vw, 1.15rem); color: var(--text-dim); max-width: 56ch; }
-
-  section { padding: 40px 0 64px; }
-  h2.section-title { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; font-size: clamp(1.3rem, 2.4vw, 1.6rem); margin: 0 0 24px; }
-
-  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 420px)); gap: 20px; }
-  .product-card {
-    display: block; text-decoration: none; color: inherit;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-    padding: 24px; transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-  }
-  .product-card:hover, .product-card:focus-visible {
-    border-color: var(--border-strong); transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(40,25,12,0.08);
-  }
-  .card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 12px; }
-  .card-top h3 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; letter-spacing: -0.01em; }
-  .chip { display: inline-flex; align-items: center; font-weight: 700; font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
-  .chip-live { background: var(--chip-live-bg); color: var(--chip-live-fg); border: 1px solid var(--chip-live-bd); }
-  .chip-beta { background: var(--chip-beta-bg); color: var(--chip-beta-fg); border: 1px solid var(--chip-beta-bd); }
-  .chip-coming { background: transparent; color: var(--text-dim); border: 1px dashed var(--border-strong); }
-  .product-card p { margin: 0 0 16px; color: var(--text-dim); font-size: 0.95rem; }
-  .card-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-dim); }
-  .card-meta span { border: 1px solid var(--border); padding: 3px 9px; border-radius: 999px; }
-  .card-cta { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-weight: 700; font-size: 0.88rem; color: var(--accent); }
-
-  .contact-inner { max-width: 640px; }
-  .contact-inner p { margin: 0 0 20px; color: var(--text-dim); font-size: 1.02rem; line-height: 1.6; }
-  .contact-link {
-    display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
-    color: var(--accent-ink); background: var(--accent); font-weight: 700; font-size: 0.98rem;
-    padding: 13px 22px; border-radius: 999px; transition: opacity 0.2s ease, transform 0.15s ease;
-  }
-  .contact-link:hover, .contact-link:focus-visible { opacity: 0.88; }
-  .contact-link:active { transform: translateY(1px); }
-
-  footer.site-footer { padding: 24px 0 36px; font-size: 0.82rem; color: var(--text-dim); border-block-start: 1px solid var(--border); }
-
-  @media (max-width: 480px) {
-    .wrap { padding-inline: 18px; }
-    .nav-links { display: none; }
-    .hero { padding: 24px 0 28px; }
-    section { padding: 28px 0 48px; }
-    .product-grid { grid-template-columns: 1fr; }
-  }
+  .wrap { max-width: 880px; margin: 0 auto; padding-inline: 24px; }
+  header.top { border-bottom: 1px solid var(--border); }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 60px; }
+  .brand { font-weight: 700; text-decoration: none; color: var(--text); }
+  nav { display: flex; gap: 20px; font-size: .92rem; font-weight: 500; }
+  nav a { color: var(--dim); text-decoration: none; }
+  nav a:hover { color: var(--text); }
+  .btn { display: inline-block; background: var(--accent); color: var(--accent-ink); font-weight: 600; text-decoration: none;
+    padding: 12px 22px; border-radius: 8px; border: 0; font: inherit; font-weight: 600; cursor: pointer; }
+  .btn:hover { opacity: .9; }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--border); }
+  .hero { padding: 64px 0 48px; }
+  .kicker { font: 600 .8rem var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 18px; max-width: 20ch; }
+  .lede { font-size: 1.15rem; color: var(--dim); max-width: 60ch; margin: 0 0 28px; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .cta-note { font-size: .88rem; color: var(--dim); }
+  section { padding: 44px 0; border-top: 1px solid var(--border); }
+  h2 { font-size: 1.45rem; letter-spacing: -.01em; margin: 0 0 8px; }
+  .sub { color: var(--dim); margin: 0 0 24px; max-width: 62ch; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .card h3 { margin: 0 0 8px; font-size: 1.05rem; }
+  .card p { margin: 0; color: var(--dim); font-size: .95rem; }
+  .card .meta { display: block; margin-top: 12px; font: .78rem var(--mono); color: var(--dim); }
+  .proof .card { display: flex; flex-direction: column; }
+  .proof h3 a { text-decoration: none; color: var(--text); }
+  .proof h3 a:hover { color: var(--accent); }
+  ol.steps { margin: 0; padding-left: 1.2em; color: var(--dim); }
+  ol.steps li { margin-bottom: 8px; } ol.steps strong { color: var(--text); }
+  ul.plain { margin: 0; padding-left: 1.2em; color: var(--dim); } ul.plain li { margin-bottom: 6px; }
+  form { display: grid; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px; }
+  label { display: grid; gap: 6px; font-size: .9rem; font-weight: 600; }
+  label span.opt { font-weight: 400; color: var(--dim); }
+  input, select, textarea { font: inherit; font-weight: 400; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; width: 100%; }
+  textarea { min-height: 110px; resize: vertical; }
+  .row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .form-note { font-size: .85rem; color: var(--dim); margin: 0; }
+  code { font-family: var(--mono); font-size: .88em; background: var(--code); padding: 1px 5px; border-radius: 4px; }
+  footer { border-top: 1px solid var(--border); padding: 28px 0 40px; font-size: .85rem; color: var(--dim); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+  @media (max-width: 560px) { .wrap { padding-inline: 18px; } nav { display: none; } .hero { padding: 40px 0 32px; } .btn { width: 100%; text-align: center; } }
 </style>
 </head>
 <body>
-
-<header class="site-nav">
+<header class="top">
   <div class="wrap">
-    <a class="wordmark" href="#top">Venture Loop</a>
-    <nav class="nav-links" aria-label="Primary">
-      <a href="#products">Products</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <a class="brand" href="#top">Angel Hermon</a>
+    <nav aria-label="Primary"><a href="#work">What I do</a><a href="#proof">Public work</a><a href="#engage">Engagement</a><a href="#contact">Contact</a></nav>
   </div>
 </header>
 
 <main id="top">
-  <section class="hero" aria-labelledby="hero-heading">
-    <div class="wrap">
-      <p class="hero-kicker">Venture Loop</p>
-      <h1 id="hero-heading" class="hero-title">Small products, built and tested in public.</h1>
-      <p class="hero-sub">Every status below is real — nothing here describes a feature before it ships.</p>
+  <div class="wrap"><div class="hero">
+    <p class="kicker">Freelance / contract engineering</p>
+    <h1>AI agent pipelines you can observe and reproduce.</h1>
+    <p class="lede">I help teams that run LLM agents and MCP servers see what those systems actually do, and make their behavior predictable enough to debug, review and trust. Software engineer; Go, Rust, Python, TypeScript.</p>
+    <div class="cta-row">
+      <a class="btn" href="#contact" onclick="vlTrackCTA('hero_contact')">Describe your pipeline</a>
+      <span class="cta-note">I reply to every genuine inquiry by email.</span>
     </div>
-  </section>
+  </div></div>
 
-  <section id="products" aria-labelledby="products-heading">
-    <div class="wrap">
-      <h2 id="products-heading" class="section-title">Products</h2>
-      <div class="product-grid">
+  <section id="work"><div class="wrap">
+    <h2>Who it is for, and what I do</h2>
+    <p class="sub">For engineering teams with an agent or MCP-based system that already runs, and a problem of the form "it failed / got slow / cost more / behaved differently, and we cannot tell why".</p>
+    <div class="grid">
+      <div class="card"><h3>Make runs observable</h3><p>Instrument agent runs and MCP tool calls with OpenTelemetry so every call has a name, duration, outcome and trace context, in the backend you already use (Jaeger, Tempo, Honeycomb, any OTLP endpoint).</p></div>
+      <div class="card"><h3>Make steps deterministic</h3><p>Separate what the model decides from what code should decide. Move fixed logic out of prompts into testable steps, so a pipeline can be re-run, diffed and reviewed.</p></div>
+      <div class="card"><h3>Put guards on tool access</h3><p>Design MCP servers and tool layers with explicit boundaries: read-only by construction, allowlisted calls, secrets kept out of model context.</p></div>
+    </div>
+  </div></section>
 
-        <a class="product-card" href="/sababa-ivrit/" onclick="vlTrackCTA('hub_product_sababa')">
-          <div class="card-top">
-            <h3>Sababa Ivrit</h3>
-            <span class="chip chip-beta">Beta</span>
-          </div>
-          <p>A Telegram bot teaching Hebrew for real bureaucracy — bank forms, the clinic, the rental lease — to new immigrants. Free 14-day trial. Drill content is an early beta draft, not yet reviewed by a native speaker.</p>
-          <div class="card-meta">
-            <span>Telegram bot</span>
-            <span>Recruiting testers</span>
-          </div>
-          <span class="card-cta">View product →</span>
-        </a>
+  <section id="proof" class="proof"><div class="wrap">
+    <h2>Public work</h2>
+    <p class="sub">All repositories below are my own, public, and open source. Read the code before you talk to me.</p>
+    <div class="grid">
+      <div class="card"><h3><a href="https://github.com/anhermon/mcp-trace">mcp-trace</a></h3><p>Transparent Go proxy for MCP servers: one OpenTelemetry span per <code>tools/call</code>, no client or server changes. Supports HTTP+SSE servers today; Streamable HTTP and stdio are not supported, and the README says so up front.</p><span class="meta">Go · MIT · v2.0.3</span></div>
+      <div class="card"><h3><a href="https://github.com/anhermon/sealref">sealref</a></h3><p>Keeps API keys out of a coding agent's context. Secrets live in the macOS Keychain; the agent only sees <code>sealref://</code> references, and injected values are scrubbed from command output.</p><span class="meta">Python · MIT · macOS</span></div>
+      <div class="card"><h3><a href="https://github.com/anhermon/spark-ordernet-mcp">spark-ordernet-mcp</a></h3><p>Read-only MCP server over a brokerage API. The read-only guarantee is enforced at the session layer with an exact-GET allowlist, not by convention.</p><span class="meta">MCP server</span></div>
+      <div class="card"><h3><a href="https://github.com/anhermon/anvil">anvil</a></h3><p>Single-binary agent harness in Rust: pluggable LLM providers, sub-agents, a skill library, and episodic memory in SQLite.</p><span class="meta">Rust</span></div>
+      <div class="card"><h3><a href="https://github.com/anhermon/awesome-agent-observability">awesome-agent-observability</a></h3><p>Curated list of tracing, evaluation, guardrail, gateway and MCP tooling for agent observability. Every entry checked to resolve and be maintained as of the last audit.</p><span class="meta">32 GitHub stars (1 Oct 2026)</span></div>
+    </div>
+  </div></section>
 
+  <section id="engage"><div class="wrap">
+    <h2>How we would work together</h2>
+    <p class="sub">I do not publish a price list; scope decides the shape, and I quote after the first call.</p>
+    <ol class="steps">
+      <li><strong>You describe the system</strong> using the form below: what runs, what goes wrong, what you already use for monitoring.</li>
+      <li><strong>Short intro call</strong> (or an email thread) to confirm whether this is something I can help with. If it is not, I will say so and, where I can, point you elsewhere.</li>
+      <li><strong>A scoped proposal</strong> in writing: a time-boxed review with findings, or a defined implementation task, or part-time contract work. You see the scope and rate before anything starts.</li>
+    </ol>
+    <p class="sub" style="margin-top:20px">Good fit: an existing agent/MCP system, a named problem, a technical owner on your side. Poor fit: building a product from a slide, or work needing a full-time on-site presence.</p>
+  </div></section>
+
+  <section id="contact"><div class="wrap">
+    <h2>Describe your pipeline</h2>
+    <p class="sub">The more specific, the more useful my reply. Submitting opens a pre-filled email in your mail app, addressed to me; nothing is sent until you press send in it.</p>
+    <form id="lead" novalidate>
+      <div class="row">
+        <label>Your name<input name="name" autocomplete="name" required></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required></label>
       </div>
-    </div>
-  </section>
-
-  <section id="contact" aria-labelledby="contact-heading">
-    <div class="wrap contact-inner">
-      <h2 id="contact-heading" class="section-title">Contact</h2>
-      <p>Venture Loop is a small studio: build fast, test with real users in public, and keep or kill each product based on what actually happens.</p>
-      <p>Bugs, ideas, partnerships — email:</p>
-      <a class="contact-link" href="mailto:hermonlabs@proton.me">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></svg>
-        hermonlabs@proton.me
-      </a>
-    </div>
-  </section>
+      <div class="row">
+        <label>Company / team (optional)<input name="company" autocomplete="organization"></label>
+        <label>What are you looking for?
+          <select name="kind">
+            <option>Observability / tracing for an agent or MCP system</option>
+            <option>Making an agent pipeline more deterministic</option>
+            <option>MCP server or tool-access design</option>
+            <option>Something else</option>
+          </select>
+        </label>
+      </div>
+      <label>What runs today, and what goes wrong?<textarea name="problem" required placeholder="Stack, how agents are run, what you cannot currently see or reproduce."></textarea></label>
+      <label>Timeline (optional)<input name="timeline" placeholder="e.g. need a first answer this month"></label>
+      <div class="cta-row">
+        <button class="btn" type="submit">Open email with these details</button>
+        <span class="cta-note">Or write directly: <a href="mailto:angel.hermon.mail@gmail.com" onclick="vlTrackCTA('mailto_direct')">angel.hermon.mail@gmail.com</a></span>
+      </div>
+      <p class="form-note">This page sets no cookies. Anonymous page analytics (PostHog, EU) measure visits and clicks; form contents are not collected by the site.</p>
+    </form>
+  </div></section>
 </main>
 
-<footer class="site-footer">
-  <div class="wrap">Venture Loop</div>
+<footer>
+  <div class="wrap">
+    <span>Angel Hermon · Software engineer</span>
+    <span><a href="https://github.com/anhermon">GitHub</a> · <a href="mailto:angel.hermon.mail@gmail.com">Email</a></span>
+  </div>
 </footer>
 
-<script src="/assets/analytics.js"></script>
+<script>
+document.getElementById('lead').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var f = e.target;
+  if (!f.reportValidity()) return;
+  var v = function (n) { return f.elements[n].value.trim(); };
+  var body = 'Name: ' + v('name') + '\nEmail: ' + v('email') + '\nCompany: ' + (v('company') || '-') +
+    '\nLooking for: ' + v('kind') + '\nTimeline: ' + (v('timeline') || '-') + '\n\nWhat runs today, and what goes wrong:\n' + v('problem') + '\n';
+  vlTrackCTA('form_submit');
+  location.href = 'mailto:angel.hermon.mail@gmail.com?subject=' + encodeURIComponent('Inquiry via anhermon.dev: ' + v('kind')) + '&body=' + encodeURIComponent(body);
+});
+</script>
+<script src="/assets/analytics.js" defer></script>
+<script>window.vlTrackCTA = window.vlTrackCTA || function () {};</script>
 </body>
 </html>
