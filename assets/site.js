@@ -34,7 +34,8 @@
       var el = pxEls[i], r = el.parentNode.getBoundingClientRect();
       if (r.bottom < -200 || r.top > vh + 200) continue;
       var c = (r.top + r.height / 2 - vh / 2);
-      el.style.setProperty("--py", (-c * parseFloat(el.dataset.px)).toFixed(1) + "px");
+      var lim = r.height * 0.06; // stays inside the 1.14 scale bleed
+      el.style.setProperty("--py", Math.max(-lim, Math.min(lim, -c * parseFloat(el.dataset.px))).toFixed(1) + "px");
     }
     if (y < vh * 1.2) heroMedia.style.setProperty("--hy", (y * 0.22).toFixed(1) + "px");
     if (proofOn) {
@@ -130,7 +131,7 @@
           callEl.classList.add(ok ? "passed" : "burnt"); stage.dataset.s = ok ? "ok" : "no";
           verdict.className = "verdict " + (ok ? "ok" : "no");
           verdict.textContent = ok ? "exact match · request goes to the API" : "ValueError: " + c.m + " " + c.p + " is not a permitted read-only endpoint";
-          outs[gi].classList.add("on");
+          outs.forEach(function (li, j) { li.classList.toggle("on", j === gi); });
           if (ok) callEl.animate([{ transform: "translateX(" + Math.max(0, (lane - w) / 2) + "px)" }, { transform: "translateX(" + lane + "px)" }], { duration: 900, delay: 600, easing: "cubic-bezier(.7,0,.84,0)", fill: "forwards" });
           gi = (gi + 1) % CALLS.length;
           if (gVisible) gTimer = setTimeout(step, ok ? 2600 : 2000);
@@ -140,7 +141,7 @@
     };
   }
   if (reduce.matches || !("IntersectionObserver" in window) || !callEl.animate) {
-    outs.forEach(function (li) { li.classList.add("on"); });
+    outs[3].classList.add("on");
     var last = CALLS[3]; allowLis[ALLOWED.indexOf(last.p)].classList.add("hit"); callEl.classList.add("passed"); stage.dataset.s = "ok";
     verdict.className = "verdict ok"; verdict.textContent = "exact match · request goes to the API";
   } else {

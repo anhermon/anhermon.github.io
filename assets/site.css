@@ -2,7 +2,7 @@
 @font-face {
   font-family: "Bricolage";
   src: url(/assets/fonts/bricolage-grotesque-latin-var.woff2) format("woff2");
-  font-weight: 200 800; font-stretch: 75% 100%; font-style: normal; font-display: swap;
+  font-weight: 200 800; font-stretch: 75% 100%; font-style: normal; font-display: block; /* preloaded; avoids a reflow of the condensed display type */
 }
 @font-face {
   font-family: "Geist Mono";
@@ -13,7 +13,7 @@
 :root {
   color-scheme: dark;
   --void: #07080A; --plate: #0E1013; --plate2: #14171B;
-  --bone: #ECE6D8; --dim: #9A9487; --faint: #5F5B53;
+  --bone: #ECE6D8; --dim: #9A9487; --faint: #8A857B;
   --rule: rgba(236, 230, 216, .12);
   --signal: #7FA2FF; --burn: #FF9F43; --pass: #C8FF6A;
   --sans: "Bricolage", ui-sans-serif, system-ui, sans-serif;
@@ -52,7 +52,7 @@ code { font: 400 .86em var(--mono); }
   font-size: clamp(52px, 8.2vw, 128px); line-height: .9; letter-spacing: -.04em;
   font-weight: 300; font-stretch: 78%; text-wrap: balance;
 }
-.say .dimmed { color: var(--faint); }
+.say .dimmed { color: #6E6A62; } /* large text: 3.6:1 */
 
 /* Buttons */
 .btn {
@@ -95,8 +95,9 @@ html[data-hero="gl"] .hero-media canvas { opacity: 1; }
 .hero-copy { align-self: end; padding: 120px var(--gut) 0; max-width: 1440px; width: 100%; margin: 0 auto; }
 h1 {
   font-size: clamp(58px, 8.6vw, 140px); line-height: .86; letter-spacing: -.045em;
-  font-weight: 260; font-stretch: 76%; max-width: 7.6em; text-wrap: balance;
+  font-weight: 260; font-stretch: 76%; max-width: 6.2em; text-wrap: balance;
 }
+h1 .nb { white-space: nowrap; }
 h1 .tr { font-weight: 800; font-stretch: 100%; color: #fff; letter-spacing: -.035em; }
 html.js h1 .tr { animation: expose 2.8s .25s var(--ease) both; }
 html[data-hero="gl"] h1 .tr { animation: none; font-weight: var(--tw, 800); font-stretch: var(--ts, 100%); }
@@ -132,8 +133,8 @@ html.js .say[data-r].in { font-weight: 330; }
 html.js .shot[data-r], html.js .contact-art[data-r] { opacity: 1; transform: none; background: none; }
 html.js .shot[data-r] > .px, html.js .contact-art[data-r] > .px { clip-path: inset(0 0 100% 0); transition: clip-path 1.4s var(--ease); }
 html.js .shot[data-r].in > .px, html.js .contact-art[data-r].in > .px { clip-path: inset(0 0 0 0); }
-html.js .shot[data-r] img, html.js .contact-art[data-r] img { transform: scale(1.18); transition: transform 2.2s var(--ease); }
-html.js .shot[data-r].in img, html.js .contact-art[data-r].in img { transform: scale(1.02); }
+html.js .shot[data-r] img, html.js .contact-art[data-r] img { transform: scale(1.32); transition: transform 2.2s var(--ease); }
+html.js .shot[data-r].in img, html.js .contact-art[data-r].in img { transform: scale(1.14); }
 .px { will-change: transform; transform: translate3d(0, var(--py, 0px), 0); }
 
 /* ---------- PROBLEM ---------- */
@@ -213,8 +214,8 @@ html.js .shot[data-r].in img, html.js .contact-art[data-r].in img { transform: s
   box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(0,0,0,.6), 0 30px 60px -30px #000;
 }
 .allow-h { font: 500 11px var(--mono); color: var(--dim); letter-spacing: .04em; margin-bottom: 10px; }
-.allow ol { columns: 1; font: 400 12px/1.75 var(--mono); color: #6B6A66; }
-.allow li { transition: color .3s, background .3s; padding: 0 6px; margin: 0 -6px; border-radius: 2px; overflow-wrap: anywhere; }
+.allow ol { columns: 1; font: 400 clamp(9.5px, 2.6vw, 12px)/1.75 var(--mono); color: #6B6A66; }
+.allow li { transition: color .3s, background .3s; padding: 0 6px; margin: 0 -6px; border-radius: 2px; overflow-wrap: anywhere; break-inside: avoid; }
 .allow li.slot { color: var(--bone); box-shadow: inset 0 0 0 1px rgba(236,230,216,.22); background: rgba(0,0,0,.35); }
 .allow li.scan { color: var(--bone); background: rgba(127,162,255,.12); }
 .allow li.hit { color: var(--void); background: var(--pass); }
@@ -232,8 +233,9 @@ html.js .shot[data-r].in img, html.js .contact-art[data-r].in img { transform: s
 .outcomes b { color: var(--bone); font-weight: 500; }
 .outcomes li.no code { text-decoration: line-through; text-decoration-color: rgba(255,159,67,.6); }
 @media (min-width: 900px) { .outcomes { grid-template-columns: 1fr 1fr; } .outcomes li { grid-template-columns: 1fr; } }
-html.js .outcomes li { opacity: .18; transition: opacity .6s; }
-html.js .outcomes li.on { opacity: 1; }
+.outcomes li { transition: background .5s, box-shadow .5s; }
+.outcomes li.on { background: #101216; box-shadow: inset 2px 0 0 var(--burn); }
+.outcomes li.ok.on { box-shadow: inset 2px 0 0 var(--pass); }
 .gate figcaption { margin-top: 18px; font-size: 14px; color: var(--dim); max-width: 70ch; }
 
 /* ---------- PROOF ---------- */
@@ -332,6 +334,8 @@ textarea { min-height: 140px; resize: vertical; }
   .runbar .run-id, .runbar .read { grid-column: 1 / -1; }
   .plate h3 { font-size: clamp(64px, 19vw, 120px); }
   .diff { left: 6%; top: 6%; }
+  .gate-stage { padding: 16px 12px; }
+  .allow { padding: 14px 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -341,7 +345,6 @@ textarea { min-height: 140px; resize: vertical; }
   html.js .shot[data-r] img, html.js .contact-art[data-r] img { transform: none; }
   html.js .shot[data-r] > .px, html.js .contact-art[data-r] > .px { clip-path: none; }
   html.js .say[data-r] { font-weight: 330; }
-  html.js .outcomes li { opacity: 1; }
   .ticks li { opacity: 1; transform: translate(-50%, -190%); }
   .logs li q { color: var(--bone); }
   .logs li.err q { color: var(--burn); }
