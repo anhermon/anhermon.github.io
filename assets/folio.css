@@ -230,14 +230,14 @@ a:hover { text-decoration-thickness: 2px; }
 .hcontact { padding: var(--sec) 0 clamp(40px, 5vw, 72px); border-top: 1px solid var(--rule); }
 .hcontact .say { max-width: 12em; }
 .hcontact .intro { margin-top: 20px; font-size: 18px; max-width: 40em; }
-.direct, .bigmail { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
-.direct a, .bigmail a { font-size: clamp(24px, 4.2vw, 64px); font-weight: 560; letter-spacing: -.04em; line-height: 1.05; overflow-wrap: anywhere; }
-.copy { min-height: 38px; padding: 0 14px; font: 500 14px var(--sans); background: transparent; color: var(--ink); border: 1px solid var(--ink); cursor: pointer; }
-.copy:hover { background: var(--ink); color: var(--wall); }
-.copy[data-state="copied"] { background: var(--ink); color: var(--wall); }
+.direct, .bigmail { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 20px; }
+.direct a, .bigmail a { font-size: clamp(20px, 2.6vw, 36px); font-weight: 560; letter-spacing: -.03em; line-height: 1.1; text-decoration: none; border-bottom: 1px solid var(--ink); padding-bottom: 4px; overflow-wrap: anywhere; }
+.copy { min-height: 28px; padding: 0; font: 500 14px var(--sans); background: none; color: var(--mute); border: 0; border-bottom: 1px solid transparent; cursor: pointer; }
+.copy:hover { color: var(--ink); border-bottom-color: var(--ink); }
+.copy[data-state="copied"] { color: var(--ink); }
 .hc-links { margin-top: 26px; display: flex; gap: 12px; flex-wrap: wrap; }
-.foot { padding-top: clamp(32px, 4vw, 56px); overflow: hidden; }
-.foot-cols { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: var(--gap); font-size: 14px; padding-bottom: clamp(28px, 4vw, 56px); }
+.foot { padding-top: clamp(40px, 5vw, 72px); overflow: hidden; border-top: 1px solid var(--rule); }
+.foot-cols { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: var(--gap); font-size: 14px; padding-bottom: clamp(24px, 3vw, 40px); }
 .foot-cols p { max-width: 42ch; color: var(--mute); }
 .foot-cols p a { color: var(--ink); }
 .foot-cols nav { display: grid; gap: 2px; align-content: start; }
@@ -523,8 +523,9 @@ a:hover { text-decoration-thickness: 2px; }
 .tl span { color: var(--mute); }
 @media (max-width: 700px) { .tl { flex-direction: column; } .tl li { flex: none; display: flex; justify-content: space-between; gap: 12px; } .tl b { display: inline; } }
 .hc-grid { align-items: start; row-gap: 32px; }
+.hcontact .say { font-size: clamp(34px, 4.6vw, 72px); }
 .hc-main { grid-column: 1 / span 8; }
-.hc-next { grid-column: 9 / -1; list-style: none; display: grid; gap: 0; align-self: end; counter-reset: n; }
+.hc-next { grid-column: 9 / -1; list-style: none; display: grid; gap: 0; align-self: start; margin-top: clamp(8px, 1.2vw, 18px); counter-reset: n; }
 .hc-next li { counter-increment: n; border-top: 1px solid var(--rule); padding: 14px 0 16px 34px; position: relative; font-size: 15px; line-height: 1.35; color: var(--mute); }
 .hc-next li::before { content: counter(n); position: absolute; left: 0; top: 15px; font-size: 13px; color: var(--ink); font-weight: 500; }
 .hc-next b { display: block; color: var(--ink); font-size: 17px; letter-spacing: -.015em; font-weight: 600; }
@@ -596,3 +597,4 @@ a:hover { text-decoration-thickness: 2px; }
 .foot-socials a { color: inherit; text-decoration: none; }
 .foot-socials a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .foot-socials small { font-size: .78em; font-weight: 450; color: var(--mute); }
+.foot-cols nav small{color:var(--mute);font-size:.92em}
