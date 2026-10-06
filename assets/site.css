@@ -353,3 +353,7 @@ textarea { min-height: 140px; resize: vertical; }
 .form-status[data-state="err"] { color: #ff9b8f; }
 .label i { font-size: 13px; }
 .sel select { text-overflow: ellipsis; }
+
+.also { margin-top: 24px; padding: 20px 24px; border: 1px solid var(--rule); border-radius: var(--r-lg); background: var(--void); max-width: 72ch; }
+.also h3 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin-bottom: 8px; }
+.also p { color: var(--dim); font-size: 16px; }
