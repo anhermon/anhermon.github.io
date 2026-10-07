@@ -16,6 +16,7 @@
     person_profiles: "identified_only",
     persistence: "memory",
     autocapture: true,
+    capture_exceptions: true,
     capture_pageview: true,
     session_recording: { maskAllInputs: true },
   });
