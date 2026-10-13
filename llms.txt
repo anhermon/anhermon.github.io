@@ -1,0 +1,21 @@
+# Angel Hermon
+
+> Software engineer. Landing pages and small sites for dev-tool and indie-SaaS founders, plus open-source agent tooling (Go, Rust, Python, TypeScript). Static HTML/CSS/vanilla JS, built with an AI-agent pipeline that Angel reviews.
+
+## Pages
+- [Home](https://anhermon.dev/): overview and selected work
+- [Work](https://anhermon.dev/work/): index of case studies
+- [Services](https://anhermon.dev/services/): landing pages for dev-tool and SaaS founders (draft)
+- [Code](https://anhermon.dev/code/): open-source agent tooling
+- [Redesign Lab](https://anhermon.dev/redesign/): before/after redesign experiments
+- [Notes](https://anhermon.dev/notes/): a monthly email
+- [Contact](https://anhermon.dev/contact/)
+
+## Case studies
+- [Halcyon One](https://anhermon.dev/work/halcyon/): concept launch page (fictional product)
+- [Pebble](https://anhermon.dev/work/pebble/): concept landing page (fictional product)
+- [Draughtwell](https://anhermon.dev/work/tracer/): concept launch page (fictional product)
+- [Agent observability site](https://anhermon.dev/work/anhermon-dev/): rebuilt front page, v1 to v4
+
+## Profiles
+- [GitHub](https://github.com/anhermon)
