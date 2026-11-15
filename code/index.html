@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Code: open-source agent tooling | Angel Hermon</title>
-<meta name="description" content="Open-source repositories by Angel Hermon: mcp-trace, sealref, spark-ordernet-mcp, anvil and awesome-agent-observability, with language, licence and known limits.">
+<meta name="description" content="Open-source repositories by Angel Hermon: awesome-agent-observability, claude-panel, awesome-agent-orchestration, sealref, pstack-claude and local-harness-router, with language, licence and known limits.">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#E9E9E6">
 <link rel="canonical" href="https://anhermon.dev/code/">
@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Angel Hermon">
 <meta property="og:url" content="https://anhermon.dev/code/">
 <meta property="og:title" content="Code: open-source agent tooling | Angel Hermon">
-<meta property="og:description" content="Open-source repositories by Angel Hermon: mcp-trace, sealref, spark-ordernet-mcp, anvil and awesome-agent-observability, with language, licence and known limits.">
+<meta property="og:description" content="Open-source repositories by Angel Hermon: awesome-agent-observability, claude-panel, awesome-agent-orchestration, sealref, pstack-claude and local-harness-router, with language, licence and known limits.">
 <meta property="og:image" content="https://anhermon.dev/og.png?v=c43c3e9a">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -50,16 +50,40 @@
         "position": 1,
         "item": {
           "@type": "SoftwareSourceCode",
-          "name": "mcp-trace",
-          "description": "Transparent Go proxy for MCP servers: one OpenTelemetry span per tools/call, no client or server changes.",
-          "codeRepository": "https://github.com/anhermon/mcp-trace",
-          "programmingLanguage": "Go",
-          "license": "MIT"
+          "name": "awesome-agent-observability",
+          "description": "Curated list of agent observability tools, standards and platforms, from OTel GenAI to MCP.",
+          "codeRepository": "https://github.com/anhermon/awesome-agent-observability",
+          "programmingLanguage": "Curated list",
+          "license": "CC0-1.0"
         }
       },
       {
         "@type": "ListItem",
         "position": 2,
+        "item": {
+          "@type": "SoftwareSourceCode",
+          "name": "claude-panel",
+          "description": "Claude Code mod: a live panel beside the chat with task, context, charts and a subagent board.",
+          "codeRepository": "https://github.com/anhermon/claude-panel",
+          "programmingLanguage": "JavaScript",
+          "license": "MIT"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@type": "SoftwareSourceCode",
+          "name": "awesome-agent-orchestration",
+          "description": "Curated map of open-source agent orchestration and software-factory tools, to adopt instead of rebuilding.",
+          "codeRepository": "https://github.com/anhermon/awesome-agent-orchestration",
+          "programmingLanguage": "Curated list",
+          "license": "CC0-1.0"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
         "item": {
           "@type": "SoftwareSourceCode",
           "name": "sealref",
@@ -71,38 +95,25 @@
       },
       {
         "@type": "ListItem",
-        "position": 3,
+        "position": 5,
         "item": {
           "@type": "SoftwareSourceCode",
-          "name": "spark-ordernet-mcp",
-          "description": "Read-only MCP server over a brokerage API, enforced by an exact-GET allowlist.",
-          "codeRepository": "https://github.com/anhermon/spark-ordernet-mcp",
-          "programmingLanguage": "Python",
+          "name": "pstack-claude",
+          "description": "Port of poteto's pstack to Claude Code; skills and prose are upstream's. 23 playbooks.",
+          "codeRepository": "https://github.com/anhermon/pstack-claude",
+          "programmingLanguage": "TypeScript",
           "license": "MIT"
         }
       },
       {
         "@type": "ListItem",
-        "position": 4,
+        "position": 6,
         "item": {
           "@type": "SoftwareSourceCode",
-          "name": "anvil",
-          "description": "Single-binary agent harness in Rust: pluggable providers, sub-agents, SQLite memory.",
-          "codeRepository": "https://github.com/anhermon/anvil",
-          "programmingLanguage": "Rust",
-          "license": "MIT / Apache-2.0"
-        }
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "item": {
-          "@type": "SoftwareSourceCode",
-          "name": "awesome-agent-observability",
-          "description": "Curated list of tracing, evaluation, guardrail and MCP tooling, every entry checked.",
-          "codeRepository": "https://github.com/anhermon/awesome-agent-observability",
-          "programmingLanguage": "Curated list",
-          "license": "CC0-1.0"
+          "name": "local-harness-router",
+          "description": "CLI that routes prompts to local harness:model pairs using harness-arena evidence.",
+          "codeRepository": "https://github.com/anhermon/local-harness-router",
+          "programmingLanguage": "JavaScript"
         }
       }
     ]
@@ -123,16 +134,16 @@
 <section class="ph wrap work-pg">
   <p class="kick" data-r>Code</p>
   <h1 class="h1x" data-r style="--i:1">Open-source tools, with their limits.</h1>
-  <p class="ph-lede" data-r style="--i:2">Five public repositories, all my own. Language and licence are as listed in each repo; limits are stated where the README states them. Each row opens its GitHub repository. These are code projects: the websites are under <a href="/work/">Work</a>.</p>
+  <p class="ph-lede" data-r style="--i:2">Six public repositories, all my own. Language and licence are as listed in each repo; limits are stated where the README states them. Each row opens its GitHub repository. These are code projects: the websites are under <a href="/work/">Work</a>.</p>
 </section>
 <section class="ix ix-code" id="index" data-ix aria-labelledby="h-ix">
-    <div class="ix-bgs" aria-hidden="true"><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div></div>
+    <div class="ix-bgs" aria-hidden="true"><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div><div class="ix-bg" style="--bg:#D2D2CD"></div></div>
     <div class="wrap">
-      <div class="sh"><span id="h-ix">Repositories</span><span>5 repos on GitHub</span></div>
+      <div class="sh"><span id="h-ix">Repositories</span><span>6 repos on GitHub</span></div>
       <div class="ix-stage">
-        <ol class="ix-list"><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/mcp-trace" rel="noopener"><span class="ix-n">01</span><span class="ix-name">mcp-trace</span><span class="ix-y">Go / MIT</span><span class="ix-k">Transparent Go proxy for MCP servers: one OpenTelemetry span per tools/call, no client or server changes.</span><span class="ix-lim">Limit: On HTTP+SSE, a server that advertises an absolute POST endpoint bypasses the proxy and you get zero tool-call spans.</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/sealref" rel="noopener"><span class="ix-n">02</span><span class="ix-name">sealref</span><span class="ix-y">Python / MIT</span><span class="ix-k">Keeps API keys out of a coding agent's context: the agent only sees sealref:// references.</span><span class="ix-lim">Limit: macOS only: it is built on the Keychain.</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/spark-ordernet-mcp" rel="noopener"><span class="ix-n">03</span><span class="ix-name">spark-ordernet-mcp</span><span class="ix-y">Python / MIT</span><span class="ix-k">Read-only MCP server over a brokerage API, enforced by an exact-GET allowlist.</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/anvil" rel="noopener"><span class="ix-n">04</span><span class="ix-name">anvil</span><span class="ix-y">Rust / MIT / Apache-2.0</span><span class="ix-k">Single-binary agent harness in Rust: pluggable providers, sub-agents, SQLite memory.</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/awesome-agent-observability" rel="noopener"><span class="ix-n">05</span><span class="ix-name">awesome-agent-observability</span><span class="ix-y">Curated list / CC0-1.0</span><span class="ix-k">Curated list of tracing, evaluation, guardrail and MCP tooling, every entry checked.</span></a></li></ol>
+        <ol class="ix-list"><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/awesome-agent-observability" rel="noopener"><span class="ix-n">01</span><span class="ix-name">awesome-agent-observability</span><span class="ix-y">Curated list / CC0-1.0</span><span class="ix-k">Curated list of agent observability tools, standards and platforms, from OTel GenAI to MCP.</span><span class="ix-lim">Limit: a few entries could not be run at the 2026-10-04 audit (for example Kong and SigNoz).</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/claude-panel" rel="noopener"><span class="ix-n">02</span><span class="ix-name">claude-panel</span><span class="ix-y">JavaScript / MIT</span><span class="ix-k">Claude Code mod: a live panel beside the chat with task, context, charts and a subagent board.</span><span class="ix-lim">Limit: macOS only; Windows is not supported.</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/awesome-agent-orchestration" rel="noopener"><span class="ix-n">03</span><span class="ix-name">awesome-agent-orchestration</span><span class="ix-y">Curated list / CC0-1.0</span><span class="ix-k">Curated map of open-source agent orchestration and software-factory tools, to adopt instead of rebuilding.</span><span class="ix-lim">Limit: the list does not claim every entry was run.</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/sealref" rel="noopener"><span class="ix-n">04</span><span class="ix-name">sealref</span><span class="ix-y">Python / MIT</span><span class="ix-k">Keeps API keys out of a coding agent's context: the agent only sees sealref:// references.</span><span class="ix-lim">Limit: macOS only: it is built on the Keychain.</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/pstack-claude" rel="noopener"><span class="ix-n">05</span><span class="ix-name">pstack-claude</span><span class="ix-y">TypeScript / MIT</span><span class="ix-k">Port of poteto's pstack to Claude Code; skills and prose are upstream's. 23 playbooks.</span></a></li><li class="ix-row ix-repo" data-ink="#0D0D0C"><a href="https://github.com/anhermon/local-harness-router" rel="noopener"><span class="ix-n">06</span><span class="ix-name">local-harness-router</span><span class="ix-y">JavaScript / no licence file</span><span class="ix-k">CLI that routes prompts to local harness:model pairs using harness-arena evidence.</span></a></li></ol>
         <p class="ix-hint" aria-hidden="true">Point at a row. The wall takes on that work's own colours.</p>
-        <div class="ix-prev" aria-hidden="true"><div class="ix-card txt"><b>mcp-trace</b><p>Transparent Go proxy for MCP servers: one OpenTelemetry span per tools/call, no client or server changes.</p><em>Go, MIT</em></div><div class="ix-card txt"><b>sealref</b><p>Keeps API keys out of a coding agent's context: the agent only sees sealref:// references.</p><em>Python, MIT</em></div><div class="ix-card txt"><b>spark-ordernet-mcp</b><p>Read-only MCP server over a brokerage API, enforced by an exact-GET allowlist.</p><em>Python, MIT</em></div><div class="ix-card txt"><b>anvil</b><p>Single-binary agent harness in Rust: pluggable providers, sub-agents, SQLite memory.</p><em>Rust, MIT / Apache-2.0</em></div><div class="ix-card txt"><b>awesome-agent-observability</b><p>Curated list of tracing, evaluation, guardrail and MCP tooling, every entry checked.</p><em>Curated list, CC0-1.0, 33 stars on 1 Oct 2026</em></div></div>
+        <div class="ix-prev" aria-hidden="true"><div class="ix-card txt"><b>awesome-agent-observability</b><p>Curated list of agent observability tools, standards and platforms, from OTel GenAI to MCP.</p><em>Curated list, CC0-1.0, 63 stars and 34 forks on 16 Nov 2026</em></div><div class="ix-card txt"><b>claude-panel</b><p>Claude Code mod: a live panel beside the chat with task, context, charts and a subagent board.</p><em>JavaScript, MIT</em></div><div class="ix-card txt"><b>awesome-agent-orchestration</b><p>Curated map of open-source agent orchestration and software-factory tools, to adopt instead of rebuilding.</p><em>Curated list, CC0-1.0</em></div><div class="ix-card txt"><b>sealref</b><p>Keeps API keys out of a coding agent's context: the agent only sees sealref:// references.</p><em>Python, MIT</em></div><div class="ix-card txt"><b>pstack-claude</b><p>Port of poteto's pstack to Claude Code; skills and prose are upstream's. 23 playbooks.</p><em>TypeScript, MIT</em></div><div class="ix-card txt"><b>local-harness-router</b><p>CLI that routes prompts to local harness:model pairs using harness-arena evidence.</p><em>JavaScript, no licence file</em></div></div>
       </div>
     </div>
   </section>
